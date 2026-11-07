@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -18,10 +20,10 @@ import {
   Briefcase,
   Users,
   ShieldCheck,
-  ArrowRight
+  ArrowRight,
 } from 'lucide-react';
 
-const iconMap: Record<string, React.ReactNode> = {
+const ICON_MAP: Record<string, React.ReactNode> = {
   Trees: <Trees className="w-5 h-5" />,
   Building2: <Building2 className="w-5 h-5" />,
   Sparkles: <Sparkles className="w-5 h-5" />,
@@ -41,78 +43,78 @@ const iconMap: Record<string, React.ReactNode> = {
 
 export const CategorySection: React.FC = () => {
   return (
-    <section className="py-20 sm:py-24 bg-ivory">
+    <section className="py-16 sm:py-24 bg-ivory">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
           <div>
-            <div className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.2em] uppercase text-gold-dark mb-2">
-              <span className="w-6 h-[1px] bg-gold" />
-              <span>Curated Celebration Categories</span>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-soft text-forest text-xs font-bold uppercase tracking-wider mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
+              <span>Curated Marketplace</span>
             </div>
-            <h2 className="font-serif text-3xl sm:text-5xl font-bold text-forest tracking-tight">
-              Explore Event Venues & Specialists
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-ink tracking-tight">
+              Discover by Event Category
             </h2>
-            <p className="text-charcoal-muted text-sm sm:text-base mt-2.5 max-w-xl leading-relaxed">
-              From sprawling outdoor party plots along Sindhu Bhavan Road to royal Gujarati catering thals and couture decorators.
+            <p className="text-sm sm:text-base text-ink-secondary mt-2 max-w-xl font-normal">
+              Ahmedabad&apos;s complete roster of vetted wedding lawns, banquet halls, and celebration specialists.
             </p>
           </div>
 
           <Link
             href="/explore"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-ivory-border hover:border-gold/50 text-xs sm:text-sm font-semibold text-forest hover:text-gold-dark transition-all shadow-soft-sm hover:shadow-soft self-start md:self-auto"
+            className="inline-flex items-center gap-2 text-forest hover:text-forest-dark font-bold text-sm group self-start md:self-auto"
           >
             <span>View All 15 Categories</span>
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {/* Categories Grid (Top 8 categories) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {CATEGORIES.slice(0, 8).map((cat) => (
             <Link
               key={cat.id}
               href={`/businesses?category=${cat.id}`}
-              className="group relative rounded-3xl overflow-hidden bg-white border border-ivory-border shadow-soft-sm hover:shadow-soft hover:border-gold/50 transition-all duration-300 flex flex-col justify-between card-hover-elevate"
+              className="group bg-white rounded-3xl overflow-hidden border border-ivory-border shadow-soft-sm hover:shadow-soft hover:border-gold-border transition-all duration-300 flex flex-col hover:-translate-y-1"
             >
-              {/* Image with overlay */}
-              <div className="relative h-48 w-full overflow-hidden bg-charcoal">
+              {/* Category Image */}
+              <div className="relative aspect-[4/3] overflow-hidden bg-ivory-dark">
                 <Image
                   src={cat.image}
                   alt={cat.name}
                   fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-                  className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-forest-deep via-forest-deep/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
 
-                {/* Category Icon Badge */}
-                <div className="absolute top-3.5 left-3.5 w-11 h-11 rounded-2xl bg-forest/85 backdrop-blur-md border border-gold/40 text-gold flex items-center justify-center shadow-md">
-                  {iconMap[cat.iconName] || <Sparkles className="w-5 h-5" />}
+                {/* Floating Icon Box */}
+                <div className="absolute top-3.5 left-3.5 w-10 h-10 rounded-2xl bg-white/90 backdrop-blur-md text-forest flex items-center justify-center shadow-sm">
+                  {ICON_MAP[cat.iconName] || <Sparkles className="w-5 h-5 text-gold-dark" />}
                 </div>
 
-                {/* Business Count */}
-                <div className="absolute top-3.5 right-3.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-[11px] font-semibold text-white/90 border border-white/10">
-                  {cat.businessCount}+ Listed
-                </div>
-
-                {/* Category Title on image bottom */}
-                <div className="absolute bottom-3.5 left-4 right-4">
-                  <h3 className="font-serif text-xl font-bold text-white group-hover:text-gold-light transition-colors">
-                    {cat.name}
-                  </h3>
+                {/* Business Count Badge */}
+                <div className="absolute bottom-3.5 left-3.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold">
+                  {cat.businessCount} Curated Options
                 </div>
               </div>
 
-              {/* Description & Action */}
-              <div className="p-5 flex-1 flex flex-col justify-between bg-white">
-                <p className="text-xs text-charcoal/80 line-clamp-2 leading-relaxed mb-4">
-                  {cat.shortDescription}
-                </p>
+              {/* Text Info */}
+              <div className="p-5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-serif text-lg font-bold text-ink group-hover:text-forest transition-colors">
+                    {cat.name}
+                  </h3>
+                  <p className="text-xs text-ink-muted mt-1.5 leading-relaxed line-clamp-2">
+                    {cat.shortDescription}
+                  </p>
+                </div>
 
-                <div className="pt-3 border-t border-ivory-border flex items-center justify-between text-xs font-semibold text-forest group-hover:text-gold-dark transition-colors">
+                <div className="mt-4 pt-3 border-t border-ivory-border flex items-center justify-between text-xs font-bold text-forest">
                   <span>Explore Listings</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  <div className="w-6 h-6 rounded-full bg-emerald-soft flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
                 </div>
               </div>
             </Link>

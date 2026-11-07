@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
+import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 import { useToastStore } from '@/store/useToastStore';
-import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 
 export const ToastContainer: React.FC = () => {
   const { toasts, removeToast } = useToastStore();
@@ -10,33 +10,31 @@ export const ToastContainer: React.FC = () => {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-md w-full px-4 sm:px-0 pointer-events-none">
+    <div className="fixed bottom-6 right-4 sm:right-6 z-[100] flex flex-col gap-3 max-w-sm w-full">
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`pointer-events-auto flex items-start gap-3 p-4 rounded-3xl shadow-soft-lg border backdrop-blur-md transition-all duration-300 animate-in slide-in-from-bottom-5 ${
+          className={`flex items-start gap-3 p-4 rounded-xl shadow-soft-lg border backdrop-blur-md animate-fade-in-up ${
             toast.type === 'success'
-              ? 'bg-white text-charcoal border-sand-border ring-1 ring-coral/20'
+              ? 'bg-white border-emerald-primary/20 text-ink'
               : toast.type === 'error'
-              ? 'bg-white text-charcoal border-red-200 ring-1 ring-red-400/20'
-              : 'bg-white text-charcoal border-sand-border ring-1 ring-ochre/20'
+              ? 'bg-white border-red-200 text-ink'
+              : 'bg-white border-ivory-border text-ink'
           }`}
+          role="alert"
         >
           <div className="shrink-0 mt-0.5">
-            {toast.type === 'success' && <CheckCircle2 className="w-5 h-5 text-coral" />}
-            {toast.type === 'error' && <AlertCircle className="w-5 h-5 text-red-500" />}
-            {toast.type === 'info' && <Info className="w-5 h-5 text-ochre" />}
+            {toast.type === 'success' && <CheckCircle className="w-4 h-4 text-forest" />}
+            {toast.type === 'error' && <AlertCircle className="w-4 h-4 text-red-500" />}
+            {toast.type === 'info' && <Info className="w-4 h-4 text-gold-dark" />}
           </div>
-          <div className="flex-1 min-w-0">
-            <h4 className="text-xs font-bold tracking-wide font-serif text-charcoal">{toast.title}</h4>
-            <p className="text-[11px] text-charcoal-muted mt-0.5 leading-relaxed">{toast.message}</p>
-          </div>
+          <p className="flex-1 text-sm font-medium leading-snug">{toast.message}</p>
           <button
             onClick={() => removeToast(toast.id)}
-            className="shrink-0 text-charcoal-muted hover:text-charcoal transition-colors p-1"
-            aria-label="Close notification"
+            className="shrink-0 text-ink-muted hover:text-ink transition-colors"
+            aria-label="Dismiss notification"
           >
-            <X className="w-4 h-4" />
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
       ))}

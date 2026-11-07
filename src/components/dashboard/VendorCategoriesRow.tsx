@@ -3,84 +3,85 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronRight } from 'lucide-react';
-
-interface VendorCategoryItem {
-  id: string;
-  name: string;
-  image: string;
-  link: string;
-}
-
-const DASHBOARD_CATEGORIES: VendorCategoryItem[] = [
-  {
-    id: 'decorators',
-    name: 'Decorators',
-    image: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80',
-    link: '/businesses?category=decoration',
-  },
-  {
-    id: 'makeup',
-    name: 'Makeup',
-    image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&q=80',
-    link: '/businesses?category=makeup-artists',
-  },
-  {
-    id: 'florists',
-    name: 'Florists & Mandap',
-    image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=80',
-    link: '/businesses?category=wedding-gardens',
-  },
-  {
-    id: 'dj-music',
-    name: 'DJ & Music',
-    image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80',
-    link: '/businesses?category=dj-sound',
-  },
-];
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 export const VendorCategoriesRow: React.FC = () => {
+  const vendorCategories = [
+    {
+      title: 'Event Decorators',
+      slug: 'decoration',
+      image: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80',
+      count: '27 Verified Teams',
+    },
+    {
+      title: 'Bridal Makeup',
+      slug: 'makeup-artists',
+      image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&q=80',
+      count: '21 Specialists',
+    },
+    {
+      title: 'Florists & Mandap',
+      slug: 'wedding-gardens',
+      image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=80',
+      count: '34 Designers',
+    },
+    {
+      title: 'DJ & Sound Stages',
+      slug: 'dj-sound',
+      image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80',
+      count: '16 Audio Teams',
+    },
+  ];
+
   return (
-    <div className="mb-10">
+    <div className="mb-8">
+      {/* Row Header */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-serif text-xl sm:text-2xl font-bold text-charcoal">
-          Vendor Categories
-        </h3>
+        <div>
+          <h3 className="font-serif text-lg sm:text-xl font-bold text-ink">
+            Celebration Specialists
+          </h3>
+          <p className="text-xs text-ink-muted">Top booked vendor categories across western Ahmedabad</p>
+        </div>
         <Link
           href="/explore"
-          className="text-xs font-semibold text-[#E84E59] hover:underline"
+          className="text-xs font-bold text-forest hover:text-forest-dark flex items-center gap-1 group"
         >
-          View All Categories &rarr;
+          <span>View All Vendors</span>
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {DASHBOARD_CATEGORIES.map((cat) => (
+      {/* 4 Cards Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {vendorCategories.map((cat) => (
           <Link
-            key={cat.id}
-            href={cat.link}
-            className="group bg-white rounded-3xl overflow-hidden border border-[#E9DEC9] shadow-soft-sm hover:shadow-soft transition-all duration-300 flex flex-col justify-between"
+            key={cat.title}
+            href={`/businesses?category=${cat.slug}`}
+            className="group bg-white rounded-3xl overflow-hidden border border-ivory-border shadow-soft-sm hover:shadow-soft hover:border-gold-border transition-all duration-300 flex flex-col hover:-translate-y-1"
           >
-            {/* Image */}
-            <div className="relative h-44 w-full overflow-hidden bg-charcoal">
+            {/* Visual Header */}
+            <div className="relative aspect-[16/10] overflow-hidden bg-ivory-dark">
               <Image
                 src={cat.image}
-                alt={cat.name}
+                alt={cat.title}
                 fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                sizes="(max-width: 768px) 50vw, 25vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute bottom-2.5 left-3 text-[11px] font-semibold text-white/90">
+                {cat.count}
+              </div>
             </div>
 
-            {/* Bottom Bar matching screenshot */}
-            <div className="p-4 bg-white flex items-center justify-between">
-              <span className="font-serif font-bold text-sm text-charcoal group-hover:text-forest transition-colors">
-                {cat.name}
+            {/* Bottom Label Bar */}
+            <div className="p-3.5 sm:p-4 flex items-center justify-between">
+              <span className="font-serif font-bold text-xs sm:text-sm text-ink group-hover:text-forest transition-colors">
+                {cat.title}
               </span>
-
-              {/* Red arrow button in rounded square matching screenshot */}
-              <div className="w-7 h-7 rounded-lg border border-[#E84E59] text-[#E84E59] group-hover:bg-[#E84E59] group-hover:text-white flex items-center justify-center transition-colors">
-                <ChevronRight className="w-4 h-4" />
+              <div className="w-7 h-7 rounded-xl bg-emerald-soft text-forest group-hover:bg-forest group-hover:text-white flex items-center justify-center transition-colors shadow-2xs">
+                <ArrowRight className="w-3.5 h-3.5" />
               </div>
             </div>
           </Link>

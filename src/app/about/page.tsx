@@ -1,146 +1,161 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useEnquiryStore } from '@/store/useEnquiryStore';
 import {
   ShieldCheck,
   HeartHandshake,
-  MapPin,
   Sparkles,
-  Users,
+  MapPin,
   Building2,
-  CalendarCheck,
   CheckCircle2,
-  PhoneOff,
-  ChevronRight
+  Users,
+  Lock,
+  ArrowRight,
 } from 'lucide-react';
 
 export default function AboutPage() {
+  const openEnquiryModal = useEnquiryStore((state) => state.openEnquiryModal);
+
   return (
-    <div className="bg-[#FBF9F5] min-h-screen py-10 sm:py-16">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-sand text-coral border border-sand-border">
-            <Sparkles className="w-3.5 h-3.5 text-coral" />
-            <span>The Gatherly Vision</span>
+    <div className="py-12 sm:py-20 bg-ivory min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 sm:space-y-24">
+        {/* Hero Section */}
+        <div className="text-center max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-soft text-forest text-xs font-bold uppercase tracking-wider mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
+            <span>Our Intermediary Mission</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-5xl font-bold text-charcoal tracking-tight">
-            Ahmedabad’s Premier Event Discovery Concierge
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-6xl font-bold text-ink tracking-tight">
+            Every Celebration, <br />
+            <span className="italic font-normal text-forest">Beautifully Connected.</span>
           </h1>
-          <p className="text-charcoal-muted text-xs sm:text-sm leading-relaxed">
-            Gatherly is an intermediary marketplace created to bring dignity, transparency, and calm to celebration planning across Gujarat.
+          <p className="text-sm sm:text-base text-ink-secondary mt-4 leading-relaxed font-normal">
+            Gatherly is an intermediary event venue and service discovery marketplace created specifically for Ahmedabad, Gujarat. We bridge the gap between families planning landmark celebrations and vetted local venue operators.
           </p>
         </div>
 
-        {/* Core Intermediary Business Model Explained */}
-        <div className="p-8 sm:p-10 rounded-3xl bg-white border border-sand-border shadow-soft-sm space-y-6">
-          <div className="flex items-center gap-3.5 pb-5 border-b border-sand-border">
-            <div className="w-12 h-12 rounded-2xl bg-sand flex items-center justify-center text-coral shadow-xs">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <div>
-              <h2 className="font-serif text-2xl font-bold text-charcoal">
-                Our Intermediary Business Model
+        {/* The Business Model & Role (Critical) */}
+        <div className="bg-white rounded-3xl p-8 sm:p-12 border border-ivory-border shadow-soft-sm">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-7 space-y-4">
+              <span className="text-xs font-bold text-gold-dark uppercase tracking-wider block">
+                How Gatherly Operates
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-ink">
+                An Independent Bridge for Ahmedabad Events
               </h2>
-              <p className="text-xs text-ochre font-semibold">
-                How Gatherly Connects Customers & Independent Businesses
+              <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">
+                Existing businesses in Ahmedabad—including marriage halls, party plots, catering kitchens, decorators, and photographers—already operate independently.
               </p>
-            </div>
-          </div>
+              <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed font-semibold text-forest">
+                Gatherly does NOT own these businesses.
+              </p>
+              <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">
+                Customers visit Gatherly to discover vetted businesses, explore virtual walkthroughs, compare pricing packages, and send centralized booking enquiries. All enquiries are directed exclusively to Gatherly’s internal concierge team, who privately checks availability with venue administrators and negotiates optimal terms.
+              </p>
 
-          <div className="text-xs sm:text-sm text-charcoal/85 space-y-4 leading-relaxed">
-            <p>
-              Gatherly is an intermediary discovery and booking platform connecting customers with vetted local event venues and service providers in Ahmedabad.
-            </p>
-            <p>
-              Top celebration businesses across Gujarat—including marriage halls, party plots, luxury banquet halls, wedding gardens, gourmet catering firms, decorators, and candid photographers—operate independently. <strong className="text-charcoal">Gatherly does not own or operate these businesses.</strong>
-            </p>
-            <p>
-              Instead, Gatherly serves as your trusted, dedicated celebration representative. Customers browse curated business portfolios, review facilities and guest capacities, and submit booking enquiries through our unified portal.
-            </p>
-            <div className="p-5 rounded-3xl bg-sand border border-sand-border text-charcoal space-y-2">
-              <div className="flex items-center gap-2 font-bold text-coral text-sm">
-                <HeartHandshake className="w-5 h-5 text-coral" />
-                <span>The Gatherly Concierge Promise</span>
+              <div className="pt-2 flex flex-wrap gap-3">
+                <span className="px-3 py-1 rounded-full bg-emerald-soft text-forest text-xs font-semibold">
+                  Zero Vendor Phone Spam
+                </span>
+                <span className="px-3 py-1 rounded-full bg-emerald-soft text-forest text-xs font-semibold">
+                  100% Free for Hosts
+                </span>
+                <span className="px-3 py-1 rounded-full bg-emerald-soft text-forest text-xs font-semibold">
+                  Direct Date Checks
+                </span>
               </div>
-              <p className="text-xs text-charcoal/85 leading-relaxed">
-                All customer enquiries are handled directly by Gatherly’s internal concierge team. Customers do not contact vendors directly through this platform. Gatherly Admin privately contacts the relevant venue management, checks calendar availability, negotiates official quotes, and presents you with consolidated options.
+            </div>
+
+            <div className="lg:col-span-5 relative aspect-[4/3] rounded-2xl overflow-hidden bg-ivory-dark shadow-md">
+              <Image
+                src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1000&q=80"
+                alt="Ahmedabad Wedding Celebration"
+                fill
+                className="object-cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* 4 Pillars Grid */}
+        <div>
+          <div className="text-center max-w-xl mx-auto mb-12">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-ink">
+              Our Core Principles
+            </h2>
+            <p className="text-xs sm:text-sm text-ink-muted mt-2">
+              How we protect hosts and ensure high standards across every corridor.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="p-6 rounded-3xl bg-white border border-ivory-border shadow-soft-sm">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-soft flex items-center justify-center text-forest mb-4">
+                <Lock className="w-5 h-5 text-gold-dark" />
+              </div>
+              <h3 className="font-serif font-bold text-base text-ink mb-1">Privacy Protection</h3>
+              <p className="text-xs text-ink-secondary leading-relaxed">
+                We never distribute your mobile number or email to multiple vendors. Gatherly acts as your single discreet liaison.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-3xl bg-white border border-ivory-border shadow-soft-sm">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-soft flex items-center justify-center text-forest mb-4">
+                <ShieldCheck className="w-5 h-5 text-gold-dark" />
+              </div>
+              <h3 className="font-serif font-bold text-base text-ink mb-1">In-Person Audits</h3>
+              <p className="text-xs text-ink-secondary leading-relaxed">
+                Our Ahmedabad operations team audits lawn square footage, green room amenities, and sound permits before publishing listings.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-3xl bg-white border border-ivory-border shadow-soft-sm">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-soft flex items-center justify-center text-forest mb-4">
+                <MapPin className="w-5 h-5 text-gold-dark" />
+              </div>
+              <h3 className="font-serif font-bold text-base text-ink mb-1">Local Knowledge</h3>
+              <p className="text-xs text-ink-secondary leading-relaxed">
+                From SBR to Bopal, we know auspicious date calendars, parking logistics, and seasonal Gujarat weather patterns.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-3xl bg-white border border-ivory-border shadow-soft-sm">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-soft flex items-center justify-center text-forest mb-4">
+                <HeartHandshake className="w-5 h-5 text-gold-dark" />
+              </div>
+              <h3 className="font-serif font-bold text-base text-ink mb-1">Transparent Pricing</h3>
+              <p className="text-xs text-ink-secondary leading-relaxed">
+                Clear pricing units, package inclusions, and verified guest capacity ratings—with no surprise surcharges.
               </p>
             </div>
           </div>
         </div>
 
-        {/* 4 Pillars of Value */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div className="p-6 rounded-3xl bg-white border border-sand-border shadow-soft-xs space-y-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-coral-soft text-coral flex items-center justify-center font-bold text-sm">
-              01
-            </div>
-            <h3 className="font-serif text-lg font-bold text-charcoal">
-              Zero Direct Vendor Harassment
-            </h3>
-            <p className="text-xs text-charcoal-muted leading-relaxed">
-              Traditional directories broadcast your personal phone number to hundreds of vendors, resulting in endless cold calls. On Gatherly, your identity is private. You talk only to our dedicated concierge.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-3xl bg-white border border-sand-border shadow-soft-xs space-y-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-ochre-soft text-ochre flex items-center justify-center font-bold text-sm">
-              02
-            </div>
-            <h3 className="font-serif text-lg font-bold text-charcoal">
-              Real Date Availability Pre-Checks
-            </h3>
-            <p className="text-xs text-charcoal-muted leading-relaxed">
-              In Ahmedabad, auspicious wedding dates (Muhurat dates) book out 6 to 12 months in advance. Our desk maintains active communication with party plot managers to verify true slot status before you waste time on site visits.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-3xl bg-white border border-sand-border shadow-soft-xs space-y-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-sand text-charcoal flex items-center justify-center font-bold text-sm">
-              03
-            </div>
-            <h3 className="font-serif text-lg font-bold text-charcoal">
-              Hyper-Local Ahmedabad Expertise
-            </h3>
-            <p className="text-xs text-charcoal-muted leading-relaxed">
-              We specialize specifically in the Ahmedabad and Gandhinagar belt—understanding the exact parking dynamics of Sindhu Bhavan Road, sound permissions on SG Highway, and Kathiyawadi vs. Swaminarayan catering kitchens.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-3xl bg-white border border-sand-border shadow-soft-xs space-y-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-sand text-charcoal flex items-center justify-center font-bold text-sm">
-              04
-            </div>
-            <h3 className="font-serif text-lg font-bold text-charcoal">
-              Transparent, Clean Communication
-            </h3>
-            <p className="text-xs text-charcoal-muted leading-relaxed">
-              We deliver accurate ballpark pricing, clear inclusion checklists, and transparent contract notes so families can make informed decisions together with joy and clarity.
-            </p>
-          </div>
-        </div>
-
-        {/* CTA Strip */}
-        <div className="text-center p-8 sm:p-10 rounded-3xl bg-sand border border-sand-border text-charcoal space-y-4">
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold">
-            Begin Your Celebration Journey Today
+        {/* CTA */}
+        <div className="p-8 sm:p-12 rounded-3xl bg-forest text-white text-center max-w-4xl mx-auto shadow-lg space-y-4">
+          <h2 className="font-serif text-2xl sm:text-4xl font-bold">
+            Plan your Ahmedabad celebration with confidence.
           </h2>
-          <p className="text-xs sm:text-sm text-charcoal-muted max-w-xl mx-auto">
-            Explore Ahmedabad’s most distinguished party plots, banquets, and service partners, or speak to our concierge desk directly.
+          <p className="text-xs sm:text-sm text-white/80 max-w-xl mx-auto">
+            Discover verified party plots, banquet halls, and wedding decorators with dedicated concierge assistance.
           </p>
-          <div className="flex flex-wrap justify-center gap-3 pt-2">
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/businesses"
-              className="px-6 py-3 rounded-2xl bg-coral hover:bg-coral-hover text-white font-bold text-xs shadow-xs transition-colors"
+              className="px-6 py-3 rounded-xl bg-gold hover:bg-gold-dark text-forest-deep font-bold text-xs shadow-xs transition-colors"
             >
-              Explore Businesses
+              Explore Venues &amp; Vendors
             </Link>
-            <Link
-              href="/enquiry"
-              className="px-6 py-3 rounded-2xl bg-white hover:bg-sand-dark text-charcoal font-semibold text-xs border border-sand-border transition-colors"
+            <button
+              onClick={() => openEnquiryModal()}
+              className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold text-xs transition-colors"
             >
               Submit Event Enquiry
-            </Link>
+            </button>
           </div>
         </div>
       </div>

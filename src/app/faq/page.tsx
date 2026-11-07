@@ -2,235 +2,170 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useEnquiryStore } from '@/store/useEnquiryStore';
 import {
-  ChevronDown,
   HelpCircle,
+  ChevronDown,
   ShieldCheck,
-  Search,
-  Sparkles,
   CalendarCheck,
-  PhoneOff,
-  MapPin,
-  ChevronRight
+  Sparkles,
+  ArrowRight,
 } from 'lucide-react';
 
-interface FAQItem {
-  question: string;
-  answer: string;
-  category: string;
+interface FAQCategory {
+  title: string;
+  items: { q: string; a: string }[];
 }
 
-const ALL_FAQS: FAQItem[] = [
-  // 1. Business Model & Intermediary Role
-  {
-    category: 'Business Model',
-    question: 'What is Gatherly and how does it work?',
-    answer:
-      'Gatherly is an intermediary marketplace connecting customers with premier event venues and service providers in Ahmedabad. Existing businesses (party plots, marriage halls, caterers, decorators, photographers, makeup artists) operate independently; Gatherly does not own these businesses. Gatherly acts as your central concierge—curating options, checking calendar availability, negotiating pricing, and managing all communications so you never experience vendor spam.',
-  },
-  {
-    category: 'Business Model',
-    question: 'Why don’t you show the vendor’s direct phone number or WhatsApp?',
-    answer:
-      'To provide customers with a stress-free planning experience. In traditional open directories, your phone number is often sold or broadcast, causing you to receive dozens of unprompted cold calls. With Gatherly, your personal contact information remains strictly confidential with our internal team. We coordinate with the venue management on your behalf.',
-  },
-  {
-    category: 'Business Model',
-    question: 'Is there a vendor registration or login portal on this website?',
-    answer:
-      'No. This website is entirely customer-facing. Vendor onboarding, internal verifications, and admin scheduling are handled through private internal backend systems.',
-  },
-  {
-    category: 'Business Model',
-    question: 'Does Gatherly charge customers any platform fees for discovering venues?',
-    answer:
-      'No! Browsing businesses, shortlisting favorites, and submitting enquiries through Gatherly is 100% free for customers. The quotes we present reflect official venue pricing.',
-  },
-
-  // 2. Booking & Enquiries
-  {
-    category: 'Booking & Enquiries',
-    question: 'What happens after I click "Submit Enquiry"?',
-    answer:
-      'Your request is routed immediately to Gatherly’s Ahmedabad operations desk. An assigned event manager reviews your guest count, preferred dates, and specific requirements, then privately reaches out to the relevant venue or service manager to verify availability and secure formal pricing.',
-  },
-  {
-    category: 'Booking & Enquiries',
-    question: 'How quickly will Gatherly contact me?',
-    answer:
-      'Our team typically responds within 2 to 4 business hours during standard operational timings (Monday to Saturday, 9:30 AM to 7:30 PM IST). For auspicious wedding muhurat dates in peak season, requests are prioritized.',
-  },
-  {
-    category: 'Booking & Enquiries',
-    question: 'Can I enquire about multiple party plots or services at the same time?',
-    answer:
-      'Yes! You can add multiple venues to your Wishlist and submit a consolidated enquiry, or mention all preferred names in the enquiry notes. Gatherly will compare date availability across all of them in a single report.',
-  },
-  {
-    category: 'Booking & Enquiries',
-    question: 'Can Gatherly arrange physical site visits to party plots?',
-    answer:
-      'Absolutely. Once our team verifies date availability, we schedule and confirm an accompanied or priority site visit at your convenience with the property management.',
-  },
-
-  // 3. Ahmedabad Venues & Locations
-  {
-    category: 'Ahmedabad Venues',
-    question: 'Which areas of Ahmedabad do you cover?',
-    answer:
-      'We cover all top event corridors across Ahmedabad and Gandhinagar, including Sindhu Bhavan Road (SBR), S.G. Highway, Bodakdev, Prahlad Nagar, Satellite, Science City Road, Thaltej, South Bopal, Ambli Road, Vaishnodevi Circle, and Gandhinagar - Koba Road.',
-  },
-  {
-    category: 'Ahmedabad Venues',
-    question: 'What is the average party plot lawn rental in Ahmedabad?',
-    answer:
-      'Party plot lawn rentals in western Ahmedabad generally range from ₹1,50,000 to ₹4,50,000+ per day depending on lawn size (30,000 to 80,000+ sq.ft), prime location (e.g. SBR vs. outskirts), day of the week, and whether it falls on a peak wedding muhurat date.',
-  },
-  {
-    category: 'Ahmedabad Venues',
-    question: 'Are sound permits and late-night DJ allowances managed by Gatherly?',
-    answer:
-      'In Ahmedabad, outdoor party plots must adhere to Ahmedabad Police & municipal sound guidelines (typically outdoor amplified sound is permitted until 10:00 PM). Our concierge team will inform you of the exact sound restrictions for each specific property.',
-  },
-
-  // 4. Catering, Decor & Services
-  {
-    category: 'Services',
-    question: 'Do you offer pure vegetarian, Jain, and Swaminarayan catering options?',
-    answer:
-      'Yes! All premier caterers curated on Gatherly in Ahmedabad (such as Gordhan Thal and royal banquet teams) offer specialized pure vegetarian, strict Jain (no onion, garlic, or root vegetables), and Swaminarayan catering counters with dedicated preparation vessels.',
-  },
-  {
-    category: 'Services',
-    question: 'Can I bring my own decorator or caterer to a listed party plot?',
-    answer:
-      'Every party plot has its own vendor policy: some have empaneled decorators/caterers, while others offer open-vendor policies (subject to royalty fees). Gatherly’s team will clarify the exact empanelment rules for each venue beforehand.',
-  },
-];
-
 export default function FAQPage() {
-  const [activeCategory, setActiveCategory] = useState<string>('All');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [selectedCategory, setSelectedCategory] = useState(0);
+  const [openItems, setOpenItems] = useState<Record<string, boolean>>({ '0-0': true });
+  const openEnquiryModal = useEnquiryStore((state) => state.openEnquiryModal);
 
-  const categories = ['All', 'Business Model', 'Booking & Enquiries', 'Ahmedabad Venues', 'Services'];
+  const categories: FAQCategory[] = [
+    {
+      title: 'About Gatherly & Business Model',
+      items: [
+        {
+          q: 'What is Gatherly and how does it work?',
+          a: 'Gatherly is an intermediary discovery and booking concierge for wedding venues and event professionals in Ahmedabad. We discover, audit, and showcase independent party plots, marriage halls, banquet spaces, caterers, decorators, and photographers. Rather than having customers contact multiple vendors directly, all enquiries flow through Gatherly, where our team privately checks real-time availability and presents verified options.',
+        },
+        {
+          q: 'Does Gatherly own or operate any event venues?',
+          a: 'No. All marriage halls, party plots, and catering providers operate independently. Gatherly does not own, lease, or manage any properties. We act exclusively as a neutral discovery concierge connecting customers with local businesses.',
+        },
+        {
+          q: 'Why are vendor phone numbers and emails hidden on Gatherly?',
+          a: 'Direct contact details are intentionally withheld to protect host privacy and prevent vendor spam. When you submit your requirements, Gatherly’s concierge team acts as your single point of contact, checking availability and rates without disclosing your personal number to third parties.',
+        },
+        {
+          q: 'Is there any fee or charge to use Gatherly?',
+          a: 'No. Exploring venues, building wishlists, and submitting booking enquiries through Gatherly is 100% free for customers. You pay only the negotiated venue rates directly upon final booking confirmation.',
+        },
+      ],
+    },
+    {
+      title: 'Venues & Availability Checks',
+      items: [
+        {
+          q: 'Which areas in Ahmedabad does Gatherly cover?',
+          a: 'We cover all major event corridors including Sindhu Bhavan Road (SBR), SG Highway, Bodakdev, Prahlad Nagar, Satellite, Bopal, South Bopal, Thaltej, Science City Road, Ambli Road, and Gandhinagar highway plots.',
+        },
+        {
+          q: 'How fast does the concierge team check date availability?',
+          a: 'Our Ahmedabad operations desk contacts venue managers directly and consolidates availability reports within 24 hours of your enquiry submission.',
+        },
+        {
+          q: 'Can I schedule an in-person walkthrough before booking?',
+          a: 'Yes. Simply mention in your enquiry that you would like an accompanied site visit. Our concierge coordinates appointment slots with venue staff.',
+        },
+      ],
+    },
+    {
+      title: 'Enquiries, Pricing & Packages',
+      items: [
+        {
+          q: 'Are the starting prices displayed on listings final?',
+          a: 'Starting rates reflect standard non-peak day charges or starting per-plate buffet rates. During auspicious peak wedding dates, our concierge team confirms exact seasonal quotes directly with venue management.',
+        },
+        {
+          q: 'Can I submit one enquiry for multiple venues and caterers?',
+          a: 'Yes! You can add multiple venues to your Wishlist and submit one single enquiry. Gatherly’s concierge team will evaluate all shortlisted options simultaneously.',
+        },
+        {
+          q: 'What event types can be planned through Gatherly?',
+          a: 'Grand weddings, sangeet sandhyas, ring ceremonies, milestone birthdays, corporate summits, cultural sammelans, and family anniversary feasts.',
+        },
+      ],
+    },
+  ];
 
-  const filteredFaqs = ALL_FAQS.filter((faq) => {
-    if (activeCategory !== 'All' && faq.category !== activeCategory) {
-      return false;
-    }
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      return faq.question.toLowerCase().includes(q) || faq.answer.toLowerCase().includes(q);
-    }
-    return true;
-  });
+  const toggleItem = (catIdx: number, itemIdx: number) => {
+    const key = `${catIdx}-${itemIdx}`;
+    setOpenItems((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   return (
-    <div className="bg-[#FBF9F5] min-h-screen py-10 sm:py-16">
+    <div className="py-8 sm:py-16 bg-ivory min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase text-coral mb-2">
-            <HelpCircle className="w-3.5 h-3.5 text-coral" />
-            <span>Knowledge Centre</span>
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-soft text-forest text-xs font-bold uppercase tracking-wider mb-2">
+            <HelpCircle className="w-3.5 h-3.5 text-gold-dark" />
+            <span>Help Center &amp; FAQ</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-5xl font-bold text-charcoal tracking-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-ink tracking-tight">
             Frequently Asked Questions
           </h1>
-          <p className="text-charcoal-muted text-xs sm:text-sm mt-2.5 max-w-xl mx-auto leading-relaxed">
-            Learn how Gatherly connects you with Ahmedabad’s finest celebration spaces through our dedicated intermediary concierge.
+          <p className="text-xs sm:text-sm text-ink-secondary mt-2 leading-relaxed">
+            Detailed answers regarding our intermediary concierge model, privacy protections, and date verification services in Ahmedabad.
           </p>
         </div>
 
-        {/* Search Bar matching dashboard */}
-        <div className="relative mb-6">
-          <Search className="w-4 h-4 text-charcoal-muted absolute left-4 top-3.5 pointer-events-none" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search FAQs (e.g. party plot pricing, sound permit, concierge, Jain catering)..."
-            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-sand-border bg-white text-xs sm:text-sm shadow-soft-xs focus:outline-none focus:border-coral focus:ring-2 focus:ring-coral/10 text-charcoal"
-          />
-        </div>
-
-        {/* Category Filter Pills */}
-        <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {categories.map((cat) => (
+        {/* Category Tabs */}
+        <div className="flex gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none">
+          {categories.map((cat, idx) => (
             <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                activeCategory === cat
-                  ? 'bg-coral text-white shadow-xs'
-                  : 'bg-white text-charcoal-muted border border-sand-border hover:border-coral/40'
+              key={cat.title}
+              onClick={() => setSelectedCategory(idx)}
+              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                selectedCategory === idx
+                  ? 'bg-forest text-white shadow-xs'
+                  : 'bg-white text-ink-secondary hover:text-ink border border-ivory-border'
               }`}
             >
-              {cat}
+              {cat.title}
             </button>
           ))}
         </div>
 
-        {/* FAQs Accordion */}
-        <div className="space-y-3">
-          {filteredFaqs.length > 0 ? (
-            filteredFaqs.map((faq, index) => {
-              const isOpen = openIndex === index;
-              return (
-                <div
-                  key={index}
-                  className="rounded-3xl border border-sand-border overflow-hidden transition-all bg-white shadow-soft-xs"
+        {/* Accordions */}
+        <div className="space-y-4">
+          {categories[selectedCategory].items.map((item, itemIdx) => {
+            const key = `${selectedCategory}-${itemIdx}`;
+            const isOpen = !!openItems[key];
+            return (
+              <div
+                key={item.q}
+                className="bg-white rounded-2xl border border-ivory-border shadow-soft-sm overflow-hidden"
+              >
+                <button
+                  onClick={() => toggleItem(selectedCategory, itemIdx)}
+                  className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-serif font-bold text-base sm:text-lg text-ink hover:text-forest transition-colors"
+                  aria-expanded={isOpen}
                 >
-                  <button
-                    onClick={() => setOpenIndex(isOpen ? null : index)}
-                    className="w-full p-5 text-left flex items-center justify-between gap-4 font-serif text-base font-bold text-charcoal hover:text-coral transition-colors"
+                  <span>{item.q}</span>
+                  <div
+                    className={`w-8 h-8 rounded-full bg-ivory flex items-center justify-center shrink-0 border border-ivory-border transition-transform duration-300 ${
+                      isOpen ? 'rotate-180 bg-emerald-soft text-forest' : 'text-ink-muted'
+                    }`}
                   >
-                    <span className="flex-1">{faq.question}</span>
-                    <div
-                      className={`w-7 h-7 rounded-xl bg-sand-light border border-sand-border flex items-center justify-center shrink-0 transition-transform duration-300 ${
-                        isOpen ? 'rotate-180 bg-coral text-white border-coral' : 'text-charcoal-muted'
-                      }`}
-                    >
-                      <ChevronDown className="w-4 h-4" />
-                    </div>
-                  </button>
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
+                </button>
 
-                  {isOpen && (
-                    <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-charcoal/80 leading-relaxed border-t border-sand-border bg-sand-light/40 animate-in fade-in duration-200">
-                      <p>{faq.answer}</p>
-                      <span className="inline-block mt-3 px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-sand text-charcoal border border-sand-border">
-                        {faq.category}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              );
-            })
-          ) : (
-            <div className="text-center py-12 bg-white rounded-3xl border border-sand-border">
-              <p className="text-xs sm:text-sm text-charcoal-muted">
-                No matching questions found for &ldquo;{searchQuery}&rdquo;.
-              </p>
-            </div>
-          )}
+                {isOpen && (
+                  <div className="px-5 sm:px-6 pb-6 pt-1 text-xs sm:text-sm text-ink-secondary leading-relaxed border-t border-ivory-border/60 animate-fade-in">
+                    <p>{item.a}</p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
-        {/* Still have questions banner */}
-        <div className="mt-12 p-8 rounded-3xl bg-sand border border-sand-border text-center space-y-3">
-          <h3 className="font-serif text-2xl font-bold text-charcoal">Still have questions?</h3>
-          <p className="text-xs sm:text-sm text-charcoal-muted max-w-md mx-auto">
-            Our Ahmedabad concierge desk is happy to answer any custom inquiries about venues, auspicious dates, or catering.
-          </p>
-          <div className="pt-2">
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-coral hover:bg-coral-hover text-white font-bold text-xs shadow-xs transition-colors"
-            >
-              <span>Contact Concierge Desk</span>
-              <ChevronRight className="w-4 h-4" />
-            </Link>
+        {/* Concierge Callout */}
+        <div className="mt-12 p-8 rounded-3xl bg-forest text-white flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="space-y-1 text-center sm:text-left">
+            <h3 className="font-serif text-xl font-bold">Have a question not listed here?</h3>
+            <p className="text-xs text-white/80">Our Ahmedabad concierge team is available to assist you 7 days a week.</p>
           </div>
+          <button
+            onClick={() => openEnquiryModal()}
+            className="px-6 py-3 rounded-xl bg-gold hover:bg-gold-dark text-forest-deep font-bold text-xs shadow-xs transition-colors shrink-0"
+          >
+            Ask Concierge Desk
+          </button>
         </div>
       </div>
     </div>

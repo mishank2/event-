@@ -1,73 +1,59 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { BUSINESSES } from '@/data/businesses';
 import { useWishlistStore } from '@/store/useWishlistStore';
 import { useEnquiryStore } from '@/store/useEnquiryStore';
+import { BUSINESSES } from '@/data/businesses';
 import { BusinessCard } from '@/components/business/BusinessCard';
 import {
   Heart,
-  Send,
   Trash2,
-  ChevronRight,
-  Sparkles
+  CalendarCheck,
+  Building2,
+  ArrowRight,
+  ShieldCheck,
 } from 'lucide-react';
 
 export default function WishlistPage() {
-  const [mounted, setMounted] = useState(false);
-  const savedIds = useWishlistStore((state) => state.savedIds);
-  const clearWishlist = useWishlistStore((state) => state.clearWishlist);
+  const { savedIds, clearWishlist } = useWishlistStore();
   const openEnquiryModal = useEnquiryStore((state) => state.openEnquiryModal);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const savedBusinesses = BUSINESSES.filter((b) => savedIds.includes(b.id));
 
-  if (!mounted) {
-    return (
-      <div className="min-h-[70vh] bg-[#FBF9F5] flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-coral border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
   return (
-    <div className="bg-[#FBF9F5] min-h-screen py-10 sm:py-14">
+    <div className="py-8 sm:py-12 bg-ivory min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 pb-6 border-b border-sand-border">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 pb-6 border-b border-ivory-border">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase text-coral mb-1.5">
-              <Heart className="w-3.5 h-3.5 text-coral fill-current" />
-              <span>Saved Shortlist</span>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-soft text-forest text-xs font-bold uppercase tracking-wider mb-2">
+              <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
+              <span>Personal Shortlist</span>
             </div>
-            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-charcoal tracking-tight">
-              Your Celebration Wishlist
+            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-ink tracking-tight">
+              Your Saved Venues &amp; Services
             </h1>
-            <p className="text-charcoal-muted text-xs sm:text-sm mt-1.5">
-              {savedBusinesses.length} {savedBusinesses.length === 1 ? 'business' : 'businesses'} saved for your celebration in Ahmedabad.
+            <p className="text-sm text-ink-secondary mt-1">
+              You have shortlisted {savedBusinesses.length} celebration options in Ahmedabad.
             </p>
           </div>
 
           {savedBusinesses.length > 0 && (
-            <div className="flex items-center gap-3">
-              <button
-                onClick={clearWishlist}
-                className="px-4 py-2.5 rounded-2xl border border-sand-border bg-white text-xs text-charcoal-muted hover:text-coral transition-colors flex items-center gap-1.5 shadow-soft-xs"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-                <span>Clear All</span>
-              </button>
-
+            <div className="flex items-center gap-3 self-start sm:self-auto">
               <button
                 onClick={() => openEnquiryModal()}
-                className="px-5 py-2.5 rounded-2xl bg-coral hover:bg-coral-hover text-white text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5"
+                className="px-5 py-2.5 rounded-xl bg-forest hover:bg-forest-light text-white text-xs font-bold flex items-center gap-2 shadow-xs transition-colors"
               >
-                <Send className="w-3.5 h-3.5" />
-                <span>Enquire Shortlisted</span>
+                <CalendarCheck className="w-4 h-4 text-gold" />
+                <span>Enquire for All Shortlisted</span>
+              </button>
+              <button
+                onClick={clearWishlist}
+                className="p-2.5 rounded-xl border border-ivory-border bg-white hover:bg-rose-50 text-ink-muted hover:text-rose-600 transition-colors"
+                title="Clear wishlist"
+              >
+                <Trash2 className="w-4 h-4" />
               </button>
             </div>
           )}
@@ -82,25 +68,44 @@ export default function WishlistPage() {
           </div>
         ) : (
           /* Empty State */
-          <div className="text-center py-20 px-4 bg-white rounded-3xl border border-sand-border max-w-lg mx-auto shadow-soft-sm">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-3xl bg-coral-soft flex items-center justify-center text-coral">
-              <Heart className="w-8 h-8 fill-current" />
+          <div className="bg-white rounded-3xl p-12 text-center border border-ivory-border shadow-soft-sm max-w-lg mx-auto my-12">
+            <div className="w-16 h-16 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mx-auto mb-4">
+              <Heart className="w-8 h-8" />
             </div>
-            <h3 className="font-serif text-2xl font-bold text-charcoal mb-2">
-              Your wishlist is empty
+            <h3 className="font-serif text-2xl font-bold text-ink mb-2">
+              Your wishlist is currently empty
             </h3>
-            <p className="text-xs sm:text-sm text-charcoal-muted mb-6 leading-relaxed">
-              Explore Ahmedabad party plots, banquet halls, and decorators. Tap the heart icon on any card to save your favorites here.
+            <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed mb-6">
+              Browse Ahmedabad party plots, banquet halls, and decorators and tap the heart icon to save your favorites for easy comparison.
             </p>
             <Link
               href="/businesses"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-coral hover:bg-coral-hover text-white font-bold text-xs transition-colors shadow-xs"
+              className="px-6 py-3 rounded-xl bg-forest hover:bg-forest-light text-white font-bold text-xs shadow-xs transition-colors inline-flex items-center gap-2"
             >
-              <span>Explore Ahmedabad Businesses</span>
-              <ChevronRight className="w-4 h-4" />
+              <Building2 className="w-4 h-4 text-gold" />
+              <span>Explore Businesses Now</span>
             </Link>
           </div>
         )}
+
+        {/* Concierge Reminder */}
+        <div className="mt-12 p-6 rounded-3xl bg-white border border-ivory-border flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-soft text-forest flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-5 h-5 text-gold-dark" />
+            </div>
+            <div>
+              <h4 className="font-serif font-bold text-sm text-ink">Need assistance comparing shortlisted venues?</h4>
+              <p className="text-xs text-ink-muted">Our concierge desk will review your shortlist and verify which venues have open dates.</p>
+            </div>
+          </div>
+          <button
+            onClick={() => openEnquiryModal()}
+            className="px-5 py-2.5 rounded-xl border border-forest text-forest hover:bg-emerald-soft font-bold text-xs shrink-0 transition-colors"
+          >
+            Ask Concierge
+          </button>
+        </div>
       </div>
     </div>
   );

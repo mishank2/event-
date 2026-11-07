@@ -2,85 +2,96 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ChevronDown, HelpCircle, ChevronRight } from 'lucide-react';
+import { useEnquiryStore } from '@/store/useEnquiryStore';
+import { ChevronDown, HelpCircle, CalendarCheck, Sparkles, ShieldCheck } from 'lucide-react';
 
 interface FAQItem {
   question: string;
   answer: string;
 }
 
-const FAQS: FAQItem[] = [
-  {
-    question: 'What is Gatherly and what is your role in my event booking?',
-    answer:
-      'Gatherly is an intermediary discovery and booking concierge connecting customers with premier independent event venues and service providers in Ahmedabad. We do not own the businesses. We act as your private celebration representative, researching options, verifying real-time date availability, and coordinating quotes directly with venue management.',
-  },
-  {
-    question: 'Why can’t I see vendor phone numbers or contact businesses directly?',
-    answer:
-      'To protect both customers and businesses. By channeling enquiries through Gatherly’s dedicated concierge desk, customers avoid relentless follow-up calls and spam from dozens of vendors. Furthermore, Gatherly leverages established relationships with Ahmedabad party plots and caterers to negotiate preferred rates and confirm genuine date availability.',
-  },
-  {
-    question: 'How quickly will Gatherly contact me after I submit an enquiry?',
-    answer:
-      'Our Ahmedabad operations team typically reviews enquiries within 2 to 4 business hours. If your event date is urgent, our senior event manager will prioritize your request immediately to check calendar holds.',
-  },
-  {
-    question: 'Does Gatherly charge customers an extra booking fee?',
-    answer:
-      'No. Customers enjoy complimentary access to our discovery portal and concierge assistance. The pricing quotes you receive through Gatherly reflect direct official venue rates without any customer-facing surcharges.',
-  },
-  {
-    question: 'Can Gatherly arrange guided site visits across Ahmedabad party plots?',
-    answer:
-      'Yes! Once our team confirms that your preferred venue is available on your target date, we coordinate an accompanied or VIP-entry site inspection at the venue at a time convenient for your family.',
-  },
-  {
-    question: 'Which areas of Ahmedabad do you cover?',
-    answer:
-      'We cover all prominent celebration corridors in Ahmedabad and Gandhinagar, including Sindhu Bhavan Road (SBR), S.G. Highway, Bodakdev, Prahlad Nagar, Satellite, Science City Road, Thaltej, South Bopal, Ambli, Vaishnodevi Circle, and Koba Road.',
-  },
-];
-
 export const HomeFAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const openEnquiryModal = useEnquiryStore((state) => state.openEnquiryModal);
 
-  const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
+  const faqs: FAQItem[] = [
+    {
+      question: 'What is Gatherly and how does it help event hosts?',
+      answer:
+        'Gatherly is an intermediary celebration concierge and discovery marketplace in Ahmedabad. We connect brides, grooms, families, and corporate planners with vetted party plots, marriage halls, banquet spaces, caterers, and photographers. Instead of calling dozens of vendors individually, you explore curated options on Gatherly and submit your requirements to our concierge team, who handles date checking and pricing for you.',
+    },
+    {
+      question: 'Does Gatherly own or operate any of the listed venues?',
+      answer:
+        'No. Gatherly does not own, lease, or manage any marriage halls, party plots, or service providers. All businesses operate independently. Gatherly serves strictly as an intermediary discovery platform and coordination concierge to streamline venue discovery and availability verification.',
+    },
+    {
+      question: 'Why are direct vendor phone numbers and WhatsApp links not displayed?',
+      answer:
+        'To protect your privacy and ensure transparent service, Gatherly manages all enquiries through our dedicated internal desk. By routing enquiries through Gatherly, you avoid unsolicited vendor sales calls, spam follow-ups, and inflated last-minute rates. Our team coordinates directly with the authorized administrative managers of each venue.',
+    },
+    {
+      question: 'Is there any fee or charge for customers to use Gatherly?',
+      answer:
+        'Browsing, shortlisting venues, and submitting enquiries through Gatherly is completely free for customers. You pay only the agreed venue or vendor package directly upon confirmation.',
+    },
+    {
+      question: 'How quickly does the Gatherly Concierge team check availability?',
+      answer:
+        'Once you submit an event enquiry with your preferred dates, guest count, and locality preferences, our Ahmedabad operations desk reaches out to the relevant venues and provides you with a consolidated availability report within 24 hours.',
+    },
+    {
+      question: 'Are the guest capacities and starting prices on Gatherly accurate?',
+      answer:
+        'Our figures are based on comprehensive audits of each venue’s physical square footage, catering lawn layout, and standard rate cards across Ahmedabad corridors like Sindhu Bhavan Road, SG Highway, and Bodakdev. During auspicious high-demand dates, our concierge confirms final custom quotes directly with management.',
+    },
+    {
+      question: 'Can I request in-person site visits for shortlisted party plots?',
+      answer:
+        'Yes! When you submit an enquiry, you can indicate that you would like an accompanied site walkthrough. Our team coordinates convenient appointment slots with venue caretaking staff.',
+    },
+    {
+      question: 'What types of celebrations can I plan through Gatherly?',
+      answer:
+        'Gatherly supports grand multi-day Gujarati weddings, sangeet sandhyas, ring ceremonies, reception dinners, milestone birthdays, corporate summits, cultural sammelans, and baby showers across all Ahmedabad corridors.',
+    },
+  ];
 
   return (
-    <section className="py-16 sm:py-20 bg-[#FBF9F5]">
+    <section className="py-16 sm:py-24 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-[0.2em] uppercase text-coral mb-2">
-            <HelpCircle className="w-3.5 h-3.5 text-coral" />
-            <span>Got Questions?</span>
+        {/* Header */}
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-soft text-forest text-xs font-bold uppercase tracking-wider mb-3">
+            <HelpCircle className="w-3.5 h-3.5 text-gold-dark" />
+            <span>Common Questions</span>
           </div>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-charcoal tracking-tight">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-ink tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-charcoal-muted text-xs sm:text-sm mt-2">
-            Everything you need to know about discovering and booking venues via Gatherly.
+          <p className="text-sm sm:text-base text-ink-secondary mt-3 font-normal leading-relaxed">
+            Everything you need to know about discovering and securing venues through Gatherly&apos;s concierge desk.
           </p>
         </div>
 
-        <div className="space-y-3">
-          {FAQS.map((faq, index) => {
+        {/* Accordion List */}
+        <div className="space-y-4">
+          {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
               <div
                 key={index}
-                className="rounded-3xl border border-sand-border overflow-hidden transition-all bg-white shadow-soft-xs"
+                className="rounded-2xl border border-ivory-border bg-ivory overflow-hidden transition-colors"
               >
                 <button
-                  onClick={() => toggleFAQ(index)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 font-serif text-base font-bold text-charcoal hover:text-coral transition-colors"
+                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                  className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-serif font-bold text-base sm:text-lg text-ink hover:text-forest transition-colors"
+                  aria-expanded={isOpen}
                 >
                   <span>{faq.question}</span>
                   <div
-                    className={`w-7 h-7 rounded-xl bg-sand-light border border-sand-border flex items-center justify-center shrink-0 transition-transform duration-300 ${
-                      isOpen ? 'rotate-180 bg-coral text-white border-coral' : 'text-charcoal-muted'
+                    className={`w-8 h-8 rounded-full bg-white flex items-center justify-center shrink-0 border border-ivory-border transition-transform duration-300 ${
+                      isOpen ? 'rotate-180 bg-emerald-soft text-forest' : 'text-ink-muted'
                     }`}
                   >
                     <ChevronDown className="w-4 h-4" />
@@ -88,7 +99,7 @@ export const HomeFAQ: React.FC = () => {
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-charcoal/80 leading-relaxed border-t border-sand-border bg-sand-light/30 animate-in fade-in duration-200">
+                  <div className="px-5 sm:px-6 pb-6 pt-1 text-xs sm:text-sm text-ink-secondary leading-relaxed border-t border-ivory-border/60 animate-fade-in">
                     <p>{faq.answer}</p>
                   </div>
                 )}
@@ -97,14 +108,23 @@ export const HomeFAQ: React.FC = () => {
           })}
         </div>
 
-        <div className="mt-8 text-center">
-          <Link
-            href="/faq"
-            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-coral hover:underline transition-colors"
+        {/* Still have questions banner */}
+        <div className="mt-12 p-6 rounded-3xl bg-ivory border border-gold-border flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-forest text-gold flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="font-serif font-bold text-sm text-ink">Have specific date or capacity questions?</h4>
+              <p className="text-xs text-ink-secondary">Our Ahmedabad concierge desk is available 7 days a week.</p>
+            </div>
+          </div>
+          <button
+            onClick={() => openEnquiryModal()}
+            className="px-5 py-2.5 rounded-xl bg-forest hover:bg-forest-light text-white text-xs font-bold shadow-xs transition-colors shrink-0"
           >
-            <span>Have more questions? Read our full FAQ page</span>
-            <ChevronRight className="w-4 h-4" />
-          </Link>
+            Ask Gatherly Concierge
+          </button>
         </div>
       </div>
     </section>

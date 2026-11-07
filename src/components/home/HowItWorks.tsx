@@ -1,105 +1,131 @@
+'use client';
+
 import React from 'react';
-import Link from 'next/link';
-import { Search, Send, ShieldCheck, CheckCircle2, ArrowRight, Sparkles, ChevronRight } from 'lucide-react';
+import { useEnquiryStore } from '@/store/useEnquiryStore';
+import {
+  Search,
+  Heart,
+  CalendarCheck,
+  Headphones,
+  ShieldCheck,
+  Sparkles,
+  ArrowRight,
+  CheckCircle2,
+} from 'lucide-react';
 
 export const HowItWorks: React.FC = () => {
+  const openEnquiryModal = useEnquiryStore((state) => state.openEnquiryModal);
+
   const steps = [
     {
-      step: '01',
+      number: '01',
       title: 'Discover & Compare',
+      subtitle: 'Browse 150+ Verified Venues',
       description:
-        'Browse vetted Ahmedabad party plots, banquet halls, caterers, and decorators. Filter by capacity, budget, and locality with full transparency.',
-      icon: <Search className="w-5 h-5 text-coral" />,
+        'Explore party plots along Sindhu Bhavan Road, royal banquets on SG Highway, caterers and decorators with photos, pricing, and guest capacity.',
+      icon: <Search className="w-5 h-5 text-gold-light" />,
     },
     {
-      step: '02',
-      title: 'Send Enquiry to Gatherly',
+      number: '02',
+      title: 'Shortlist to Wishlist',
+      subtitle: 'Save Your Top Choices',
       description:
-        'Submit your event date, estimated guests, and preferred venues through our unified enquiry portal. You never have to chase multiple businesses.',
-      icon: <Send className="w-5 h-5 text-coral" />,
+        'Save matching venues, caterers, and decorators to your personal wishlist to compare amenities, packages, and location advantages.',
+      icon: <Heart className="w-5 h-5 text-gold-light" />,
     },
     {
-      step: '03',
-      title: 'Admin Checks Availability',
+      number: '03',
+      title: 'Submit Single Enquiry',
+      subtitle: 'One Form for Your Whole Event',
       description:
-        'Our internal Ahmedabad concierge team privately contacts the relevant venue management to check calendar slots and negotiate preferred quotes.',
-      icon: <ShieldCheck className="w-5 h-5 text-coral" />,
+        'Send your event dates, guest count, and requirements directly to Gatherly’s dedicated concierge desk. No vendor forms to fill repeatedly.',
+      icon: <CalendarCheck className="w-5 h-5 text-gold-light" />,
     },
     {
-      step: '04',
-      title: 'Stress-Free Booking',
+      number: '04',
+      title: 'Concierge Verification',
+      subtitle: 'We Coordinate Everything',
       description:
-        'Gatherly communicates verified rates and availability back to you. Review your options and confirm your dream celebration with peace of mind.',
-      icon: <CheckCircle2 className="w-5 h-5 text-coral" />,
+        'Gatherly privately contacts venue management, verifies actual date availability, negotiates best quotes, and presents transparent options to you.',
+      icon: <Headphones className="w-5 h-5 text-gold-light" />,
     },
   ];
 
   return (
-    <section className="py-16 sm:py-20 bg-sand border-b border-sand-border text-charcoal relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-[0.2em] uppercase text-coral mb-2">
-            <Sparkles className="w-3.5 h-3.5 text-coral" />
-            <span>Our Intermediary Service Model</span>
+    <section className="py-16 sm:py-24 bg-forest-dark text-white relative overflow-hidden">
+      {/* Ambient background blur */}
+      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-gold/10 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-gold-light border border-gold/30 text-xs font-bold uppercase tracking-wider mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-gold" />
+            <span>The Gatherly Model</span>
           </div>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-charcoal">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
             How Gatherly Works
           </h2>
-          <p className="text-charcoal-muted text-xs sm:text-sm mt-2.5 leading-relaxed">
-            We operate as your private celebration representative. Customers discover independent businesses on Gatherly, and our internal team handles all availability checks and vendor coordination.
+          <p className="text-sm sm:text-base text-white/80 mt-3 font-normal leading-relaxed">
+            We act as your private celebration concierge. You discover and choose; we handle date verification, vendor checks, and pricing coordination.
           </p>
         </div>
 
-        {/* 4 Steps Grid matching dashboard styling */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {steps.map((item, index) => (
+        {/* 4 Steps Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((step) => (
             <div
-              key={item.step}
-              className="relative p-6 rounded-3xl bg-white border border-sand-border shadow-soft-xs hover:shadow-soft transition-all duration-300 flex flex-col justify-between group"
+              key={step.number}
+              className="relative p-6 sm:p-7 rounded-3xl bg-white/5 border border-white/10 hover:border-gold/50 backdrop-blur-md transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
             >
               <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-11 h-11 rounded-2xl bg-coral-soft flex items-center justify-center shadow-xs">
-                    {item.icon}
-                  </div>
-                  <span className="font-serif text-3xl font-bold text-ochre">
-                    {item.step}
+                {/* Step Number & Icon */}
+                <div className="flex items-center justify-between mb-6">
+                  <span className="font-serif text-3xl font-bold text-gold/80 group-hover:text-gold transition-colors">
+                    {step.number}
                   </span>
+                  <div className="w-11 h-11 rounded-2xl bg-forest-light/60 border border-gold/30 flex items-center justify-center">
+                    {step.icon}
+                  </div>
                 </div>
 
-                <h3 className="font-serif text-lg font-bold text-charcoal mb-2 group-hover:text-coral transition-colors">
-                  {item.title}
+                <h3 className="font-serif text-xl font-bold text-white mb-1">
+                  {step.title}
                 </h3>
-                <p className="text-xs text-charcoal-muted leading-relaxed">
-                  {item.description}
+                <p className="text-xs font-semibold text-gold-light mb-3">
+                  {step.subtitle}
+                </p>
+                <p className="text-xs text-white/70 leading-relaxed">
+                  {step.description}
                 </p>
               </div>
 
-              <div className="mt-6 pt-3.5 border-t border-sand-border flex items-center justify-between text-[11px] text-coral font-bold">
-                <span>Phase {index + 1}</span>
-                <span className="text-charcoal-muted font-medium">Ahmedabad Concierge</span>
+              <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-1.5 text-[11px] text-white/50 group-hover:text-gold-light transition-colors">
+                <CheckCircle2 className="w-3.5 h-3.5 text-gold" />
+                <span>Zero vendor phone spam</span>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Callout Banner matching dashboard */}
-        <div className="mt-12 p-7 sm:p-8 rounded-3xl bg-white border border-sand-border flex flex-col sm:flex-row items-center justify-between gap-6 shadow-soft-sm">
-          <div className="text-left space-y-1">
-            <h4 className="font-serif text-xl font-bold text-charcoal">
-              Ready to plan your Ahmedabad celebration?
+        {/* Bottom CTA Card */}
+        <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-white/10 border border-gold/40 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-6 max-w-4xl mx-auto">
+          <div className="space-y-1 text-center sm:text-left">
+            <h4 className="font-serif text-xl font-bold text-white">
+              Ready to verify date availability for your event?
             </h4>
-            <p className="text-xs sm:text-sm text-charcoal-muted leading-relaxed max-w-xl">
-              Tell our concierge desk your requirements, and we will check verified availability across top party plots and banquets today.
+            <p className="text-xs text-white/80">
+              Submit an enquiry to Gatherly. Our concierge desk responds within 24 hours.
             </p>
           </div>
-          <Link
-            href="/enquiry"
-            className="px-7 py-3 rounded-2xl bg-coral hover:bg-coral-hover text-white font-bold text-xs sm:text-sm shrink-0 shadow-xs transition-all flex items-center gap-1.5"
+
+          <button
+            onClick={() => openEnquiryModal()}
+            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-gold hover:bg-gold-dark text-forest-deep font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 shrink-0 active:scale-95"
           >
+            <CalendarCheck className="w-4 h-4 text-forest-deep" />
             <span>Submit Event Enquiry</span>
-            <ChevronRight className="w-4 h-4" />
-          </Link>
+          </button>
         </div>
       </div>
     </section>

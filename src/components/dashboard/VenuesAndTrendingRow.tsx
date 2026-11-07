@@ -3,155 +3,177 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { BUSINESSES } from '@/data/businesses';
 import { useWishlistStore } from '@/store/useWishlistStore';
-import { useToastStore } from '@/store/useToastStore';
-import { Star, Heart, ArrowRight } from 'lucide-react';
+import { useEnquiryStore } from '@/store/useEnquiryStore';
+import { BUSINESSES } from '@/data/businesses';
+import { Star, Heart, MapPin, ArrowRight, Sparkles, CalendarCheck } from 'lucide-react';
 
 export const VenuesAndTrendingRow: React.FC = () => {
-  const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
-  const isSaved = useWishlistStore((state) => state.isSaved);
-  const addToast = useToastStore((state) => state.addToast);
+  const { isSaved, toggleWishlist } = useWishlistStore();
+  const openEnquiryModal = useEnquiryStore((state) => state.openEnquiryModal);
 
-  const venues = BUSINESSES.slice(0, 4);
-
-  const trendingLooks = [
-    {
-      id: 'look-1',
-      title: 'Regal Zardozi Bridal Lehenga',
-      hashtag: '#royalheritage',
-      image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80',
-    },
-    {
-      id: 'look-2',
-      title: 'Gujarat Heritage Mandap Styling',
-      hashtag: '#goldenlehenga',
-      image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=80',
-    },
-  ];
-
-  const handleHeartClick = (e: React.MouseEvent, id: string, name: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const saved = toggleWishlist(id);
-    addToast({
-      type: saved ? 'success' : 'info',
-      title: saved ? 'Saved to Wishlist' : 'Removed from Wishlist',
-      message: `${name} ${saved ? 'added to' : 'removed from'} your celebration shortlist.`,
-    });
-  };
+  const venue1 = BUSINESSES[0]; // Shantam Party Plot
+  const venue2 = BUSINESSES[1]; // The Grand Bhagwati Royale
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
-      {/* Left Column: Select Your Venue (matches screenshot) */}
-      <div className="lg:col-span-7 space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="font-serif text-xl sm:text-2xl font-bold text-charcoal">
-            Select Your Venue
-          </h3>
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Left 7 Columns: Select Your Venue */}
+      <div className="lg:col-span-7 bg-white rounded-3xl p-6 border border-ivory-border shadow-soft-sm">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h3 className="font-serif text-lg sm:text-xl font-bold text-ink">
+              Select Your Venue
+            </h3>
+            <p className="text-xs text-ink-muted">High-capacity lawn & banquet destinations</p>
+          </div>
           <Link
             href="/businesses"
-            className="text-xs font-semibold text-[#E84E59] hover:underline"
+            className="text-xs font-bold text-forest hover:text-forest-dark flex items-center gap-1 group"
           >
-            View All
+            <span>View All</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {venues.map((venue) => {
+        {/* 2 Featured Venue Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {[venue1, venue2].map((venue) => {
+            if (!venue) return null;
             const saved = isSaved(venue.id);
             return (
-              <Link
+              <div
                 key={venue.id}
-                href={`/business/${venue.slug}`}
-                className="group bg-white rounded-3xl overflow-hidden border border-[#E9DEC9] shadow-soft-sm hover:shadow-soft transition-all duration-300 flex flex-col justify-between"
+                className="group rounded-2xl overflow-hidden border border-ivory-border bg-ivory/50 hover:bg-white hover:border-gold-border hover:shadow-soft-sm transition-all duration-300 flex flex-col justify-between"
               >
-                {/* Image */}
-                <div className="relative h-44 w-full overflow-hidden bg-charcoal">
-                  <Image
-                    src={venue.heroImage}
-                    alt={venue.name}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 350px"
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-black/60 text-white text-[10px] font-semibold backdrop-blur-xs">
-                    {venue.area}
-                  </div>
-                </div>
+                <div>
+                  <div className="relative aspect-[16/10] overflow-hidden bg-ivory-dark">
+                    <Image
+                      src={venue.heroImage}
+                      alt={venue.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 300px"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
 
-                {/* Bottom Details matching screenshot */}
-                <div className="p-4 bg-white flex items-center justify-between">
-                  <div>
-                    <h4 className="font-serif font-bold text-sm text-charcoal group-hover:text-forest transition-colors line-clamp-1">
-                      {venue.name}
-                    </h4>
-                    <div className="flex items-center gap-1 text-xs text-charcoal-muted mt-0.5">
-                      <Star className="w-3.5 h-3.5 fill-[#C89B3C] text-[#C89B3C]" />
-                      <span className="font-bold text-charcoal">{venue.rating.toFixed(1)}</span>
-                      <span className="text-[10px] text-charcoal-muted ml-1 font-medium">
-                        ({venue.priceDisplay})
-                      </span>
+                    {/* Top heart */}
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleWishlist(venue.id);
+                      }}
+                      className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-ink-secondary hover:text-rose-500 transition-colors shadow-xs"
+                      aria-label="Toggle wishlist"
+                    >
+                      <Heart className={`w-3.5 h-3.5 ${saved ? 'fill-rose-500 text-rose-500' : ''}`} />
+                    </button>
+
+                    <div className="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-bold flex items-center gap-1">
+                      <Star className="w-3 h-3 fill-gold text-gold" />
+                      <span>{venue.rating.toFixed(1)}</span>
                     </div>
                   </div>
 
-                  {/* Red Heart Button matching screenshot */}
-                  <button
-                    onClick={(e) => handleHeartClick(e, venue.id, venue.name)}
-                    aria-label="Save venue to wishlist"
-                    className="p-2 rounded-full hover:bg-red-50 text-red-500 transition-colors"
+                  <div className="p-4">
+                    <h4 className="font-serif font-bold text-sm text-ink group-hover:text-forest transition-colors truncate">
+                      {venue.name}
+                    </h4>
+                    <div className="flex items-center gap-1 mt-1 text-[11px] text-ink-muted">
+                      <MapPin className="w-3 h-3 text-gold-dark shrink-0" />
+                      <span className="truncate">{venue.area}</span>
+                    </div>
+                    <div className="mt-2 text-xs font-bold text-forest">
+                      {venue.priceDisplay}
+                      <span className="text-[10px] text-ink-muted font-normal ml-1">/{venue.priceUnit}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="px-4 pb-4 pt-1 grid grid-cols-2 gap-2">
+                  <Link
+                    href={`/business/${venue.slug}`}
+                    className="py-1.5 px-2 rounded-lg border border-ivory-border hover:bg-ivory text-[11px] font-semibold text-center text-ink transition-colors"
                   >
-                    <Heart className={`w-4 h-4 ${saved ? 'fill-current' : 'text-red-400'}`} />
+                    Details
+                  </Link>
+                  <button
+                    onClick={() => openEnquiryModal(venue)}
+                    className="py-1.5 px-2 rounded-lg bg-forest hover:bg-forest-light text-white text-[11px] font-bold flex items-center justify-center gap-1 transition-colors"
+                  >
+                    <CalendarCheck className="w-3 h-3 text-gold" />
+                    <span>Enquire</span>
                   </button>
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>
       </div>
 
-      {/* Right Column: Trending Today (matches screenshot) */}
-      <div className="lg:col-span-5 space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="font-serif text-xl sm:text-2xl font-bold text-charcoal">
-            Trending Today
-          </h3>
-          <span className="text-xs font-bold text-[#E84E59]">
-            #ahmedabadweddings
-          </span>
+      {/* Right 5 Columns: Trending Today */}
+      <div className="lg:col-span-5 bg-white rounded-3xl p-6 border border-ivory-border shadow-soft-sm flex flex-col justify-between">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h3 className="font-serif text-lg sm:text-xl font-bold text-ink">
+              Trending Today
+            </h3>
+            <p className="text-xs text-ink-muted">Royal bridal couture & bespoke mandap themes</p>
+          </div>
+          <span className="text-xs font-bold text-gold-dark">#ahmedabadweddings</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          {trendingLooks.map((look) => (
-            <div
-              key={look.id}
-              className="group relative rounded-3xl overflow-hidden border border-[#E9DEC9] shadow-soft-sm bg-charcoal h-64 sm:h-72"
-            >
-              <Image
-                src={look.image}
-                alt={look.title}
-                fill
-                sizes="(max-width: 640px) 50vw, 250px"
-                className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-              <div className="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-black/60 text-gold-light text-[10px] font-bold backdrop-blur-xs">
-                {look.hashtag}
-              </div>
-              <div className="absolute bottom-3 left-3 right-3 text-white">
-                <p className="font-serif text-xs font-bold leading-snug line-clamp-2">
-                  {look.title}
-                </p>
-                <Link
-                  href="/businesses"
-                  className="mt-1 inline-flex items-center gap-1 text-[10px] text-gold hover:underline font-semibold"
-                >
-                  <span>Explore Venues</span>
-                  <ArrowRight className="w-3 h-3" />
-                </Link>
-              </div>
+        {/* 2 Portrait Cards */}
+        <div className="grid grid-cols-2 gap-4 flex-1">
+          <Link
+            href="/#wedding-reels"
+            className="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-neutral-900 border border-ivory-border hover:shadow-soft transition-all duration-300"
+          >
+            <Image
+              src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80"
+              alt="Bridal Couture"
+              fill
+              sizes="(max-width: 768px) 50vw, 20vw"
+              className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute bottom-3 inset-x-3 text-white">
+              <span className="text-[10px] uppercase font-bold text-gold-light tracking-wider block">
+                Bridal Look
+              </span>
+              <p className="font-serif text-xs font-bold leading-snug">
+                Raw Silk & Heritage Zari
+              </p>
             </div>
-          ))}
+          </Link>
+
+          <Link
+            href="/#wedding-reels"
+            className="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-neutral-900 border border-ivory-border hover:shadow-soft transition-all duration-300"
+          >
+            <Image
+              src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=600&q=80"
+              alt="Floral Mandap"
+              fill
+              sizes="(max-width: 768px) 50vw, 20vw"
+              className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute bottom-3 inset-x-3 text-white">
+              <span className="text-[10px] uppercase font-bold text-gold-light tracking-wider block">
+                Thematic Decor
+              </span>
+              <p className="font-serif text-xs font-bold leading-snug">
+                Royal Marigold & Lotus Canopies
+              </p>
+            </div>
+          </Link>
+        </div>
+
+        <div className="mt-4 pt-3 border-t border-ivory-border flex items-center justify-between text-xs text-ink-muted">
+          <span>Updated daily by Gatherly Editorial Desk</span>
+          <Link href="/#wedding-reels" className="text-forest hover:underline font-bold text-[11px]">
+            Watch Moments &rarr;
+          </Link>
         </div>
       </div>
     </div>

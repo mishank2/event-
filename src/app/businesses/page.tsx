@@ -3,19 +3,27 @@
 import React, { useState, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { BUSINESSES } from '@/data/businesses';
-import { AHMEDABAD_AREAS } from '@/data/categories';
+import { FilterState, Business } from '@/types';
 import { BusinessCard } from '@/components/business/BusinessCard';
 import { FilterBar } from '@/components/filters/FilterBar';
 import { MobileFilterDrawer } from '@/components/filters/MobileFilterDrawer';
-import { FilterState } from '@/types';
-import { Sparkles, MapPin, SearchX, SlidersHorizontal } from 'lucide-react';
+import {
+  Building2,
+  SlidersHorizontal,
+  RotateCcw,
+  Sparkles,
+  MapPin,
+  CalendarCheck,
+} from 'lucide-react';
 
 function BusinessesContent() {
   const searchParams = useSearchParams();
 
+  // Read URL params
   const initialCategory = searchParams.get('category') || 'all';
   const initialArea = searchParams.get('area') || 'all';
   const initialQuery = searchParams.get('q') || '';
+  const initialFilter = searchParams.get('filter');
 
   const [filters, setFilters] = useState<FilterState>({
     searchQuery: initialQuery,
@@ -29,13 +37,28 @@ function BusinessesContent() {
     viewMode: 'grid',
   });
 
-  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
-  const handleFilterChange = (newFilters: Partial<FilterState>) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }));
+  // Active filter counter
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (filters.searchQuery) count++;
+    if (filters.categoryId !== 'all') count++;
+    if (filters.area !== 'all') count++;
+    if (filters.priceRange !== 'all') count++;
+    if (filters.minRating > 0) count++;
+    if (filters.minCapacity > 0) count++;
+    return count;
+  }, [filters]);
+
+  const handleFilterChange = <K extends keyof FilterState>(
+    key: K,
+    value: FilterState[K]
+  ) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleReset = () => {
+  const handleResetFilters = () => {
     setFilters({
       searchQuery: '',
       categoryId: 'all',
@@ -49,51 +72,65 @@ function BusinessesContent() {
     });
   };
 
-  // Filter and sort computation
+  // Filter & Sort Logic
   const filteredBusinesses = useMemo(() => {
     return BUSINESSES.filter((b) => {
-      // Keyword search
-      if (filters.searchQuery.trim()) {
+      // Featured filter
+      if (initialFilter === 'featured' && !b.featured) {
+        return false;
+      }
+
+      // Query search
+      if (filters.searchQuery) {
         const q = filters.searchQuery.toLowerCase();
         const matchesName = b.name.toLowerCase().includes(q);
-        const matchesTagline = b.tagline.toLowerCase().includes(q);
         const matchesArea = b.area.toLowerCase().includes(q);
         const matchesCategory = b.category.toLowerCase().includes(q);
-        const matchesAmenities = b.amenities.some((a) => a.toLowerCase().includes(q));
-        if (!matchesName && !matchesTagline && !matchesArea && !matchesCategory && !matchesAmenities) {
+        const matchesTagline = b.tagline.toLowerCase().includes(q);
+        if (!matchesName && !matchesArea && !matchesCategory && !matchesTagline) {
           return false;
         }
       }
 
       // Category filter
-      if (filters.categoryId !== 'all') {
-        if (b.categoryId !== filters.categoryId) return false;
+      if (filters.categoryId !== 'all' && b.categoryId !== filters.categoryId) {
+        return false;
       }
 
       // Area filter
       if (filters.area !== 'all') {
-        if (!b.area.toLowerCase().includes(filters.area.toLowerCase())) return false;
+        const areaLower = filters.area.toLowerCase();
+        if (!b.area.toLowerCase().includes(areaLower.split(' ')[0])) {
+          return false;
+        }
       }
 
-      // Guest Capacity
-      if (filters.minCapacity > 0) {
-        if (b.guestCapacity.max < filters.minCapacity) return false;
+      // Price Range
+      if (filters.priceRange !== 'all') {
+        if (filters.priceRange === 'budget' && b.startingPrice > 100000) return false;
+        if (
+          filters.priceRange === 'mid' &&
+          (b.startingPrice <= 100000 || b.startingPrice > 250000)
+        )
+          return false;
+        if (filters.priceRange === 'luxury' && b.startingPrice <= 250000) return false;
       }
 
       // Rating
-      if (filters.minRating > 0) {
-        if (b.rating < filters.minRating) return false;
+      if (filters.minRating > 0 && b.rating < filters.minRating) {
+        return false;
       }
 
-      // Price Range filter
-      if (filters.priceRange === 'budget') {
-        if (b.startingPrice > 150000 && b.startingPrice > 1500) return false;
-      } else if (filters.priceRange === 'luxury') {
-        if (b.startingPrice < 150000 && b.startingPrice < 1500) return false;
+      // Capacity
+      if (b.guestCapacity.max < filters.minCapacity) {
+        return false;
       }
 
       return true;
     }).sort((a, b) => {
+      if (filters.sortBy === 'popular') {
+        return b.reviewCount - a.reviewCount;
+      }
       if (filters.sortBy === 'rating-desc') {
         return b.rating - a.rating;
       }
@@ -106,82 +143,44 @@ function BusinessesContent() {
       if (filters.sortBy === 'capacity-desc') {
         return b.guestCapacity.max - a.guestCapacity.max;
       }
-      return (b.reviewCount * b.rating) - (a.reviewCount * a.rating);
+      return 0;
     });
-  }, [filters]);
-
-  const topAhmedabadHubs = [
-    'all',
-    'Sindhu Bhavan Road (SBR)',
-    'SG Highway',
-    'Bodakdev',
-    'Prahlad Nagar',
-    'Thaltej',
-    'Bopal & South Bopal',
-  ];
+  }, [filters, initialFilter]);
 
   return (
-    <div className="bg-[#FBF9F5] min-h-screen py-10 sm:py-14">
+    <div className="py-8 sm:py-12 bg-ivory min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header Title */}
-        <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-bold tracking-[0.2em] uppercase text-coral mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-coral" />
-              <span>Ahmedabad Marketplace Directory</span>
-            </div>
-            <h1 className="font-serif text-3xl sm:text-5xl font-bold text-charcoal tracking-tight">
-              Event Venues & Professional Services
-            </h1>
-            <p className="text-charcoal-muted text-xs sm:text-sm mt-2 max-w-2xl leading-relaxed">
-              Compare party plots, marriage halls, caterers, and decorators. Inquire privately through Gatherly Concierge to verify dates and rates.
-            </p>
+        {/* Page Title & Breadcrumbs */}
+        <div className="mb-8">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-soft text-forest text-xs font-bold uppercase tracking-wider mb-2">
+            <Building2 className="w-3.5 h-3.5 text-gold-dark" />
+            <span>Marketplace Directory</span>
           </div>
-
-          <div className="px-4 py-2 rounded-2xl bg-sand border border-sand-border text-xs text-charcoal self-start md:self-auto font-medium shadow-soft-xs">
-            Showing <strong className="text-charcoal font-bold">{filteredBusinesses.length}</strong> vetted businesses
-          </div>
-        </div>
-
-        {/* Locality Quick Filter Ribbon */}
-        <div className="mb-6 flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none text-xs">
-          <span className="text-charcoal-muted font-semibold flex items-center gap-1 shrink-0 mr-1">
-            <MapPin className="w-3.5 h-3.5 text-ochre" />
-            <span>Locality:</span>
-          </span>
-          {topAhmedabadHubs.map((hub) => (
-            <button
-              key={hub}
-              onClick={() => handleFilterChange({ area: hub })}
-              className={`px-3.5 py-1.5 rounded-full whitespace-nowrap transition-all text-xs font-semibold border ${
-                filters.area === hub
-                  ? 'bg-coral text-white border-coral shadow-xs'
-                  : 'bg-white text-charcoal border-sand-border hover:border-coral/50'
-              }`}
-            >
-              {hub === 'all' ? 'All Ahmedabad' : hub}
-            </button>
-          ))}
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-ink tracking-tight">
+            Explore Venues &amp; Event Services
+          </h1>
+          <p className="text-sm sm:text-base text-ink-secondary mt-2 max-w-2xl font-normal">
+            Discover verified party plots, banquet halls, and wedding specialists across Ahmedabad. Filter by corridor, guest capacity, and budget.
+          </p>
         </div>
 
         {/* Filter Bar */}
-        <div className="mb-8">
-          <FilterBar
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onReset={handleReset}
-            totalResults={filteredBusinesses.length}
-            onOpenMobileFilters={() => setMobileDrawerOpen(true)}
-          />
-        </div>
+        <FilterBar
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onReset={handleResetFilters}
+          activeFilterCount={activeFilterCount}
+          totalResults={filteredBusinesses.length}
+          onOpenMobileFilters={() => setIsMobileDrawerOpen(true)}
+        />
 
-        {/* Listings Display */}
+        {/* Results Grid / List */}
         {filteredBusinesses.length > 0 ? (
           <div
             className={
               filters.viewMode === 'grid'
                 ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
-                : 'flex flex-col gap-5'
+                : 'space-y-5'
             }
           >
             {filteredBusinesses.map((business) => (
@@ -194,21 +193,22 @@ function BusinessesContent() {
           </div>
         ) : (
           /* Empty State */
-          <div className="text-center py-20 px-4 bg-white rounded-3xl border border-sand-border max-w-xl mx-auto shadow-soft-sm">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-3xl bg-sand flex items-center justify-center text-charcoal-muted">
-              <SearchX className="w-8 h-8 text-ochre" />
+          <div className="bg-white rounded-3xl p-12 text-center border border-ivory-border shadow-soft-sm max-w-lg mx-auto my-12">
+            <div className="w-16 h-16 rounded-full bg-emerald-soft flex items-center justify-center text-forest mx-auto mb-4">
+              <Building2 className="w-8 h-8 text-gold-dark" />
             </div>
-            <h3 className="font-serif text-2xl font-bold text-charcoal mb-2">
-              No matching businesses found
+            <h3 className="font-serif text-2xl font-bold text-ink mb-2">
+              No matching listings found
             </h3>
-            <p className="text-xs sm:text-sm text-charcoal-muted mb-6 leading-relaxed">
-              We couldn’t find any businesses matching your selected filters. Try widening your capacity, budget, or resetting the search query.
+            <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed mb-6">
+              Try adjusting your corridor filters, category selections, or search terms to discover more Ahmedabad venues.
             </p>
             <button
-              onClick={handleReset}
-              className="px-6 py-3 rounded-2xl bg-coral hover:bg-coral-hover text-white font-bold text-xs transition-colors shadow-xs"
+              onClick={handleResetFilters}
+              className="px-6 py-3 rounded-xl bg-forest hover:bg-forest-light text-white font-bold text-xs shadow-xs transition-colors inline-flex items-center gap-2"
             >
-              Reset All Filters
+              <RotateCcw className="w-4 h-4 text-gold" />
+              <span>Reset All Filters</span>
             </button>
           </div>
         )}
@@ -216,11 +216,11 @@ function BusinessesContent() {
 
       {/* Mobile Drawer */}
       <MobileFilterDrawer
-        isOpen={mobileDrawerOpen}
-        onClose={() => setMobileDrawerOpen(false)}
+        isOpen={isMobileDrawerOpen}
+        onClose={() => setIsMobileDrawerOpen(false)}
         filters={filters}
         onFilterChange={handleFilterChange}
-        onReset={handleReset}
+        onReset={handleResetFilters}
         totalResults={filteredBusinesses.length}
       />
     </div>
@@ -231,13 +231,8 @@ export default function BusinessesPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#FBF9F5] flex items-center justify-center py-20">
-          <div className="text-center space-y-3">
-            <div className="w-10 h-10 border-4 border-coral border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-sm font-serif text-charcoal font-semibold">
-              Loading Ahmedabad Listings...
-            </p>
-          </div>
+        <div className="py-20 text-center text-sm font-semibold text-ink-muted">
+          Loading Ahmedabad venues...
         </div>
       }
     >

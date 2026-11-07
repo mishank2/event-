@@ -1,206 +1,357 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useWishlistStore } from '@/store/useWishlistStore';
 import { useEnquiryStore } from '@/store/useEnquiryStore';
 import {
-  MapPin,
-  Heart,
-  CalendarCheck,
-  Menu,
-  X,
-  Search,
-  Sparkles,
-  ChevronDown,
-  PhoneCall,
-  ShieldCheck
+  Menu, X, Search, Heart, ChevronDown, MapPin, Sparkles, ArrowRight
 } from 'lucide-react';
+
+const NAV_LINKS = [
+  { name: 'Home', href: '/' },
+  {
+    name: 'Explore Venues',
+    href: '/businesses?category=party-plots',
+    children: [
+      { name: 'Party Plots', href: '/businesses?category=party-plots' },
+      { name: 'Marriage Halls', href: '/businesses?category=marriage-halls' },
+      { name: 'Banquet Halls', href: '/businesses?category=banquet-halls' },
+      { name: 'Wedding Gardens', href: '/businesses?category=wedding-gardens' },
+      { name: 'Birthday Venues', href: '/businesses?category=birthday-party-venues' },
+      { name: 'Corporate Venues', href: '/businesses?category=corporate-event-venues' },
+    ],
+  },
+  {
+    name: 'Discover Vendors',
+    href: '/explore',
+    children: [
+      { name: 'Photographers', href: '/businesses?category=photography' },
+      { name: 'Makeup Artists', href: '/businesses?category=makeup-artists' },
+      { name: 'Event Decorators', href: '/businesses?category=decoration' },
+      { name: 'Catering', href: '/businesses?category=catering' },
+      { name: 'DJ & Sound', href: '/businesses?category=dj-sound' },
+      { name: 'Wedding Services', href: '/businesses?category=wedding-services' },
+    ],
+  },
+  { name: 'Inspiration', href: '/#wedding-reels' },
+  { name: 'How It Works', href: '/#how-it-works' },
+];
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
+  const router = useRouter();
   const savedIds = useWishlistStore((state) => state.savedIds);
   const openEnquiryModal = useEnquiryStore((state) => state.openEnquiryModal);
 
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchRef = useRef<HTMLInputElement>(null);
+  const dropdownTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
-    setMounted(true);
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 15);
-    };
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'Explore Categories', href: '/explore' },
-    { name: 'Browse Businesses', href: '/businesses' },
-    { name: 'How It Works', href: '/about' },
-    { name: 'FAQ', href: '/faq' },
-    { name: 'Concierge Desk', href: '/contact' },
-  ];
+  useEffect(() => {
+    setMobileOpen(false);
+    setOpenDropdown(null);
+  }, [pathname]);
 
-  const wishlistCount = mounted ? savedIds.length : 0;
+  useEffect(() => {
+    if (searchOpen) searchRef.current?.focus();
+  }, [searchOpen]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/businesses?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
+
+  const handleDropdownEnter = (name: string) => {
+    if (dropdownTimeout.current) clearTimeout(dropdownTimeout.current);
+    setOpenDropdown(name);
+  };
+
+  const handleDropdownLeave = () => {
+    dropdownTimeout.current = setTimeout(() => setOpenDropdown(null), 150);
+  };
+
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href.split('?')[0]);
+  };
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-forest/98 backdrop-blur-md shadow-soft-lg border-b border-gold/30 py-3'
-          : 'bg-forest text-white py-4 border-b border-white/10'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-4">
-          {/* Logo & City Badge */}
-          <div className="flex items-center gap-5">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              {/* Royal Emblem Monogram */}
-              <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-gold-light via-gold to-gold-dark p-[1.5px] shadow-md group-hover:scale-105 transition-transform">
-                <div className="w-full h-full bg-forest-dark rounded-[10px] flex items-center justify-center">
-                  <span className="font-serif text-2xl font-bold gold-gradient-text">
-                    G
-                  </span>
-                </div>
-              </div>
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? 'bg-white/98 backdrop-blur-lg border-b border-ivory-border shadow-soft-sm'
+            : 'bg-white/90 backdrop-blur-md'
+        }`}
+        style={{ height: '72px' }}
+      >
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4">
 
-              <div className="flex flex-col">
-                <div className="flex items-baseline">
-                  <span className="font-serif text-2xl font-bold tracking-tight text-white group-hover:text-gold-light transition-colors">
-                    Gatherly
-                  </span>
-                  <span className="text-gold text-2xl font-serif leading-none">.</span>
-                </div>
-                <span className="text-[9px] tracking-[0.25em] uppercase text-gold-soft/85 font-semibold -mt-0.5">
-                  Ahmedabad Concierge
-                </span>
-              </div>
-            </Link>
-
-            {/* City Selector Pill with Live Pulse Dot */}
-            <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-forest-dark/80 border border-gold/30 text-xs">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-gold"></span>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+            <div className="w-9 h-9 rounded-xl bg-emerald-gradient flex items-center justify-center shadow-soft-sm group-hover:shadow-soft transition-shadow">
+              <span className="font-serif text-lg font-bold text-gold-light leading-none">G</span>
+            </div>
+            <div className="hidden sm:flex flex-col">
+              <span className="font-serif font-bold text-[1.2rem] text-ink leading-none tracking-tight">
+                Gatherly
               </span>
-              <span className="font-medium text-white/90">Ahmedabad & SBR</span>
-              <span className="text-[10px] bg-gold/15 text-gold-light px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
-                Live Desk
+              <span className="text-[9px] text-ink-muted tracking-widest uppercase font-medium leading-none mt-0.5">
+                Every Celebration, Beautifully Connected
               </span>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
-            {navLinks.slice(0, 5).map((link) => {
-              const active = pathname === link.href;
-              return (
+          <nav className="hidden lg:flex items-center gap-1">
+            {NAV_LINKS.map((link) => (
+              <div
+                key={link.name}
+                className="relative"
+                onMouseEnter={() => link.children && handleDropdownEnter(link.name)}
+                onMouseLeave={link.children ? handleDropdownLeave : undefined}
+              >
                 <Link
-                  key={link.name}
                   href={link.href}
-                  className={`transition-all relative py-1 hover:text-gold-light ${
-                    active ? 'text-gold font-semibold' : 'text-white/85'
+                  className={`flex items-center gap-1 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
+                    isActive(link.href)
+                      ? 'text-forest bg-emerald-soft'
+                      : 'text-ink-secondary hover:text-ink hover:bg-ivory-dark'
                   }`}
                 >
                   {link.name}
-                  {active && (
-                    <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-gold to-gold-light rounded-full" />
+                  {link.children && (
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform ${openDropdown === link.name ? 'rotate-180' : ''}`}
+                    />
                   )}
                 </Link>
-              );
-            })}
+
+                {/* Dropdown */}
+                {link.children && openDropdown === link.name && (
+                  <div
+                    className="absolute top-full left-0 mt-1 w-56 bg-white rounded-2xl shadow-soft-lg border border-ivory-border py-2 animate-scale-in"
+                    onMouseEnter={() => handleDropdownEnter(link.name)}
+                    onMouseLeave={handleDropdownLeave}
+                  >
+                    {link.children.map((child) => (
+                      <Link
+                        key={child.name}
+                        href={child.href}
+                        className="flex items-center px-4 py-2.5 text-sm text-ink-secondary hover:text-forest hover:bg-emerald-soft transition-colors"
+                      >
+                        {child.name}
+                      </Link>
+                    ))}
+                    <div className="mx-4 my-2 pt-2 border-t border-ivory-border">
+                      <Link
+                        href="/explore"
+                        className="flex items-center gap-1.5 text-xs font-semibold text-forest hover:underline"
+                      >
+                        <Sparkles className="w-3 h-3" />
+                        View all categories
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </nav>
 
-          {/* Action CTAs */}
-          <div className="flex items-center gap-3">
-            {/* Wishlist Link */}
+          {/* Right Actions */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Location Badge */}
+            <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-emerald-soft border border-forest/15 text-xs text-forest font-medium">
+              <MapPin className="w-3 h-3 text-gold shrink-0" />
+              <span>Ahmedabad</span>
+            </div>
+
+            {/* Search */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-ink-secondary hover:text-forest hover:bg-ivory-dark transition-colors"
+              aria-label="Search"
+            >
+              <Search className="w-4.5 h-4.5" />
+            </button>
+
+            {/* Wishlist */}
             <Link
               href="/wishlist"
-              className="relative p-2.5 rounded-xl text-white/90 hover:text-gold hover:bg-forest-light/60 transition-colors border border-white/10"
-              title="Saved Venues & Services"
+              className="relative w-9 h-9 rounded-xl flex items-center justify-center text-ink-secondary hover:text-forest hover:bg-ivory-dark transition-colors"
+              aria-label={`Wishlist (${savedIds.length} saved)`}
             >
-              <Heart className="w-4 h-4" />
-              {wishlistCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-gold text-forest font-bold text-[10px] flex items-center justify-center shadow-md animate-pulse">
-                  {wishlistCount}
+              <Heart className="w-4.5 h-4.5" />
+              {savedIds.length > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-forest text-white text-[9px] font-bold flex items-center justify-center">
+                  {savedIds.length}
                 </span>
               )}
             </Link>
 
-            {/* Submit Enquiry CTA */}
+            {/* Plan Your Event CTA */}
             <button
               onClick={() => openEnquiryModal()}
-              className="hidden sm:inline-flex items-center gap-2 px-4.5 py-2.5 rounded-xl bg-gradient-to-r from-gold via-gold-light to-gold hover:from-gold-light hover:to-gold-dark text-forest font-bold text-xs md:text-sm shadow-md hover:shadow-gold-glow transition-all active:scale-95"
+              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-forest hover:bg-forest-dark text-white text-sm font-semibold transition-all hover:shadow-soft-sm active:scale-95"
             >
-              <CalendarCheck className="w-4 h-4 text-forest" />
-              <span>Submit Event Enquiry</span>
+              <span>Plan Your Event</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
 
-            {/* Mobile Hamburger Button */}
+            {/* Mobile Menu */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2.5 rounded-xl bg-forest-light/60 border border-white/15 text-white hover:text-gold transition-colors"
-              aria-label="Toggle Navigation Menu"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="lg:hidden w-9 h-9 rounded-xl flex items-center justify-center text-ink-secondary hover:text-forest hover:bg-ivory-dark transition-colors"
+              aria-label="Toggle menu"
+              aria-expanded={mobileOpen}
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-x-0 top-[68px] bg-forest-deep/98 backdrop-blur-xl border-b border-gold/30 px-6 py-6 shadow-2xl transition-all">
-          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/10 text-xs text-gold-soft">
-            <MapPin className="w-4 h-4 text-gold shrink-0" />
-            <span>Serving Ahmedabad, SG Highway, SBR & Gandhinagar</span>
-          </div>
-
-          <div className="flex flex-col gap-2.5">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`py-2 text-base font-medium transition-colors ${
-                  pathname === link.href ? 'text-gold font-bold' : 'text-white/90 hover:text-gold'
-                }`}
+      {/* Search Overlay */}
+      {searchOpen && (
+        <div
+          className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-start justify-center pt-24 px-4"
+          onClick={(e) => { if (e.target === e.currentTarget) setSearchOpen(false); }}
+        >
+          <div className="w-full max-w-2xl bg-white rounded-2xl shadow-soft-lg border border-ivory-border overflow-hidden animate-scale-in">
+            <form onSubmit={handleSearch} className="flex items-center gap-3 p-4">
+              <Search className="w-5 h-5 text-ink-muted shrink-0" />
+              <input
+                ref={searchRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search venues, caterers, photographers..."
+                className="flex-1 text-base text-ink placeholder:text-ink-muted outline-none bg-transparent"
+              />
+              {searchQuery && (
+                <button type="button" onClick={() => setSearchQuery('')} className="text-ink-muted hover:text-ink">
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+              <button
+                type="submit"
+                className="px-4 py-2 rounded-lg bg-forest text-white text-sm font-medium hover:bg-forest-dark transition-colors"
               >
-                {link.name}
-              </Link>
-            ))}
-
-            <Link
-              href="/wishlist"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between py-2 text-base font-medium text-white/90 hover:text-gold"
-            >
-              <span className="flex items-center gap-2">
-                <Heart className="w-4 h-4 text-gold" /> Saved Shortlist
-              </span>
-              <span className="px-2 py-0.5 rounded-full bg-gold/20 text-gold text-xs font-bold">
-                {wishlistCount}
-              </span>
-            </Link>
-
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                openEnquiryModal();
-              }}
-              className="mt-4 w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-gradient-to-r from-gold to-gold-dark text-forest font-bold text-sm shadow-md"
-            >
-              <CalendarCheck className="w-4 h-4" />
-              <span>Submit Event Enquiry to Gatherly</span>
-            </button>
+                Search
+              </button>
+            </form>
+            <div className="border-t border-ivory-border px-4 py-3 flex flex-wrap gap-2">
+              {['Party Plots', 'Banquet Halls', 'Wedding Gardens', 'Photographers', 'Catering'].map((s) => (
+                <button
+                  key={s}
+                  onClick={() => { setSearchQuery(s); router.push(`/businesses?q=${encodeURIComponent(s)}`); setSearchOpen(false); }}
+                  className="px-3 py-1 rounded-full text-xs bg-ivory-dark text-ink-secondary hover:bg-emerald-soft hover:text-forest border border-ivory-border transition-colors"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}
-    </header>
+
+      {/* Mobile Drawer */}
+      {mobileOpen && (
+        <div className="lg:hidden fixed inset-0 z-[55] flex">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setMobileOpen(false)}
+          />
+          <nav className="relative ml-auto w-80 max-w-full h-full bg-white shadow-soft-lg flex flex-col animate-slide-up overflow-y-auto">
+            <div className="flex items-center justify-between p-5 border-b border-ivory-border">
+              <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-forest flex items-center justify-center">
+                  <span className="font-serif font-bold text-gold-light text-sm">G</span>
+                </div>
+                <span className="font-serif font-bold text-ink text-lg">Gatherly</span>
+              </Link>
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-ink-muted hover:text-ink hover:bg-ivory-dark"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="flex-1 p-5 space-y-1">
+              {NAV_LINKS.map((link) => (
+                <div key={link.name}>
+                  <Link
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`flex items-center justify-between w-full px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                      isActive(link.href)
+                        ? 'bg-emerald-soft text-forest'
+                        : 'text-ink-secondary hover:text-ink hover:bg-ivory-dark'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                  {link.children && (
+                    <div className="mt-1 ml-3 space-y-0.5 border-l border-ivory-border pl-3">
+                      {link.children.map((child) => (
+                        <Link
+                          key={child.name}
+                          href={child.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="block py-1.5 text-xs text-ink-muted hover:text-forest transition-colors"
+                        >
+                          {child.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="p-5 border-t border-ivory-border space-y-3">
+              <button
+                onClick={() => { openEnquiryModal(); setMobileOpen(false); }}
+                className="w-full py-3 rounded-xl bg-forest text-white font-semibold text-sm hover:bg-forest-dark transition-colors flex items-center justify-center gap-2"
+              >
+                <span>Plan Your Event</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <Link
+                href="/wishlist"
+                onClick={() => setMobileOpen(false)}
+                className="w-full py-3 rounded-xl border border-ivory-border text-ink-secondary font-medium text-sm hover:bg-ivory-dark transition-colors flex items-center justify-center gap-2"
+              >
+                <Heart className="w-4 h-4" />
+                <span>Saved ({savedIds.length})</span>
+              </Link>
+            </div>
+          </nav>
+        </div>
+      )}
+    </>
   );
 };

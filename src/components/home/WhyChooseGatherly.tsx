@@ -1,83 +1,97 @@
+'use client';
+
 import React from 'react';
 import {
   ShieldCheck,
-  Headset,
-  Calendar,
+  CheckCircle2,
+  MapPin,
+  Lock,
   Sparkles,
-  Users2,
-  DollarSign
+  HeartHandshake,
+  Clock,
+  Layers,
 } from 'lucide-react';
 
 export const WhyChooseGatherly: React.FC = () => {
-  const benefits = [
+  const reasons = [
     {
-      title: 'Zero Vendor Harassment',
+      icon: <Lock className="w-5 h-5 text-forest" />,
+      title: 'Privacy-First Concierge',
       description:
-        'Your contact number is never given away to hundreds of vendors. Gatherly’s internal concierge acts as your sole private representative.',
-      icon: <ShieldCheck className="w-5 h-5 text-coral" />,
+        'Your mobile number and email are never shared with venues or vendors. All availability checks and price negotiations are conducted privately by Gatherly.',
     },
     {
-      title: 'Dedicated Ahmedabad Concierge',
+      icon: <ShieldCheck className="w-5 h-5 text-forest" />,
+      title: 'Hand-Curated Listings',
       description:
-        'Our local event specialists personally negotiate dates, schedule guided site visits, and coordinate venue inclusions.',
-      icon: <Headset className="w-5 h-5 text-ochre" />,
+        'We physically visit and audit party plots, lawn turf quality, acoustic permits, bridal suites, and kitchen infrastructure before listing on Gatherly.',
     },
     {
-      title: 'Fast Availability Pre-Checks',
+      icon: <MapPin className="w-5 h-5 text-forest" />,
+      title: 'Deep Ahmedabad Expertise',
       description:
-        'Skip endless phone tag. We verify prime auspicious wedding dates across multiple party plots and banquets in one go.',
-      icon: <Calendar className="w-5 h-5 text-coral" />,
+        'From high-demand Sindhu Bhavan Road corridors to serene Gandhinagar highways, our local team knows wedding dates, peak seasons, and zoning rules.',
     },
     {
-      title: 'Deep Local Insight',
+      icon: <Layers className="w-5 h-5 text-forest" />,
+      title: 'Complete Vendor Ecosystem',
       description:
-        'In-depth knowledge of Ahmedabad sound restrictions, Jain catering standards, parking capacity, and lawn layouts.',
-      icon: <Sparkles className="w-5 h-5 text-ochre" />,
+        'Coordinate venues, authentic Kathiyawadi caterers, candid wedding photographers, and luxury floral decorators through a single dashboard.',
     },
     {
-      title: 'Transparent Budgeting',
+      icon: <Clock className="w-5 h-5 text-forest" />,
+      title: 'Fast Availability Turns',
       description:
-        'Accurate ballpark pricing per plate or per lawn day helps you plan without uncomfortable surprises down the road.',
-      icon: <DollarSign className="w-5 h-5 text-coral" />,
+        'Instead of calling 15 venues yourself, submit one enquiry and receive consolidated date availability and pricing within 24 to 48 hours.',
     },
     {
-      title: 'All-in-One Marketplace',
+      icon: <HeartHandshake className="w-5 h-5 text-forest" />,
+      title: 'Zero Hidden Booking Markups',
       description:
-        'From 3,000-guest party plots on SBR to bridal makeup artists and live Dhol players, discover your complete vendor team.',
-      icon: <Users2 className="w-5 h-5 text-ochre" />,
+        'Gatherly is completely free for event hosts to browse and enquire. We work directly with venue administrations to secure transparent rates.',
     },
   ];
 
   return (
-    <section className="py-16 sm:py-20 bg-[#FBF9F5]">
+    <section className="py-16 sm:py-24 bg-ivory">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-[0.2em] uppercase text-coral mb-2">
-            <span>The Gatherly Advantage</span>
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-soft text-forest text-xs font-bold uppercase tracking-wider mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
+            <span>The Gatherly Difference</span>
           </div>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-charcoal tracking-tight">
-            Why Choose Gatherly
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-ink tracking-tight">
+            Why Ahmedabad Chooses Gatherly
           </h2>
-          <p className="text-charcoal-muted text-xs sm:text-sm mt-2">
-            A dignified, modern way to plan your weddings and celebrations in Ahmedabad.
+          <p className="text-sm sm:text-base text-ink-secondary mt-3 font-normal leading-relaxed">
+            A celebration marketplace built on privacy, transparent discovery, and dedicated local coordination.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {benefits.map((benefit, idx) => (
+        {/* 6 Reasons Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {reasons.map((reason, idx) => (
             <div
               key={idx}
-              className="p-6 rounded-3xl bg-white border border-sand-border shadow-soft-xs hover:shadow-soft transition-all duration-300"
+              className="p-7 rounded-3xl bg-white border border-ivory-border shadow-soft-sm hover:shadow-soft hover:border-gold-border transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
             >
-              <div className="w-10 h-10 rounded-2xl bg-sand-light border border-sand-border flex items-center justify-center mb-4 shadow-xs">
-                {benefit.icon}
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-emerald-soft flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                  {reason.icon}
+                </div>
+                <h3 className="font-serif text-xl font-bold text-ink mb-2">
+                  {reason.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">
+                  {reason.description}
+                </p>
               </div>
-              <h3 className="font-serif text-lg font-bold text-charcoal mb-2">
-                {benefit.title}
-              </h3>
-              <p className="text-xs text-charcoal-muted leading-relaxed">
-                {benefit.description}
-              </p>
+
+              <div className="mt-6 pt-4 border-t border-ivory-border flex items-center gap-1.5 text-xs font-semibold text-forest">
+                <CheckCircle2 className="w-4 h-4 text-gold-dark" />
+                <span>Gatherly Standard Guarantee</span>
+              </div>
             </div>
           ))}
         </div>

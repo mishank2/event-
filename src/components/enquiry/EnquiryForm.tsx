@@ -18,7 +18,8 @@ import {
   CheckCircle2,
   Clock,
   ShieldCheck,
-  Send
+  Send,
+  RotateCcw,
 } from 'lucide-react';
 
 interface EnquiryFormProps {
@@ -53,7 +54,7 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
       numberOfGuests: '' as any,
       preferredBusiness: preselectedBusiness ? preselectedBusiness.name : '',
       preferredBusinessId: preselectedBusiness ? preselectedBusiness.id : '',
-      estimatedBudget: '₹2,00,000 - ₹5,00,000',
+      estimatedBudget: '₹10,00,000 - ₹25,00,000',
       requirements: preselectedBusiness
         ? `I am interested in checking date availability and official package rates for ${preselectedBusiness.name}.`
         : '',
@@ -81,328 +82,266 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
 
   if (submitted && submittedData) {
     return (
-      <div className="p-8 sm:p-10 text-center bg-white rounded-3xl border border-sand-border shadow-soft-sm animate-in zoom-in-95 duration-300">
-        <div className="w-16 h-16 mx-auto mb-4 rounded-3xl bg-coral-soft flex items-center justify-center text-coral shadow-xs">
+      <div className="p-8 sm:p-10 text-center bg-white rounded-3xl border border-ivory-border shadow-soft-sm animate-scale-in">
+        <div className="w-16 h-16 mx-auto mb-4 rounded-3xl bg-emerald-soft flex items-center justify-center text-forest shadow-xs">
           <CheckCircle2 className="w-9 h-9" />
         </div>
 
-        <span className="inline-block px-3.5 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-sand text-charcoal border border-sand-border mb-3">
+        <span className="inline-block px-3.5 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-ivory text-ink border border-ivory-border mb-3">
           Concierge Token: #GTH-{Math.floor(100000 + Math.random() * 900000)}
         </span>
 
-        <h3 className="font-serif text-3xl font-bold text-charcoal mb-2">
+        <h3 className="font-serif text-3xl font-bold text-ink mb-2">
           Thank you for contacting Gatherly!
         </h3>
-        <p className="text-sm font-medium text-charcoal-muted mb-6 max-w-md mx-auto leading-relaxed">
+        <p className="text-sm font-medium text-ink-muted mb-6 max-w-md mx-auto leading-relaxed">
           Our team will check availability with the relevant business and contact you shortly.
         </p>
 
-        <div className="bg-sand-light rounded-2xl p-5 text-left text-xs space-y-2.5 border border-sand-border max-w-md mx-auto mb-6">
-          <div className="flex justify-between pb-2 border-b border-sand-border">
-            <span className="text-charcoal-muted">Customer Name:</span>
-            <span className="font-bold text-charcoal">{submittedData.customerName}</span>
+        <div className="bg-ivory rounded-2xl p-5 text-left text-xs space-y-2.5 border border-ivory-border max-w-md mx-auto mb-6">
+          <div className="flex justify-between">
+            <span className="text-ink-muted">Event:</span>
+            <span className="font-bold text-ink">{submittedData.eventType}</span>
           </div>
-          <div className="flex justify-between pb-2 border-b border-sand-border">
-            <span className="text-charcoal-muted">Target Event:</span>
-            <span className="font-bold text-coral">{submittedData.eventType}</span>
+          <div className="flex justify-between">
+            <span className="text-ink-muted">Date:</span>
+            <span className="font-bold text-ink">{submittedData.eventDate}</span>
           </div>
-          <div className="flex justify-between pb-2 border-b border-sand-border">
-            <span className="text-charcoal-muted">Event Date:</span>
-            <span className="font-bold text-charcoal">{submittedData.eventDate}</span>
+          <div className="flex justify-between">
+            <span className="text-ink-muted">Expected Guests:</span>
+            <span className="font-bold text-ink">{submittedData.numberOfGuests} Guests</span>
           </div>
           {submittedData.preferredBusiness && (
-            <div className="flex justify-between pb-2 border-b border-sand-border">
-              <span className="text-charcoal-muted">Selected Business:</span>
-              <span className="font-bold text-charcoal">{submittedData.preferredBusiness}</span>
+            <div className="flex justify-between">
+              <span className="text-ink-muted">Preferred Business:</span>
+              <span className="font-bold text-forest">{submittedData.preferredBusiness}</span>
             </div>
           )}
-          <div className="flex justify-between">
-            <span className="text-charcoal-muted">Guests & Area:</span>
-            <span className="font-bold text-charcoal">
-              {submittedData.numberOfGuests} Guests • {submittedData.eventLocation}
-            </span>
+          <div className="pt-2 border-t border-ivory-border flex items-center gap-2 text-forest font-semibold">
+            <ShieldCheck className="w-4 h-4 shrink-0 text-gold-dark" />
+            <span>Assigned to Gatherly Ahmedabad Concierge Desk</span>
           </div>
-        </div>
-
-        <div className="p-3.5 bg-sand rounded-2xl text-xs text-charcoal mb-6 flex items-center justify-center gap-2 max-w-md mx-auto">
-          <Clock className="w-4 h-4 text-ochre shrink-0" />
-          <span>Expected response: Within 2 to 4 business hours (Ahmedabad IST).</span>
         </div>
 
         <button
           onClick={() => {
-            setSubmitted(false);
             reset();
+            setSubmitted(false);
           }}
-          className="px-7 py-3 rounded-2xl bg-coral hover:bg-coral-hover text-white text-xs font-bold shadow-xs transition-all"
+          className="px-6 py-2.5 rounded-xl border border-ivory-border hover:bg-ivory text-xs font-bold text-ink transition-colors inline-flex items-center gap-2"
         >
-          Submit Another Enquiry
+          <RotateCcw className="w-4 h-4 text-forest" />
+          <span>Submit Another Enquiry</span>
         </button>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {/* Notice Banner */}
-      <div className="p-4 rounded-2xl bg-sand-light border border-sand-border text-xs text-charcoal space-y-1">
-        <div className="flex items-center gap-2 font-bold">
-          <ShieldCheck className="w-4 h-4 text-ochre" />
-          <span>Private Gatherly Concierge Intake</span>
-        </div>
-        <p className="text-charcoal-muted text-[11px] leading-relaxed">
-          Your enquiry is handled directly by Gatherly’s internal event desk. We contact venue management privately to check dates and negotiate packages without vendor spam.
-        </p>
-      </div>
-
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      {/* Target Business Banner if preselected */}
       {preselectedBusiness && (
-        <div className="p-3.5 rounded-2xl bg-sand border border-sand-border flex items-center justify-between text-xs">
+        <div className="p-3.5 rounded-2xl bg-emerald-soft border border-emerald-primary/20 flex items-center justify-between text-xs">
           <div>
-            <span className="text-[10px] uppercase font-bold text-charcoal-muted block">Enquiring for:</span>
-            <span className="font-serif font-bold text-charcoal text-base">{preselectedBusiness.name}</span>
-            <span className="text-charcoal-muted ml-2">({preselectedBusiness.area})</span>
+            <span className="text-[10px] text-forest font-bold uppercase tracking-wider block">
+              Enquiring for:
+            </span>
+            <span className="font-serif font-bold text-sm text-ink">
+              {preselectedBusiness.name}
+            </span>
           </div>
-          <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-white border border-sand-border text-charcoal">
-            {preselectedBusiness.category}
+          <span className="text-[11px] font-semibold text-gold-dark bg-white px-2.5 py-1 rounded-lg border border-ivory-border">
+            {preselectedBusiness.area}
           </span>
         </div>
       )}
 
-      {/* Row 1: Name and Mobile */}
+      {/* Row 1: Name & Phone */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-bold text-charcoal mb-1">
-            Customer Name <span className="text-coral">*</span>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
+            Customer Name *
           </label>
           <div className="relative">
-            <User className="w-4 h-4 text-charcoal-muted absolute left-3.5 top-3 pointer-events-none" />
+            <User className="w-4 h-4 text-ink-muted absolute left-3 top-3 pointer-events-none" />
             <input
               type="text"
               placeholder="e.g. Priyanshu Patel"
               {...register('customerName')}
-              className={`w-full pl-10 pr-3 py-2.5 text-xs sm:text-sm rounded-2xl border bg-sand-light focus:bg-white focus:outline-none focus:ring-2 transition-all ${
-                errors.customerName
-                  ? 'border-red-400 focus:ring-red-200'
-                  : 'border-sand-border focus:border-coral focus:ring-coral/10'
-              }`}
+              className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink transition-all"
             />
           </div>
           {errors.customerName && (
-            <p className="text-[11px] text-coral mt-1 font-medium">{errors.customerName.message}</p>
+            <p className="text-[11px] text-rose-500 mt-1">{errors.customerName.message}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-charcoal mb-1">
-            Mobile Number <span className="text-coral">*</span>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
+            Mobile Number *
           </label>
           <div className="relative">
-            <Phone className="w-4 h-4 text-charcoal-muted absolute left-3.5 top-3 pointer-events-none" />
+            <Phone className="w-4 h-4 text-ink-muted absolute left-3 top-3 pointer-events-none" />
             <input
               type="tel"
-              placeholder="e.g. 9825012345"
+              placeholder="e.g. 9876543210"
               {...register('mobileNumber')}
-              className={`w-full pl-10 pr-3 py-2.5 text-xs sm:text-sm rounded-2xl border bg-sand-light focus:bg-white focus:outline-none focus:ring-2 transition-all ${
-                errors.mobileNumber
-                  ? 'border-red-400 focus:ring-red-200'
-                  : 'border-sand-border focus:border-coral focus:ring-coral/10'
-              }`}
+              className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink transition-all"
             />
           </div>
           {errors.mobileNumber && (
-            <p className="text-[11px] text-coral mt-1 font-medium">{errors.mobileNumber.message}</p>
+            <p className="text-[11px] text-rose-500 mt-1">{errors.mobileNumber.message}</p>
           )}
         </div>
       </div>
 
-      {/* Row 2: Email and Event Type */}
+      {/* Row 2: Email & Event Type */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-bold text-charcoal mb-1">
-            Email Address <span className="text-coral">*</span>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
+            Email Address *
           </label>
           <div className="relative">
-            <Mail className="w-4 h-4 text-charcoal-muted absolute left-3.5 top-3 pointer-events-none" />
+            <Mail className="w-4 h-4 text-ink-muted absolute left-3 top-3 pointer-events-none" />
             <input
               type="email"
               placeholder="e.g. priyanshu@example.com"
               {...register('email')}
-              className={`w-full pl-10 pr-3 py-2.5 text-xs sm:text-sm rounded-2xl border bg-sand-light focus:bg-white focus:outline-none focus:ring-2 transition-all ${
-                errors.email
-                  ? 'border-red-400 focus:ring-red-200'
-                  : 'border-sand-border focus:border-coral focus:ring-coral/10'
-              }`}
+              className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink transition-all"
             />
           </div>
           {errors.email && (
-            <p className="text-[11px] text-coral mt-1 font-medium">{errors.email.message}</p>
+            <p className="text-[11px] text-rose-500 mt-1">{errors.email.message}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-charcoal mb-1">
-            Event Type <span className="text-coral">*</span>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
+            Event Type *
           </label>
           <select
             {...register('eventType')}
-            className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-2xl border border-sand-border bg-sand-light focus:bg-white focus:outline-none focus:border-coral focus:ring-2 focus:ring-coral/10 transition-all text-charcoal"
+            className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink transition-all"
           >
-            <option value="Wedding & Grand Reception">Wedding & Grand Reception</option>
-            <option value="Sangeet & Garba Night">Sangeet & Garba Night</option>
+            <option value="Wedding & Grand Reception">Wedding &amp; Grand Reception</option>
+            <option value="Sangeet & Garba Night">Sangeet &amp; Garba Night</option>
             <option value="Ring Ceremony / Sagai">Ring Ceremony / Sagai</option>
-            <option value="Haldi & Mehendi">Haldi & Mehendi</option>
-            <option value="Birthday Celebration">Birthday Celebration</option>
-            <option value="Anniversary Party">Anniversary Party</option>
-            <option value="Corporate Conclave / Gala">Corporate Conclave / Gala</option>
-            <option value="Community Samaj Event">Community Samaj Event</option>
+            <option value="Milestone Birthday">Milestone Birthday</option>
+            <option value="Corporate Gala / Summit">Corporate Gala / Summit</option>
+            <option value="Community Gathering">Community Gathering</option>
             <option value="Other Celebration">Other Celebration</option>
           </select>
         </div>
       </div>
 
-      {/* Row 3: Event Date, Location, Guest Count */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {/* Row 3: Event Date & Location */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-bold text-charcoal mb-1">
-            Target Event Date <span className="text-coral">*</span>
-          </label>
-          <input
-            type="date"
-            {...register('eventDate')}
-            className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-2xl border bg-sand-light focus:bg-white focus:outline-none focus:ring-2 transition-all text-charcoal ${
-              errors.eventDate
-                ? 'border-red-400 focus:ring-red-200'
-                : 'border-sand-border focus:border-coral focus:ring-coral/10'
-            }`}
-          />
-          {errors.eventDate && (
-            <p className="text-[11px] text-coral mt-1 font-medium">{errors.eventDate.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-xs font-bold text-charcoal mb-1">
-            Ahmedabad Area <span className="text-coral">*</span>
-          </label>
-          <select
-            {...register('eventLocation')}
-            className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-2xl border border-sand-border bg-sand-light focus:bg-white focus:outline-none focus:border-coral focus:ring-2 focus:ring-coral/10 transition-all text-charcoal"
-          >
-            {AHMEDABAD_AREAS.map((area) => (
-              <option key={area} value={area}>
-                {area}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-xs font-bold text-charcoal mb-1">
-            Guest Count <span className="text-coral">*</span>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
+            Event Date *
           </label>
           <div className="relative">
-            <Users className="w-4 h-4 text-charcoal-muted absolute left-3.5 top-3 pointer-events-none" />
+            <Calendar className="w-4 h-4 text-ink-muted absolute left-3 top-3 pointer-events-none" />
             <input
-              type="number"
-              placeholder="e.g. 500"
-              {...register('numberOfGuests')}
-              className={`w-full pl-10 pr-3 py-2.5 text-xs sm:text-sm rounded-2xl border bg-sand-light focus:bg-white focus:outline-none focus:ring-2 transition-all ${
-                errors.numberOfGuests
-                  ? 'border-red-400 focus:ring-red-200'
-                  : 'border-sand-border focus:border-coral focus:ring-coral/10'
-              }`}
+              type="date"
+              {...register('eventDate')}
+              className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink transition-all"
             />
           </div>
-          {errors.numberOfGuests && (
-            <p className="text-[11px] text-coral mt-1 font-medium">{errors.numberOfGuests.message}</p>
+          {errors.eventDate && (
+            <p className="text-[11px] text-rose-500 mt-1">{errors.eventDate.message}</p>
           )}
         </div>
-      </div>
 
-      {/* Quick Guest Count Pills */}
-      <div>
-        <span className="text-[11px] text-charcoal-muted block mb-1">Quick Select Guest Count:</span>
-        <div className="flex flex-wrap gap-2">
-          {guestQuickOptions.map((count) => (
-            <button
-              key={count}
-              type="button"
-              onClick={() => setValue('numberOfGuests', count)}
-              className={`px-3 py-1 rounded-xl text-xs font-semibold border transition-all ${
-                selectedGuests === count
-                  ? 'bg-coral text-white border-coral shadow-xs'
-                  : 'bg-sand-light text-charcoal border-sand-border hover:border-coral/50'
-              }`}
+        <div>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
+            Event Location Corridor *
+          </label>
+          <div className="relative">
+            <MapPin className="w-4 h-4 text-gold-dark absolute left-3 top-3 pointer-events-none" />
+            <select
+              {...register('eventLocation')}
+              className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink transition-all"
             >
-              ~{count} Guests
-            </button>
-          ))}
+              {AHMEDABAD_AREAS.map((area) => (
+                <option key={area} value={area}>
+                  {area}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
-      {/* Row 4: Budget Range */}
+      {/* Guest Count & Quick Picks */}
       <div>
-        <label className="block text-xs font-bold text-charcoal mb-1">
-          Estimated Overall Budget <span className="text-coral">*</span>
-        </label>
-        <select
-          {...register('estimatedBudget')}
-          className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-2xl border border-sand-border bg-sand-light focus:bg-white focus:outline-none focus:border-coral focus:ring-2 focus:ring-coral/10 transition-all text-charcoal"
-        >
-          <option value="Under ₹2,00,000">Under ₹2,00,000</option>
-          <option value="₹2,00,000 - ₹5,00,000">₹2,00,000 - ₹5,00,000</option>
-          <option value="₹5,00,000 - ₹10,00,000">₹5,00,000 - ₹10,00,000</option>
-          <option value="₹10,00,000 - ₹25,00,000">₹10,00,000 - ₹25,00,000</option>
-          <option value="₹25,00,000+ (Ultra Luxury)">₹25,00,000+ (Ultra Luxury)</option>
-        </select>
-      </div>
-
-      {/* Row 5: Requirements */}
-      <div>
-        <label className="block text-xs font-bold text-charcoal mb-1">
-          Key Requirements & Details <span className="text-coral">*</span>
-        </label>
-        <textarea
-          rows={3}
-          placeholder="Mention specific dates, timings (day/evening), catering preferences (Jain/Swaminarayan), decorator style, or specific questions..."
-          {...register('requirements')}
-          className={`w-full p-3.5 text-xs sm:text-sm rounded-2xl border bg-sand-light focus:bg-white focus:outline-none focus:ring-2 transition-all ${
-            errors.requirements
-              ? 'border-red-400 focus:ring-red-200'
-              : 'border-sand-border focus:border-coral focus:ring-coral/10'
-          }`}
-        />
-        {errors.requirements && (
-          <p className="text-[11px] text-coral mt-1 font-medium">{errors.requirements.message}</p>
+        <div className="flex items-center justify-between mb-1">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+            Number of Guests *
+          </label>
+          <div className="flex items-center gap-1">
+            {guestQuickOptions.map((opt) => (
+              <button
+                type="button"
+                key={opt}
+                onClick={() => setValue('numberOfGuests', opt as any)}
+                className={`px-2 py-0.5 rounded text-[10px] font-bold transition-colors ${
+                  selectedGuests === opt
+                    ? 'bg-forest text-white'
+                    : 'bg-ivory text-ink-muted hover:text-ink'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="relative">
+          <Users className="w-4 h-4 text-ink-muted absolute left-3 top-3 pointer-events-none" />
+          <input
+            type="number"
+            placeholder="e.g. 850"
+            {...register('numberOfGuests', { valueAsNumber: true })}
+            className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink transition-all"
+          />
+        </div>
+        {errors.numberOfGuests && (
+          <p className="text-[11px] text-rose-500 mt-1">{errors.numberOfGuests.message}</p>
         )}
       </div>
 
-      {/* Row 6: Additional Notes */}
+      {/* Requirements */}
       <div>
-        <label className="block text-xs font-bold text-charcoal mb-1">
-          Additional Notes (Optional)
+        <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
+          Requirements &amp; Setup Notes *
         </label>
-        <input
-          type="text"
-          placeholder="Preferred time to receive a call back, alternate contacts, etc."
-          {...register('additionalNotes')}
-          className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-2xl border border-sand-border bg-sand-light focus:bg-white focus:outline-none focus:border-coral focus:ring-2 focus:ring-coral/10 transition-all text-charcoal"
+        <textarea
+          rows={3}
+          placeholder="e.g. Need AC green rooms, lawn setup, catering counters for Gujarati thal, mandap decoration..."
+          {...register('requirements')}
+          className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink transition-all"
         />
+        {errors.requirements && (
+          <p className="text-[11px] text-rose-500 mt-1">{errors.requirements.message}</p>
+        )}
       </div>
 
-      {/* Submit Button */}
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full py-3.5 px-6 rounded-2xl bg-coral hover:bg-coral-hover active:bg-coral-dark text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2 transition-all disabled:opacity-70 active:scale-[0.99]"
-      >
-        <Send className="w-4 h-4 text-white" />
-        <span>{isSubmitting ? 'Submitting to Gatherly...' : 'Submit Enquiry to Gatherly'}</span>
-      </button>
+      {/* Submit CTA */}
+      <div className="pt-2 border-t border-ivory-border flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-1.5 text-[11px] text-ink-muted">
+          <ShieldCheck className="w-4 h-4 text-forest shrink-0" />
+          <span>Concierge Intermediary Guarantee Active</span>
+        </div>
 
-      <p className="text-[11px] text-center text-charcoal-muted leading-relaxed">
-        By submitting, you authorize Gatherly Concierge to coordinate availability with the relevant business and reach out via Phone/WhatsApp.
-      </p>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full sm:w-auto px-7 py-3 rounded-xl bg-forest hover:bg-forest-light text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-60"
+        >
+          <Send className="w-4 h-4 text-gold" />
+          <span>{isSubmitting ? 'Checking Availability...' : 'Submit Enquiry'}</span>
+        </button>
+      </div>
     </form>
   );
 };

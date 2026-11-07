@@ -1,79 +1,40 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Business } from '@/types';
+import React from 'react';
 import { useWishlistStore } from '@/store/useWishlistStore';
 import { useEnquiryStore } from '@/store/useEnquiryStore';
-import { useToastStore } from '@/store/useToastStore';
-import { Send, Heart } from 'lucide-react';
+import { Business } from '@/types';
+import { Heart, CalendarCheck, ShieldCheck } from 'lucide-react';
 
 interface StickyEnquiryCTAProps {
   business: Business;
 }
 
 export const StickyEnquiryCTA: React.FC<StickyEnquiryCTAProps> = ({ business }) => {
-  const [mounted, setMounted] = useState(false);
-  const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
-  const isSaved = useWishlistStore((state) => state.isSaved(business.id));
+  const { isSaved, toggleWishlist } = useWishlistStore();
   const openEnquiryModal = useEnquiryStore((state) => state.openEnquiryModal);
-  const addToast = useToastStore((state) => state.addToast);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const handleWishlist = () => {
-    const saved = toggleWishlist(business.id);
-    if (saved) {
-      addToast({
-        type: 'success',
-        title: 'Saved to Wishlist',
-        message: `${business.name} added to your shortlist.`,
-      });
-    } else {
-      addToast({
-        type: 'info',
-        title: 'Removed from Wishlist',
-        message: `${business.name} removed from your shortlist.`,
-      });
-    }
-  };
-
-  const savedState = mounted ? isSaved : false;
+  const saved = isSaved(business.id);
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-sand-border p-3 sm:p-4 shadow-xl lg:hidden">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex items-center gap-1.5">
-            <span className="text-[10px] uppercase font-bold text-charcoal-muted">Starting:</span>
-            <span className="text-xs font-bold text-charcoal">{business.priceDisplay}</span>
-            <span className="text-[10px] text-charcoal-muted">/{business.priceUnit}</span>
-          </div>
-          <p className="text-[11px] font-bold text-charcoal truncate">{business.name}</p>
-        </div>
+    <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-ivory-border p-3.5 shadow-lg">
+      <div className="flex items-center gap-3 max-w-lg mx-auto">
+        {/* Wishlist Button */}
+        <button
+          onClick={() => toggleWishlist(business.id)}
+          className="w-12 h-12 rounded-2xl border border-ivory-border bg-ivory flex items-center justify-center text-ink-secondary hover:text-rose-500 transition-colors shrink-0 shadow-xs"
+          aria-label="Save to wishlist"
+        >
+          <Heart className={`w-5 h-5 ${saved ? 'fill-rose-500 text-rose-500' : ''}`} />
+        </button>
 
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={handleWishlist}
-            aria-label="Save to Wishlist"
-            className={`p-2.5 rounded-xl border transition-colors ${
-              savedState
-                ? 'bg-coral-soft text-coral border-coral-border'
-                : 'bg-sand-light text-charcoal-muted border-sand-border'
-            }`}
-          >
-            <Heart className={`w-4 h-4 ${savedState ? 'fill-current text-coral' : 'text-coral'}`} />
-          </button>
-
-          <button
-            onClick={() => openEnquiryModal(business)}
-            className="px-4 py-2.5 rounded-xl bg-coral hover:bg-coral-hover text-white font-bold text-xs shadow-xs flex items-center gap-1.5 transition-colors"
-          >
-            <Send className="w-3.5 h-3.5 text-white" />
-            <span>Enquire via Gatherly</span>
-          </button>
-        </div>
+        {/* Primary Enquiry Button */}
+        <button
+          onClick={() => openEnquiryModal(business)}
+          className="flex-1 h-12 rounded-2xl bg-forest hover:bg-forest-light text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-md transition-colors"
+        >
+          <CalendarCheck className="w-4 h-4 text-gold" />
+          <span>Send Enquiry to Gatherly</span>
+        </button>
       </div>
     </div>
   );

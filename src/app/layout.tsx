@@ -1,25 +1,29 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { TopHeader } from '@/components/layout/TopHeader';
+import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { DemoBanner } from '@/components/ui/DemoBanner';
 import { EnquiryModal } from '@/components/enquiry/EnquiryModal';
 import { ToastContainer } from '@/components/ui/ToastContainer';
 
 export const metadata: Metadata = {
-  title: 'Gatherly | Wedding Event Planning Dashboard & Marketplace (Ahmedabad)',
+  title: "Gatherly | Ahmedabad's Premium Wedding & Event Planning Marketplace",
   description:
-    'Discover Ahmedabad’s finest party plots, marriage halls, banquet halls, caterers, and wedding specialists. Handpicked luxury venues along Sindhu Bhavan Road, SG Highway, and Bodakdev with private concierge booking assistance.',
+    "Discover Ahmedabad's finest wedding venues, party plots, marriage halls, banquet halls, caterers, decorators and photographers. Plan your perfect celebration with Gatherly's concierge service on Sindhu Bhavan Road, SG Highway, Bodakdev and beyond.",
   keywords: [
-    'Ahmedabad Wedding Dashboard',
-    'Ahmedabad Party Plots',
-    'Sindhu Bhavan Road Venues',
+    'Wedding venues Ahmedabad',
+    'Party Plots Ahmedabad',
     'Marriage Halls Ahmedabad',
-    'SG Highway Banquet Halls',
-    'Gujarati Wedding Caterers',
-    'Gatherly Events',
+    'Sindhu Bhavan Road venues',
+    'SG Highway banquet halls',
+    'Wedding caterers Ahmedabad',
+    'Wedding planners Gujarat',
+    'Gatherly wedding marketplace',
   ],
+  openGraph: {
+    title: "Gatherly — Every Celebration, Beautifully Connected.",
+    description: "Ahmedabad's premium wedding & event planning marketplace. Discover top venues, vendors and wedding professionals.",
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
@@ -29,18 +33,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-[#FBF9F5] text-charcoal flex">
-        {/* Left Vertical App Icon Sidebar (matching screenshot) */}
-        <Sidebar />
-
-        {/* Right Main Dashboard / Application Canvas */}
-        <div className="flex-1 flex flex-col min-w-0 lg:pl-18">
-          <DemoBanner />
-          <TopHeader />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
-
+      <body className="min-h-screen bg-ivory text-ink antialiased">
+        <Navbar />
+        <main className="pt-[72px]">
+          {children}
+        </main>
+        <Footer />
         <EnquiryModal />
         <ToastContainer />
       </body>

@@ -1,93 +1,114 @@
+'use client';
+
 import React from 'react';
-import { Star, Quote } from 'lucide-react';
-
-interface Testimonial {
-  quote: string;
-  author: string;
-  role: string;
-  location: string;
-  venueBooked: string;
-  rating: number;
-}
-
-const TESTIMONIALS: Testimonial[] = [
-  {
-    quote:
-      'Planning our daughter’s wedding from the UK seemed daunting until we found Gatherly. Their Ahmedabad concierge checked 4 party plots on Sindhu Bhavan Road and locked down Shantam Party Plot without a single headache.',
-    author: 'Pravinbhai & Meenaben Shah',
-    role: 'Parents of the Bride',
-    location: 'Bodakdev, Ahmedabad',
-    venueBooked: 'Shantam Party Plot & Grand Lawns',
-    rating: 5,
-  },
-  {
-    quote:
-      'What I loved most was zero vendor spam. I didn’t get 50 random calls from photographers or decorators. Gatherly presented curated options, negotiated package pricing, and everything ran like clockwork.',
-    author: 'Jahnvi Choksi',
-    role: 'Bride (Dec 2026 Wedding)',
-    location: 'Satellite, Ahmedabad',
-    venueBooked: 'The Grand Bhagwati Banquets',
-    rating: 5,
-  },
-  {
-    quote:
-      'We hosted our 800-person Western India Tech Conclave at Renaissance Solarium. Gatherly verified AV configurations, stage setups, and five-star vegetarian catering effortlessly. Excellent corporate service.',
-    author: 'Samir Joshi',
-    role: 'Director of Human Capital, TechSol Gujarat',
-    location: 'SG Highway, Ahmedabad',
-    venueBooked: 'Renaissance Solarium Ballroom',
-    rating: 5,
-  },
-];
+import { Star, Quote, Sparkles, MapPin } from 'lucide-react';
 
 export const Testimonials: React.FC = () => {
+  const testimonials = [
+    {
+      id: 't-1',
+      name: 'Riya & Viraj Shah',
+      event: 'Grand Wedding & Sangeet',
+      venue: 'Shantam Party Plot, Sindhu Bhavan Road',
+      date: 'December 2025',
+      stars: 5,
+      quote:
+        'Gatherly saved us dozens of venue visits. Their team verified availability on three auspicious dates across SBR and secured Shantam within two days. Not a single unsolicited vendor call!',
+    },
+    {
+      id: 't-2',
+      name: 'Pooja & Harshil Desai',
+      event: 'Ring Ceremony & Cocktail Gala',
+      venue: 'The Grand Bhagwati Royale, SG Highway',
+      date: 'November 2025',
+      stars: 5,
+      quote:
+        'The ability to explore verified video walkthroughs of the banquet halls and suites from home made shortlisting effortless for my parents. The concierge team handled all coordination smoothly.',
+    },
+    {
+      id: 't-3',
+      name: 'Bhavesh & Nidhi Patel',
+      event: 'Silver Jubilee & Family Feast',
+      venue: 'Keshav Party Plot, Bopal',
+      date: 'January 2026',
+      stars: 5,
+      quote:
+        'The pricing and guest capacity figures on Gatherly were completely transparent. When we submitted our enquiry, Gatherly promptly checked lawn slot availability and helped us lock in our weekend date.',
+    },
+    {
+      id: 't-4',
+      name: 'Mital & Krunal Mehta',
+      event: 'Destination Style Lawn Wedding',
+      venue: 'Green Pearl Botanical Gardens, Thaltej',
+      date: 'February 2026',
+      stars: 5,
+      quote:
+        'Finding an eco-luxury garden venue with 1,500 guest capacity in western Ahmedabad felt impossible until we browsed Gatherly. The concierge assistance was warm, professional, and discreet.',
+    },
+  ];
+
   return (
-    <section className="py-16 sm:py-20 bg-sand border-b border-sand-border text-charcoal">
+    <section className="py-16 sm:py-24 bg-white border-b border-ivory-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-[0.2em] uppercase text-coral mb-2">
-            <span>Verified Customer Stories</span>
+        {/* Header */}
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-soft text-forest text-xs font-bold uppercase tracking-wider mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
+            <span>Celebration Stories</span>
           </div>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-charcoal tracking-tight">
-            Celebrations Made Effortless
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-ink tracking-tight">
+            What Our Hosts Say
           </h2>
-          <p className="text-charcoal-muted text-xs sm:text-sm mt-2">
-            Hear how Ahmedabad families and planners found their ideal venues through Gatherly.
+          <p className="text-sm sm:text-base text-ink-secondary mt-3 font-normal leading-relaxed">
+            Real families and couples who planned their milestone events with Gatherly&apos;s concierge guidance.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {TESTIMONIALS.map((t, idx) => (
+        {/* Testimonials Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {testimonials.map((t) => (
             <div
-              key={idx}
-              className="p-6 rounded-3xl bg-white border border-sand-border shadow-soft-xs hover:shadow-soft transition-all duration-300 flex flex-col justify-between"
+              key={t.id}
+              className="p-7 sm:p-8 rounded-3xl bg-ivory border border-ivory-border shadow-soft-sm flex flex-col justify-between relative hover:shadow-soft transition-all duration-300"
             >
               <div>
                 {/* Rating & Quote Icon */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-1">
-                    {Array.from({ length: t.rating }).map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-ochre text-ochre" />
+                <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center gap-1 text-gold">
+                    {Array.from({ length: t.stars }).map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-gold" />
                     ))}
                   </div>
-                  <Quote className="w-6 h-6 text-sand-border" />
+                  <Quote className="w-8 h-8 text-gold/30" />
                 </div>
 
-                <p className="text-xs sm:text-sm text-charcoal/85 leading-relaxed italic mb-6">
+                <p className="font-serif italic text-base sm:text-lg text-ink leading-relaxed">
                   &ldquo;{t.quote}&rdquo;
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-sand-border">
-                <h4 className="font-serif font-bold text-charcoal text-sm">{t.author}</h4>
-                <p className="text-[11px] text-charcoal-muted">{t.role} • {t.location}</p>
-                <div className="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-sand text-charcoal border border-sand-border">
-                  <span>Enquired: {t.venueBooked}</span>
+              {/* Host Info */}
+              <div className="mt-6 pt-5 border-t border-ivory-border flex items-center justify-between">
+                <div>
+                  <h4 className="font-bold text-sm text-ink">{t.name}</h4>
+                  <p className="text-xs text-forest font-medium mt-0.5">{t.event}</p>
+                </div>
+                <div className="text-right text-[11px] text-ink-muted">
+                  <div className="flex items-center gap-1 justify-end">
+                    <MapPin className="w-3 h-3 text-gold-dark" />
+                    <span>{t.venue.split(',')[0]}</span>
+                  </div>
+                  <span>{t.date}</span>
                 </div>
               </div>
             </div>
           ))}
         </div>
+
+        {/* Demo Disclaimer */}
+        <p className="text-center text-xs text-ink-muted mt-10">
+          * Representative customer experiences from Ahmedabad event hosts. Genuine verified reviews appear on individual venue profiles.
+        </p>
       </div>
     </section>
   );
