@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Tilt3DCard } from '@/components/ui/Tilt3DCard';
 import { useEnquiryStore } from '@/store/useEnquiryStore';
 import {
   CalendarCheck,
@@ -36,42 +37,71 @@ export const ConciergeCTASection: React.FC = () => {
           Tell us about your event. Gatherly will help you discover suitable venues and professionals.
         </p>
 
-        {/* 3 Privacy & Convenience Guarantees */}
+        {/* 3 Privacy & Convenience Guarantees in 3D */}
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-3xl mx-auto text-left">
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
-            <Lock className="w-4 h-4 text-gold mb-2" />
-            <h4 className="font-semibold text-white text-xs">Zero Spam Guarantee</h4>
-            <p className="text-white/70 text-[11px] mt-1 leading-relaxed">
-              Your contact details stay private. No unsolicited calls from third-party vendors.
-            </p>
-          </div>
+          <Tilt3DCard
+            maxTilt={8}
+            perspective={800}
+            glareColor="rgba(197, 164, 109, 0.25)"
+            className="rounded-2xl shadow-3d-floating"
+          >
+            <div className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md h-full flex flex-col justify-between">
+              <div>
+                <Lock className="w-5 h-5 text-gold mb-2.5 translate-z-20" />
+                <h4 className="font-semibold text-white text-sm translate-z-10">Zero Spam Guarantee</h4>
+                <p className="text-white/70 text-xs mt-1.5 leading-relaxed">
+                  Your contact details stay private. No unsolicited calls from third-party vendors.
+                </p>
+              </div>
+            </div>
+          </Tilt3DCard>
 
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
-            <Clock className="w-4 h-4 text-gold mb-2" />
-            <h4 className="font-semibold text-white text-xs">24-Hour Availability Turns</h4>
-            <p className="text-white/70 text-[11px] mt-1 leading-relaxed">
-              Consolidated date checks across all shortlisted party plots and banquet halls.
-            </p>
-          </div>
+          <Tilt3DCard
+            maxTilt={8}
+            perspective={800}
+            glareColor="rgba(197, 164, 109, 0.25)"
+            className="rounded-2xl shadow-3d-floating"
+          >
+            <div className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md h-full flex flex-col justify-between">
+              <div>
+                <Clock className="w-5 h-5 text-gold mb-2.5 translate-z-20" />
+                <h4 className="font-semibold text-white text-sm translate-z-10">24-Hour Availability Turns</h4>
+                <p className="text-white/70 text-xs mt-1.5 leading-relaxed">
+                  Consolidated date checks across all shortlisted party plots and banquet halls.
+                </p>
+              </div>
+            </div>
+          </Tilt3DCard>
 
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
-            <ShieldCheck className="w-4 h-4 text-gold mb-2" />
-            <h4 className="font-semibold text-white text-xs">Transparent Pricing</h4>
-            <p className="text-white/70 text-[11px] mt-1 leading-relaxed">
-              Direct administrative rates with zero booking surcharges for event hosts.
-            </p>
-          </div>
+          <Tilt3DCard
+            maxTilt={8}
+            perspective={800}
+            glareColor="rgba(197, 164, 109, 0.25)"
+            className="rounded-2xl shadow-3d-floating"
+          >
+            <div className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md h-full flex flex-col justify-between">
+              <div>
+                <ShieldCheck className="w-5 h-5 text-gold mb-2.5 translate-z-20" />
+                <h4 className="font-semibold text-white text-sm translate-z-10">Transparent Pricing</h4>
+                <p className="text-white/70 text-xs mt-1.5 leading-relaxed">
+                  Direct administrative rates with zero booking surcharges for event hosts.
+                </p>
+              </div>
+            </div>
+          </Tilt3DCard>
         </div>
 
-        {/* Requested CTA */}
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button
-            onClick={() => openEnquiryModal()}
-            className="w-full sm:w-auto px-9 py-4 rounded-xl bg-gold hover:bg-gold-dark text-forest-deep font-bold text-sm shadow-md hover:shadow-gold transition-all flex items-center justify-center gap-2 active:scale-95"
-          >
-            <span>Plan Your Event</span>
-            <ArrowRight className="w-4 h-4 text-forest-deep" />
-          </button>
+        {/* Requested CTA with 3D elevation */}
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Tilt3DCard maxTilt={5} perspective={600} glareColor="rgba(255, 255, 255, 0.4)" className="rounded-xl inline-block">
+            <button
+              onClick={() => openEnquiryModal()}
+              className="w-full sm:w-auto px-9 py-4 rounded-xl bg-gold hover:bg-gold-dark text-forest-deep font-bold text-sm shadow-3d-gold hover:shadow-gold transition-all flex items-center justify-center gap-2 active:scale-95 translate-z-20"
+            >
+              <span>Plan Your Event</span>
+              <ArrowRight className="w-4 h-4 text-forest-deep" />
+            </button>
+          </Tilt3DCard>
         </div>
       </div>
     </section>

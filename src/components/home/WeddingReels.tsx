@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Tilt3DCard } from '@/components/ui/Tilt3DCard';
 import {
   DISCOVER_REELS,
   DiscoverReel,
@@ -275,14 +276,14 @@ export const WeddingReels: React.FC = () => {
           ))}
         </div>
 
-        {/* Horizontal Scroll / Drag Carousel */}
+        {/* Horizontal Scroll / Drag Carousel with 3D Perspective */}
         <div
           ref={scrollContainerRef}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
-          className="flex gap-4 sm:gap-6 overflow-x-auto pb-6 pt-1 scroll-smooth snap-x snap-mandatory scrollbar-none cursor-grab active:cursor-grabbing"
+          className="flex gap-4 sm:gap-6 overflow-x-auto pb-8 pt-3 px-1 scroll-smooth snap-x snap-mandatory scrollbar-none cursor-grab active:cursor-grabbing perspective-1500"
         >
           {filteredReels.map((reel, index) => {
             const isLiked = likedReelIds[reel.id];
@@ -290,8 +291,12 @@ export const WeddingReels: React.FC = () => {
             const isCardPlaying = cardPlayingState[reel.id] ?? false;
 
             return (
-              <div
+              <Tilt3DCard
                 key={reel.id}
+                maxTilt={8}
+                perspective={1200}
+                glareColor="rgba(197, 164, 109, 0.22)"
+                className="group relative flex-none w-[270px] sm:w-[310px] aspect-[9/16] rounded-3xl overflow-hidden bg-forest-dark border border-ivory-border shadow-3d-floating hover:border-gold-border cursor-pointer transition-all duration-300 snap-start flex flex-col justify-between p-5"
                 onClick={() => {
                   if (!hasDragged.current) {
                     setActiveReelIndex(index);
@@ -299,7 +304,6 @@ export const WeddingReels: React.FC = () => {
                     setIsMuted(true);
                   }
                 }}
-                className="group relative flex-none w-[270px] sm:w-[310px] aspect-[9/16] rounded-3xl overflow-hidden bg-forest-dark border border-ivory-border shadow-soft-sm hover:shadow-soft-lg hover:border-gold-border cursor-pointer transition-all duration-300 snap-start flex flex-col justify-between p-5 hover:-translate-y-1"
               >
                 {/* Real HTML5 Video Preview inside Card */}
                 <video
@@ -317,8 +321,8 @@ export const WeddingReels: React.FC = () => {
                 {/* Subtle Cinematic Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-black/45 group-hover:via-black/25 transition-colors pointer-events-none" />
 
-                {/* Top Bar inside Card */}
-                <div className="relative z-10 flex items-center justify-between gap-2">
+                {/* Top Bar inside Card - 3D floating layer */}
+                <div className="relative z-10 flex items-center justify-between gap-2 translate-z-20">
                   <span className="px-3 py-1 rounded-full bg-forest text-white text-[11px] font-bold shadow-xs">
                     {reel.eventCategory}
                   </span>
@@ -328,11 +332,11 @@ export const WeddingReels: React.FC = () => {
                   </span>
                 </div>
 
-                {/* Center Inline Play/Pause Toggle Control */}
-                <div className="relative z-10 my-auto self-center">
+                {/* Center Inline Play/Pause Toggle Control - Elevated in 3D */}
+                <div className="relative z-10 my-auto self-center translate-z-30">
                   <button
                     onClick={(e) => toggleCardPlay(e, reel.id)}
-                    className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/40 text-white flex items-center justify-center group-hover:scale-110 group-hover:bg-gold group-hover:text-forest-deep transition-all duration-300 shadow-md"
+                    className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/40 text-white flex items-center justify-center group-hover:scale-110 group-hover:bg-gold group-hover:text-forest-deep transition-all duration-300 shadow-3d"
                     aria-label={isCardPlaying ? 'Pause preview' : 'Play preview'}
                   >
                     {isCardPlaying ? (
@@ -343,8 +347,8 @@ export const WeddingReels: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Bottom Info inside Card */}
-                <div className="relative z-10 space-y-2">
+                {/* Bottom Info inside Card - 3D floating layer */}
+                <div className="relative z-10 space-y-2 translate-z-20">
                   {/* Floating Action Buttons */}
                   <div className="flex items-center justify-end gap-2 pb-1">
                     <button
@@ -392,7 +396,7 @@ export const WeddingReels: React.FC = () => {
                     <Play className="w-3 h-3 fill-current" />
                   </div>
                 </div>
-              </div>
+              </Tilt3DCard>
             );
           })}
         </div>

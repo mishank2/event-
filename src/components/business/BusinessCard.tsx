@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Tilt3DCard } from '@/components/ui/Tilt3DCard';
 import { Business } from '@/types';
 import { useWishlistStore } from '@/store/useWishlistStore';
 import { useEnquiryStore } from '@/store/useEnquiryStore';
@@ -164,122 +165,129 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
     );
   }
 
-  // Grid View Mode (Default)
+  // Grid View Mode (Default in 3D)
   return (
-    <div className="group bg-white rounded-3xl overflow-hidden border border-ivory-border shadow-soft-sm hover:shadow-soft hover:border-gold-border transition-all duration-300 flex flex-col justify-between hover:-translate-y-1">
-      <div>
-        {/* Media Container */}
-        <div className="relative aspect-[16/10] overflow-hidden bg-ivory-dark">
-          <Image
-            src={business.heroImage}
-            alt={business.name}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+    <Tilt3DCard
+      maxTilt={6}
+      perspective={1000}
+      glareColor="rgba(21, 93, 64, 0.08)"
+      className="h-full rounded-3xl shadow-3d hover:shadow-3d-hover transition-all"
+    >
+      <div className="group bg-white rounded-3xl overflow-hidden border border-ivory-border hover:border-gold-border transition-all duration-300 flex flex-col justify-between h-full">
+        <div>
+          {/* Media Container */}
+          <div className="relative aspect-[16/10] overflow-hidden bg-ivory-dark">
+            <Image
+              src={business.heroImage}
+              alt={business.name}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
 
-          {/* Top Badges */}
-          <div className="absolute top-3.5 inset-x-3.5 flex items-center justify-between z-10">
-            <div className="flex items-center gap-1.5">
-              <span className="px-2.5 py-1 rounded-full bg-forest text-white text-[10px] font-bold backdrop-blur-md">
-                {business.category}
-              </span>
-              {business.verified && (
-                <span className="px-2 py-0.5 rounded-full bg-gold-dark text-white text-[10px] font-semibold flex items-center gap-1 backdrop-blur-md">
-                  <ShieldCheck className="w-3 h-3 text-gold-light" />
-                  <span>Audited</span>
+            {/* Top Badges - 3D plane */}
+            <div className="absolute top-3.5 inset-x-3.5 flex items-center justify-between z-10 translate-z-20">
+              <div className="flex items-center gap-1.5">
+                <span className="px-2.5 py-1 rounded-full bg-forest text-white text-[10px] font-bold backdrop-blur-md">
+                  {business.category}
                 </span>
-              )}
+                {business.verified && (
+                  <span className="px-2 py-0.5 rounded-full bg-gold-dark text-white text-[10px] font-semibold flex items-center gap-1 backdrop-blur-md">
+                    <ShieldCheck className="w-3 h-3 text-gold-light" />
+                    <span>Audited</span>
+                  </span>
+                )}
+              </div>
+
+              {/* Wishlist Button - 3D elevated */}
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleWishlist(business.id);
+                }}
+                className="w-9 h-9 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-ink-secondary hover:text-rose-500 transition-colors shadow-xs translate-z-30"
+                aria-label="Save to wishlist"
+              >
+                <Heart className={`w-4 h-4 ${saved ? 'fill-rose-500 text-rose-500' : ''}`} />
+              </button>
             </div>
 
-            {/* Wishlist Button */}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                toggleWishlist(business.id);
-              }}
-              className="w-9 h-9 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-ink-secondary hover:text-rose-500 transition-colors shadow-xs"
-              aria-label="Save to wishlist"
+            {/* Rating Pill Bottom Left - 3D plane */}
+            <div className="absolute bottom-3.5 left-3.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-bold flex items-center gap-1 translate-z-20">
+              <Star className="w-3.5 h-3.5 fill-gold text-gold" />
+              <span>{business.rating.toFixed(1)}</span>
+              <span className="text-white/60 text-[10px] font-normal">({business.reviewCount})</span>
+            </div>
+          </div>
+
+          {/* Info */}
+          <div className="p-5">
+            <h3 className="font-serif text-lg font-bold text-ink group-hover:text-forest transition-colors line-clamp-1">
+              {business.name}
+            </h3>
+            <div className="flex items-center gap-1.5 mt-1.5 text-xs text-ink-muted">
+              <MapPin className="w-3.5 h-3.5 text-gold-dark shrink-0" />
+              <span className="truncate">{business.area}</span>
+            </div>
+
+            <p className="text-xs text-ink-secondary mt-2.5 line-clamp-2 leading-relaxed">
+              {business.tagline}
+            </p>
+
+            {/* Supported Event Types */}
+            {business.eventTypes && business.eventTypes.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-1">
+                {business.eventTypes.slice(0, 3).map((et) => (
+                  <span
+                    key={et}
+                    className="px-2 py-0.5 rounded-md bg-ivory text-ink-secondary text-[10px] font-medium border border-ivory-border"
+                  >
+                    {et}
+                  </span>
+                ))}
+                {business.eventTypes.length > 3 && (
+                  <span className="text-[10px] text-ink-muted self-center ml-0.5">
+                    +{business.eventTypes.length - 3}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Capacity & Price Row */}
+            <div className="mt-4 pt-3 border-t border-ivory-border grid grid-cols-2 gap-2 text-xs">
+              <div className="flex items-center gap-1.5 text-ink-secondary">
+                <Users className="w-3.5 h-3.5 text-forest shrink-0" />
+                <span className="truncate">{business.capacityDisplay}</span>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] text-ink-muted uppercase tracking-wider block">Starts at</span>
+                <span className="font-bold text-forest text-sm">{business.priceDisplay}</span>
+                <span className="text-[10px] text-ink-muted ml-0.5">/{business.priceUnit}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="p-5 pt-0">
+          <div className="grid grid-cols-2 gap-2 pt-3 border-t border-ivory-border">
+            <Link
+              href={`/business/${business.slug}`}
+              className="py-2.5 px-2 rounded-xl border border-ivory-border hover:bg-ivory text-xs font-semibold text-center text-ink transition-colors"
             >
-              <Heart className={`w-4 h-4 ${saved ? 'fill-rose-500 text-rose-500' : ''}`} />
+              View Details
+            </Link>
+            <button
+              onClick={() => openEnquiryModal(business)}
+              className="py-2.5 px-2 rounded-xl bg-forest hover:bg-forest-light text-white text-xs font-bold flex items-center justify-center gap-1 shadow-xs transition-colors"
+            >
+              <CalendarCheck className="w-3.5 h-3.5 text-gold" />
+              <span>Enquire Date</span>
             </button>
           </div>
-
-          {/* Rating Pill Bottom Left */}
-          <div className="absolute bottom-3.5 left-3.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-bold flex items-center gap-1">
-            <Star className="w-3.5 h-3.5 fill-gold text-gold" />
-            <span>{business.rating.toFixed(1)}</span>
-            <span className="text-white/60 text-[10px] font-normal">({business.reviewCount})</span>
-          </div>
-        </div>
-
-        {/* Info */}
-        <div className="p-5">
-          <h3 className="font-serif text-lg font-bold text-ink group-hover:text-forest transition-colors line-clamp-1">
-            {business.name}
-          </h3>
-          <div className="flex items-center gap-1.5 mt-1.5 text-xs text-ink-muted">
-            <MapPin className="w-3.5 h-3.5 text-gold-dark shrink-0" />
-            <span className="truncate">{business.area}</span>
-          </div>
-
-          <p className="text-xs text-ink-secondary mt-2.5 line-clamp-2 leading-relaxed">
-            {business.tagline}
-          </p>
-
-          {/* Supported Event Types */}
-          {business.eventTypes && business.eventTypes.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-1">
-              {business.eventTypes.slice(0, 3).map((et) => (
-                <span
-                  key={et}
-                  className="px-2 py-0.5 rounded-md bg-ivory text-ink-secondary text-[10px] font-medium border border-ivory-border"
-                >
-                  {et}
-                </span>
-              ))}
-              {business.eventTypes.length > 3 && (
-                <span className="text-[10px] text-ink-muted self-center ml-0.5">
-                  +{business.eventTypes.length - 3}
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* Capacity & Price Row */}
-          <div className="mt-4 pt-3 border-t border-ivory-border grid grid-cols-2 gap-2 text-xs">
-            <div className="flex items-center gap-1.5 text-ink-secondary">
-              <Users className="w-3.5 h-3.5 text-forest shrink-0" />
-              <span className="truncate">{business.capacityDisplay}</span>
-            </div>
-            <div className="text-right">
-              <span className="text-[10px] text-ink-muted uppercase tracking-wider block">Starts at</span>
-              <span className="font-bold text-forest text-sm">{business.priceDisplay}</span>
-              <span className="text-[10px] text-ink-muted ml-0.5">/{business.priceUnit}</span>
-            </div>
-          </div>
         </div>
       </div>
-
-      {/* Action Buttons */}
-      <div className="p-5 pt-0">
-        <div className="grid grid-cols-2 gap-2 pt-3 border-t border-ivory-border">
-          <Link
-            href={`/business/${business.slug}`}
-            className="py-2.5 px-2 rounded-xl border border-ivory-border hover:bg-ivory text-xs font-semibold text-center text-ink transition-colors"
-          >
-            View Details
-          </Link>
-          <button
-            onClick={() => openEnquiryModal(business)}
-            className="py-2.5 px-2 rounded-xl bg-forest hover:bg-forest-light text-white text-xs font-bold flex items-center justify-center gap-1 shadow-xs transition-colors"
-          >
-            <CalendarCheck className="w-3.5 h-3.5 text-gold" />
-            <span>Enquire Date</span>
-          </button>
-        </div>
-      </div>
-    </div>
+    </Tilt3DCard>
   );
 };

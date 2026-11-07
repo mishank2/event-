@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Tilt3DCard } from '@/components/ui/Tilt3DCard';
 import { VENDOR_SERVICES } from '@/data/categories';
 import {
   Palette,
@@ -62,101 +63,115 @@ export const VendorDiscoverySection: React.FC = () => {
 
         {/* Modern Editorial Vendor Layout */}
         <div className="space-y-6">
-          {/* Top Editorial Duo */}
+          {/* Top Editorial Duo in 3D */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {featuredVendors.map((vendor) => (
-              <Link
+              <Tilt3DCard
                 key={vendor.id}
-                href={`/businesses?category=${vendor.slug}`}
-                className="group relative rounded-3xl overflow-hidden border border-ivory-border shadow-soft-sm hover:shadow-soft-lg hover:border-gold-border transition-all duration-300 min-h-[320px] flex flex-col justify-end p-7 sm:p-8"
+                maxTilt={6}
+                perspective={1200}
+                glareColor="rgba(197, 164, 109, 0.22)"
+                className="rounded-3xl shadow-3d-floating"
               >
-                <Image
-                  src={vendor.image}
-                  alt={vendor.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.88]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-forest-deep/95 via-forest-deep/35 to-black/15 group-hover:from-forest-deep transition-colors" />
+                <Link
+                  href={`/businesses?category=${vendor.slug}`}
+                  className="group relative rounded-3xl overflow-hidden border border-ivory-border hover:border-gold-border transition-all duration-300 min-h-[320px] flex flex-col justify-end p-7 sm:p-8 h-full"
+                >
+                  <Image
+                    src={vendor.image}
+                    alt={vendor.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.88]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-forest-deep/95 via-forest-deep/35 to-black/15 group-hover:from-forest-deep transition-colors" />
 
-                <div className="relative z-10 flex items-center justify-between mb-auto">
-                  <div className="w-10 h-10 rounded-2xl bg-white/90 backdrop-blur-md text-forest flex items-center justify-center shadow-xs">
-                    {ICON_MAP[vendor.iconName] || <Sparkles className="w-5 h-5" />}
+                  <div className="relative z-10 flex items-center justify-between mb-auto translate-z-20">
+                    <div className="w-10 h-10 rounded-2xl bg-white/90 backdrop-blur-md text-forest flex items-center justify-center shadow-xs">
+                      {ICON_MAP[vendor.iconName] || <Sparkles className="w-5 h-5" />}
+                    </div>
+                    <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-semibold">
+                      {vendor.count} Vetted Professionals
+                    </span>
                   </div>
-                  <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-semibold">
-                    {vendor.count} Vetted Professionals
-                  </span>
-                </div>
 
-                <div className="relative z-10 mt-6">
-                  <div className="text-gold-light text-xs font-semibold uppercase tracking-wider mb-1">
-                    {vendor.startingPrice}
-                  </div>
-                  <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white group-hover:text-gold-light transition-colors">
-                    {vendor.name}
-                  </h3>
-                  <p className="text-white/80 text-xs sm:text-sm mt-1.5 line-clamp-2 max-w-md font-sans">
-                    {vendor.description}
-                  </p>
+                  <div className="relative z-10 mt-6 translate-z-20">
+                    <div className="text-gold-light text-xs font-semibold uppercase tracking-wider mb-1">
+                      {vendor.startingPrice}
+                    </div>
+                    <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white group-hover:text-gold-light transition-colors">
+                      {vendor.name}
+                    </h3>
+                    <p className="text-white/80 text-xs sm:text-sm mt-1.5 line-clamp-2 max-w-md font-sans">
+                      {vendor.description}
+                    </p>
 
-                  <div className="mt-5 pt-3 border-t border-white/20 flex items-center justify-between text-xs font-semibold text-white">
-                    <span>Browse Ahmedabad Portfolios</span>
-                    <div className="w-6 h-6 rounded-full bg-white/20 group-hover:bg-gold group-hover:text-forest-deep flex items-center justify-center transition-all">
-                      <ArrowRight className="w-3.5 h-3.5" />
+                    <div className="mt-5 pt-3 border-t border-white/20 flex items-center justify-between text-xs font-semibold text-white">
+                      <span>Browse Ahmedabad Portfolios</span>
+                      <div className="w-6 h-6 rounded-full bg-white/20 group-hover:bg-gold group-hover:text-forest-deep flex items-center justify-center transition-all translate-z-30">
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </Tilt3DCard>
             ))}
           </div>
 
-          {/* Refined Grid of 6 Specialists */}
+          {/* Refined Grid of 6 Specialists in 3D */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {regularVendors.map((vendor) => (
-              <Link
+              <Tilt3DCard
                 key={vendor.id}
-                href={`/businesses?category=${vendor.slug}`}
-                className="group bg-white rounded-3xl overflow-hidden border border-ivory-border shadow-soft-sm hover:shadow-soft hover:border-gold-border transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
+                maxTilt={7}
+                perspective={1000}
+                glareColor="rgba(21, 93, 64, 0.08)"
+                className="rounded-3xl shadow-3d hover:shadow-3d-hover transition-all"
               >
-                <div>
-                  <div className="relative aspect-[16/10] overflow-hidden bg-ivory-dark">
-                    <Image
-                      src={vendor.image}
-                      alt={vendor.name}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                <Link
+                  href={`/businesses?category=${vendor.slug}`}
+                  className="group bg-white rounded-3xl overflow-hidden border border-ivory-border hover:border-gold-border transition-all duration-300 flex flex-col justify-between h-full"
+                >
+                  <div>
+                    <div className="relative aspect-[16/10] overflow-hidden bg-ivory-dark">
+                      <Image
+                        src={vendor.image}
+                        alt={vendor.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
 
-                    <div className="absolute top-3.5 left-3.5 w-9 h-9 rounded-xl bg-white/95 backdrop-blur-md text-forest flex items-center justify-center shadow-xs">
-                      {ICON_MAP[vendor.iconName] || <Sparkles className="w-4 h-4" />}
+                      <div className="absolute top-3.5 left-3.5 w-9 h-9 rounded-xl bg-white/95 backdrop-blur-md text-forest flex items-center justify-center shadow-xs translate-z-20">
+                        {ICON_MAP[vendor.iconName] || <Sparkles className="w-4 h-4" />}
+                      </div>
+
+                      <div className="absolute bottom-3 left-3.5 px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-medium translate-z-10">
+                        {vendor.startingPrice}
+                      </div>
                     </div>
 
-                    <div className="absolute bottom-3 left-3.5 px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-medium">
-                      {vendor.startingPrice}
+                    <div className="p-5">
+                      <h4 className="font-serif text-lg font-bold text-ink group-hover:text-forest transition-colors">
+                        {vendor.name}
+                      </h4>
+                      <p className="text-xs text-ink-secondary mt-1.5 line-clamp-2 leading-relaxed">
+                        {vendor.description}
+                      </p>
                     </div>
                   </div>
 
-                  <div className="p-5">
-                    <h4 className="font-serif text-lg font-bold text-ink group-hover:text-forest transition-colors">
-                      {vendor.name}
-                    </h4>
-                    <p className="text-xs text-ink-secondary mt-1.5 line-clamp-2 leading-relaxed">
-                      {vendor.description}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-5 pt-0">
-                  <div className="pt-3 border-t border-ivory-border flex items-center justify-between text-xs font-semibold text-forest">
-                    <span>{vendor.count} Specialists</span>
-                    <div className="w-6 h-6 rounded-full bg-emerald-soft flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                      <ArrowRight className="w-3.5 h-3.5" />
+                  <div className="p-5 pt-0">
+                    <div className="pt-3 border-t border-ivory-border flex items-center justify-between text-xs font-semibold text-forest">
+                      <span>{vendor.count} Specialists</span>
+                      <div className="w-6 h-6 rounded-full bg-emerald-soft flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </Tilt3DCard>
             ))}
           </div>
         </div>

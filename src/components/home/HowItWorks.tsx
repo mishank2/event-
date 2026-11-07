@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Tilt3DCard } from '@/components/ui/Tilt3DCard';
 import { useEnquiryStore } from '@/store/useEnquiryStore';
 import {
   Search,
@@ -71,62 +72,74 @@ export const HowItWorks: React.FC = () => {
           </p>
         </div>
 
-        {/* 4 Steps Grid */}
+        {/* 4 Steps Grid in 3D */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step) => (
-            <div
+            <Tilt3DCard
               key={step.number}
-              className="relative p-6 sm:p-7 rounded-3xl bg-white/5 border border-white/10 hover:border-gold/50 backdrop-blur-md transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
+              maxTilt={8}
+              perspective={900}
+              glareColor="rgba(197, 164, 109, 0.22)"
+              className="rounded-3xl shadow-3d-floating"
             >
-              <div>
-                {/* Step Number & Icon */}
-                <div className="flex items-center justify-between mb-6">
-                  <span className="font-serif text-3xl font-bold text-gold/80 group-hover:text-gold transition-colors">
-                    {step.number}
-                  </span>
-                  <div className="w-11 h-11 rounded-2xl bg-forest-light/60 border border-gold/30 flex items-center justify-center">
-                    {step.icon}
+              <div className="relative p-6 sm:p-7 rounded-3xl bg-white/5 border border-white/10 hover:border-gold/50 backdrop-blur-md transition-all duration-300 flex flex-col justify-between h-full group">
+                <div>
+                  {/* Step Number & Icon - 3D plane */}
+                  <div className="flex items-center justify-between mb-6 translate-z-20">
+                    <span className="font-serif text-3xl font-bold text-gold/80 group-hover:text-gold transition-colors">
+                      {step.number}
+                    </span>
+                    <div className="w-11 h-11 rounded-2xl bg-forest-light/60 border border-gold/30 flex items-center justify-center translate-z-30">
+                      {step.icon}
+                    </div>
                   </div>
+
+                  <h3 className="font-serif text-xl font-bold text-white mb-1 translate-z-10">
+                    {step.title}
+                  </h3>
+                  <p className="text-xs font-semibold text-gold-light mb-3">
+                    {step.subtitle}
+                  </p>
+                  <p className="text-xs text-white/70 leading-relaxed">
+                    {step.description}
+                  </p>
                 </div>
 
-                <h3 className="font-serif text-xl font-bold text-white mb-1">
-                  {step.title}
-                </h3>
-                <p className="text-xs font-semibold text-gold-light mb-3">
-                  {step.subtitle}
-                </p>
-                <p className="text-xs text-white/70 leading-relaxed">
-                  {step.description}
-                </p>
+                <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-1.5 text-[11px] text-white/50 group-hover:text-gold-light transition-colors translate-z-10">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-gold" />
+                  <span>Zero vendor phone spam</span>
+                </div>
               </div>
-
-              <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-1.5 text-[11px] text-white/50 group-hover:text-gold-light transition-colors">
-                <CheckCircle2 className="w-3.5 h-3.5 text-gold" />
-                <span>Zero vendor phone spam</span>
-              </div>
-            </div>
+            </Tilt3DCard>
           ))}
         </div>
 
-        {/* Bottom CTA Card */}
-        <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-white/10 border border-gold/40 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-6 max-w-4xl mx-auto">
-          <div className="space-y-1 text-center sm:text-left">
-            <h4 className="font-serif text-xl font-bold text-white">
-              Ready to verify date availability for your event?
-            </h4>
-            <p className="text-xs text-white/80">
-              Submit an enquiry to Gatherly. Our concierge desk responds within 24 hours.
-            </p>
-          </div>
+        {/* Bottom CTA Card in 3D */}
+        <Tilt3DCard
+          maxTilt={4}
+          perspective={1200}
+          glareColor="rgba(197, 164, 109, 0.2)"
+          className="mt-14 rounded-3xl shadow-3d-floating max-w-4xl mx-auto"
+        >
+          <div className="p-6 sm:p-8 rounded-3xl bg-white/10 border border-gold/40 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="space-y-1 text-center sm:text-left translate-z-10">
+              <h4 className="font-serif text-xl font-bold text-white">
+                Ready to verify date availability for your event?
+              </h4>
+              <p className="text-xs text-white/80">
+                Submit an enquiry to Gatherly. Our concierge desk responds within 24 hours.
+              </p>
+            </div>
 
-          <button
-            onClick={() => openEnquiryModal()}
-            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-gold hover:bg-gold-dark text-forest-deep font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 shrink-0 active:scale-95"
-          >
-            <CalendarCheck className="w-4 h-4 text-forest-deep" />
-            <span>Submit Event Enquiry</span>
-          </button>
-        </div>
+            <button
+              onClick={() => openEnquiryModal()}
+              className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-gold hover:bg-gold-dark text-forest-deep font-bold text-xs sm:text-sm shadow-3d-gold transition-all flex items-center justify-center gap-2 shrink-0 active:scale-95 translate-z-30"
+            >
+              <CalendarCheck className="w-4 h-4 text-forest-deep" />
+              <span>Submit Event Enquiry</span>
+            </button>
+          </div>
+        </Tilt3DCard>
       </div>
     </section>
   );

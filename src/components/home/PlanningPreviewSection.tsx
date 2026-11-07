@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { Tilt3DCard } from '@/components/ui/Tilt3DCard';
 import {
   Calendar,
   DollarSign,
@@ -210,15 +211,20 @@ export const PlanningPreviewSection: React.FC = () => {
           ))}
         </div>
 
-        {/* Dynamic Event Planner Card */}
-        <div className="max-w-5xl mx-auto bg-ivory rounded-3xl border border-ivory-border shadow-soft p-6 sm:p-9 relative overflow-hidden">
+        {/* Dynamic Event Planner Card with 3D Tilt Console */}
+        <Tilt3DCard
+          maxTilt={4}
+          perspective={1600}
+          glareColor="rgba(21, 93, 64, 0.08)"
+          className="max-w-5xl mx-auto bg-ivory rounded-3xl border border-ivory-border shadow-3d-floating p-6 sm:p-9 relative overflow-hidden"
+        >
           {/* Subtle Top Accent */}
           <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-forest via-gold to-forest" />
 
-          {/* Top Row: Event Countdown & Next Action */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-ivory-border">
+          {/* Top Row: Event Countdown & Next Action - 3D Plane */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-ivory-border translate-z-20">
             <div className="flex items-center gap-3.5">
-              <div className="w-13 h-13 rounded-2xl bg-white border border-ivory-border shadow-2xs flex items-center justify-center text-2xl shrink-0">
+              <div className="w-13 h-13 rounded-2xl bg-white border border-ivory-border shadow-3d flex items-center justify-center text-2xl shrink-0 translate-z-10">
                 {mode.icon}
               </div>
               <div>
@@ -246,7 +252,7 @@ export const PlanningPreviewSection: React.FC = () => {
           </div>
 
           {/* Dynamic Event Pillars: Specifically customized for each event type */}
-          <div className="my-8">
+          <div className="my-8 translate-z-10">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-bold uppercase tracking-wider text-ink-secondary flex items-center gap-1.5">
                 <CheckSquare className="w-4 h-4 text-forest" />
@@ -261,7 +267,7 @@ export const PlanningPreviewSection: React.FC = () => {
               {mode.categoryPillars.map((pillar) => (
                 <div
                   key={pillar.pillar}
-                  className="bg-white rounded-2xl p-4 border border-ivory-border shadow-2xs flex flex-col justify-between"
+                  className="bg-white rounded-2xl p-4 border border-ivory-border shadow-3d hover:shadow-3d-hover transition-all duration-300 flex flex-col justify-between hover:translate-z-20"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
@@ -295,9 +301,9 @@ export const PlanningPreviewSection: React.FC = () => {
           </div>
 
           {/* Overview Metrics: Budget, RSVPs, Checklist, Schedule */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-6 border-t border-ivory-border">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-6 border-t border-ivory-border translate-z-10">
             {/* Budget */}
-            <div className="bg-white rounded-2xl p-4 border border-ivory-border shadow-2xs">
+            <div className="bg-white rounded-2xl p-4 border border-ivory-border shadow-3d">
               <div className="flex items-center justify-between text-xs mb-2">
                 <span className="font-semibold text-ink flex items-center gap-1">
                   <DollarSign className="w-3.5 h-3.5 text-forest" />
@@ -318,7 +324,7 @@ export const PlanningPreviewSection: React.FC = () => {
             </div>
 
             {/* Guest list */}
-            <div className="bg-white rounded-2xl p-4 border border-ivory-border shadow-2xs">
+            <div className="bg-white rounded-2xl p-4 border border-ivory-border shadow-3d">
               <div className="flex items-center justify-between text-xs mb-2">
                 <span className="font-semibold text-ink flex items-center gap-1">
                   <Users className="w-3.5 h-3.5 text-forest" />
@@ -343,7 +349,7 @@ export const PlanningPreviewSection: React.FC = () => {
             </div>
 
             {/* Schedule Timeline */}
-            <div className="bg-white rounded-2xl p-4 border border-ivory-border shadow-2xs">
+            <div className="bg-white rounded-2xl p-4 border border-ivory-border shadow-3d">
               <div className="flex items-center justify-between text-xs mb-2">
                 <span className="font-semibold text-ink flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5 text-forest" />
@@ -367,7 +373,7 @@ export const PlanningPreviewSection: React.FC = () => {
           </div>
 
           {/* Bottom Callout & Workspace CTA */}
-          <div className="mt-8 pt-6 border-t border-ivory-border flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="mt-8 pt-6 border-t border-ivory-border flex flex-col sm:flex-row items-center justify-between gap-4 translate-z-20">
             <div className="flex items-center gap-2 text-xs text-ink-secondary">
               <ShieldCheck className="w-4 h-4 text-forest shrink-0" />
               <span>
@@ -377,13 +383,13 @@ export const PlanningPreviewSection: React.FC = () => {
 
             <Link
               href="/dashboard"
-              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-forest hover:bg-forest-dark text-white font-semibold text-xs sm:text-sm shadow-xs transition-all flex items-center justify-center gap-1.5 active:scale-95 shrink-0"
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-forest hover:bg-forest-dark text-white font-semibold text-xs sm:text-sm shadow-3d transition-all flex items-center justify-center gap-1.5 active:scale-95 shrink-0 translate-z-30 hover:scale-105"
             >
               <span>Open Event Workspace</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
-        </div>
+        </Tilt3DCard>
       </div>
     </section>
   );

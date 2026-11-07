@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEnquiryStore } from '@/store/useEnquiryStore';
 import { EVENT_TYPES, AHMEDABAD_AREAS } from '@/data/categories';
+import { ThreeCelebrationCanvas } from '@/components/home/ThreeCelebrationCanvas';
+import { Tilt3DCard } from '@/components/ui/Tilt3DCard';
 import {
   Search,
   MapPin,
@@ -86,7 +88,10 @@ export const HeroSection: React.FC = () => {
         <div className="absolute inset-0 bg-radial from-transparent via-black/40 to-black/80 pointer-events-none" />
       </div>
 
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-10 w-full text-center">
+      {/* 3D WebGL Celebration Particles & Floating Rings */}
+      <ThreeCelebrationCanvas />
+
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-20 w-full text-center">
         {/* Editorial Badge Pill */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-gold/40 text-xs sm:text-sm font-medium text-gold-light mb-6 shadow-sm">
           <Sparkles className="w-3.5 h-3.5 text-gold" />
@@ -147,128 +152,136 @@ export const HeroSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Elegant Search Panel */}
-        <div className="mt-6 max-w-5xl mx-auto text-left">
-          <form
-            onSubmit={handleSearch}
-            className="bg-white/95 backdrop-blur-xl rounded-3xl p-4 sm:p-5 shadow-2xl border border-ivory-border grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 text-ink"
-          >
-            {/* 1. Event Type Dropdown */}
-            <div className="lg:col-span-3">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1.5 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-forest" />
-                <span>Event Type</span>
-              </label>
-              <select
-                value={selectedEventType}
-                onChange={(e) => setSelectedEventType(e.target.value)}
-                className="w-full px-3 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/15 transition-all text-ink font-medium"
-              >
-                {EVENT_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
+        {/* Elegant 3D Search Panel */}
+        <div className="mt-6 max-w-5xl mx-auto text-left perspective-1500">
+          <Tilt3DCard maxTilt={5} perspective={1400} className="rounded-3xl shadow-3d-floating overflow-hidden">
+            <form
+              onSubmit={handleSearch}
+              className="bg-white/95 backdrop-blur-xl rounded-3xl p-4 sm:p-5 border border-gold/30 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 text-ink preserve-3d"
+            >
+              {/* 1. Event Type Dropdown */}
+              <div className="lg:col-span-3 translate-z-10">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1.5 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-forest" />
+                  <span>Event Type</span>
+                </label>
+                <select
+                  value={selectedEventType}
+                  onChange={(e) => setSelectedEventType(e.target.value)}
+                  className="w-full px-3 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/15 transition-all text-ink font-medium"
+                >
+                  {EVENT_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            {/* 2. City / Corridor (Default: Ahmedabad) */}
-            <div className="lg:col-span-3">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1.5 flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-forest" />
-                <span>City / Corridor</span>
-              </label>
-              <select
-                value={selectedLocation}
-                onChange={(e) => setSelectedLocation(e.target.value)}
-                className="w-full px-3 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/15 transition-all text-ink font-medium truncate"
-              >
-                <option value="Ahmedabad (All Corridors)">Ahmedabad (All Corridors)</option>
-                {AHMEDABAD_AREAS.map((area) => (
-                  <option key={area} value={area}>
-                    {area}
-                  </option>
-                ))}
-              </select>
-            </div>
+              {/* 2. City / Corridor (Default: Ahmedabad) */}
+              <div className="lg:col-span-3 translate-z-10">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1.5 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-forest" />
+                  <span>City / Corridor</span>
+                </label>
+                <select
+                  value={selectedLocation}
+                  onChange={(e) => setSelectedLocation(e.target.value)}
+                  className="w-full px-3 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/15 transition-all text-ink font-medium truncate"
+                >
+                  <option value="Ahmedabad (All Corridors)">Ahmedabad (All Corridors)</option>
+                  {AHMEDABAD_AREAS.map((area) => (
+                    <option key={area} value={area}>
+                      {area}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            {/* 3. Event Date */}
-            <div className="lg:col-span-2">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1.5 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-forest" />
-                <span>Event Date</span>
-              </label>
-              <input
-                type="date"
-                value={eventDate}
-                onChange={(e) => setEventDate(e.target.value)}
-                className="w-full px-3 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/15 transition-all text-ink font-medium"
-              />
-            </div>
+              {/* 3. Event Date */}
+              <div className="lg:col-span-2 translate-z-10">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1.5 flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-forest" />
+                  <span>Event Date</span>
+                </label>
+                <input
+                  type="date"
+                  value={eventDate}
+                  onChange={(e) => setEventDate(e.target.value)}
+                  className="w-full px-3 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/15 transition-all text-ink font-medium"
+                />
+              </div>
 
-            {/* 4. Guest Capacity */}
-            <div className="lg:col-span-2">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1.5 flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-forest" />
-                <span>Guest Capacity</span>
-              </label>
-              <select
-                value={guestCapacity}
-                onChange={(e) => setGuestCapacity(e.target.value)}
-                className="w-full px-3 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/15 transition-all text-ink font-medium"
-              >
-                <option value="any">Any Capacity</option>
-                <option value="50-200">50 - 200 Guests</option>
-                <option value="200-500">200 - 500 Guests</option>
-                <option value="500-1000">500 - 1,000 Guests</option>
-                <option value="1000+">1,000+ Guests</option>
-              </select>
-            </div>
+              {/* 4. Guest Capacity */}
+              <div className="lg:col-span-2 translate-z-10">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1.5 flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5 text-forest" />
+                  <span>Guest Capacity</span>
+                </label>
+                <select
+                  value={guestCapacity}
+                  onChange={(e) => setGuestCapacity(e.target.value)}
+                  className="w-full px-3 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/15 transition-all text-ink font-medium"
+                >
+                  <option value="any">Any Capacity</option>
+                  <option value="50-200">50 - 200 Guests</option>
+                  <option value="200-500">200 - 500 Guests</option>
+                  <option value="500-1000">500 - 1,000 Guests</option>
+                  <option value="1000+">1,000+ Guests</option>
+                </select>
+              </div>
 
-            {/* 5. Search Button */}
-            <div className="lg:col-span-2 flex items-end">
-              <button
-                type="submit"
-                className="w-full h-[42px] px-5 rounded-xl bg-forest hover:bg-forest-dark text-white font-semibold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 hover:shadow-soft active:scale-95"
-              >
-                <Search className="w-4 h-4 text-gold" />
-                <span>Search</span>
-              </button>
-            </div>
-          </form>
+              {/* 5. Search Button */}
+              <div className="lg:col-span-2 flex items-end translate-z-30">
+                <button
+                  type="submit"
+                  className="w-full h-[42px] px-5 rounded-xl bg-forest hover:bg-forest-dark text-white font-semibold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 hover:shadow-soft active:scale-95"
+                >
+                  <Search className="w-4 h-4 text-gold" />
+                  <span>Search</span>
+                </button>
+              </div>
+            </form>
+          </Tilt3DCard>
         </div>
 
-        {/* Concierge Guarantee Pills */}
+        {/* 3D Floating Concierge Guarantee Pills */}
         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto pt-6 border-t border-white/15 text-left">
-          <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md">
-            <div className="w-9 h-9 rounded-xl bg-forest-light/60 border border-gold/30 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-4.5 h-4.5 text-gold" />
+          <Tilt3DCard maxTilt={8} className="rounded-2xl">
+            <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md shadow-3d hover:border-gold/50 transition-colors">
+              <div className="w-9 h-9 rounded-xl bg-forest-light/60 border border-gold/30 flex items-center justify-center shrink-0">
+                <ShieldCheck className="w-4.5 h-4.5 text-gold" />
+              </div>
+              <div>
+                <p className="font-semibold text-white text-xs">Private Concierge Desk</p>
+                <p className="text-white/80 text-[11px]">No cold calls or third-party spam</p>
+              </div>
             </div>
-            <div>
-              <p className="font-semibold text-white text-xs">Private Concierge Desk</p>
-              <p className="text-white/80 text-[11px]">No cold calls or third-party spam</p>
-            </div>
-          </div>
+          </Tilt3DCard>
 
-          <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md">
-            <div className="w-9 h-9 rounded-xl bg-forest-light/60 border border-gold/30 flex items-center justify-center shrink-0">
-              <CheckCircle2 className="w-4.5 h-4.5 text-gold" />
+          <Tilt3DCard maxTilt={8} className="rounded-2xl">
+            <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md shadow-3d hover:border-gold/50 transition-colors">
+              <div className="w-9 h-9 rounded-xl bg-forest-light/60 border border-gold/30 flex items-center justify-center shrink-0">
+                <CheckCircle2 className="w-4.5 h-4.5 text-gold" />
+              </div>
+              <div>
+                <p className="font-semibold text-white text-xs">Verified Venue Availability</p>
+                <p className="text-white/80 text-[11px]">Direct dates audit with caretaking staff</p>
+              </div>
             </div>
-            <div>
-              <p className="font-semibold text-white text-xs">Verified Venue Availability</p>
-              <p className="text-white/80 text-[11px]">Direct dates audit with caretaking staff</p>
-            </div>
-          </div>
+          </Tilt3DCard>
 
-          <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md">
-            <div className="w-9 h-9 rounded-xl bg-forest-light/60 border border-gold/30 flex items-center justify-center shrink-0">
-              <Sparkles className="w-4.5 h-4.5 text-gold" />
+          <Tilt3DCard maxTilt={8} className="rounded-2xl">
+            <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md shadow-3d hover:border-gold/50 transition-colors">
+              <div className="w-9 h-9 rounded-xl bg-forest-light/60 border border-gold/30 flex items-center justify-center shrink-0">
+                <Sparkles className="w-4.5 h-4.5 text-gold" />
+              </div>
+              <div>
+                <p className="font-semibold text-white text-xs">Turnkey Coordination</p>
+                <p className="text-white/80 text-[11px]">Venues, catering, decor & production</p>
+              </div>
             </div>
-            <div>
-              <p className="font-semibold text-white text-xs">Turnkey Coordination</p>
-              <p className="text-white/80 text-[11px]">Venues, catering, decor & production</p>
-            </div>
-          </div>
+          </Tilt3DCard>
         </div>
       </div>
     </section>

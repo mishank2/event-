@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { BUSINESSES } from '@/data/businesses';
 import { useWishlistStore } from '@/store/useWishlistStore';
 import { useEnquiryStore } from '@/store/useEnquiryStore';
+import { Tilt3DCard } from '@/components/ui/Tilt3DCard';
 import {
   Heart,
   Star,
@@ -53,145 +54,149 @@ export const FeaturedVenues: React.FC = () => {
           </Link>
         </div>
 
-        {/* Visually Rich Asymmetric Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Spotlight Venue Card (Left / 7 cols) */}
+        {/* Visually Rich 3D Asymmetric Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start perspective-2000">
+          {/* Spotlight Venue Card (Left / 7 cols) with 3D Tilt */}
           {spotlightVenue && (
-            <div className="lg:col-span-7 bg-ivory rounded-3xl overflow-hidden border border-ivory-border shadow-soft-sm hover:shadow-soft-lg hover:border-gold-border transition-all duration-300 flex flex-col group">
-              {/* Large Image */}
-              <div className="relative aspect-[16/10] sm:aspect-[16/9] overflow-hidden bg-ivory-dark">
-                <Image
-                  src={spotlightVenue.heroImage}
-                  alt={spotlightVenue.name}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 60vw"
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
-
-                {/* Top Badges */}
-                <div className="absolute top-4 inset-x-4 flex items-center justify-between z-10">
-                  <div className="flex items-center gap-2">
-                    <span className="px-3 py-1 rounded-full bg-forest text-white text-xs font-bold shadow-xs">
-                      {spotlightVenue.category}
-                    </span>
-                    <span className="px-2.5 py-1 rounded-full bg-white/95 text-forest text-[11px] font-bold shadow-xs flex items-center gap-1 backdrop-blur-md">
-                      <Sparkles className="w-3 h-3 text-gold" />
-                      <span>Premier Spotlight</span>
-                    </span>
-                  </div>
-
-                  {/* Wishlist Button */}
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      toggleWishlist(spotlightVenue.id);
-                    }}
-                    className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-ink-secondary hover:text-rose-500 transition-colors shadow-xs"
-                    aria-label="Save to wishlist"
-                  >
-                    <Heart
-                      className={`w-4.5 h-4.5 ${
-                        isSaved(spotlightVenue.id) ? 'fill-rose-500 text-rose-500' : ''
-                      }`}
+            <div className="lg:col-span-7">
+              <Tilt3DCard maxTilt={5} perspective={1400} className="rounded-3xl shadow-3d-floating overflow-hidden">
+                <div className="bg-ivory rounded-3xl overflow-hidden border border-gold/30 transition-all duration-300 flex flex-col group preserve-3d">
+                  {/* Large Image */}
+                  <div className="relative aspect-[16/10] sm:aspect-[16/9] overflow-hidden bg-ivory-dark">
+                    <Image
+                      src={spotlightVenue.heroImage}
+                      alt={spotlightVenue.name}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 60vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      priority
                     />
-                  </button>
-                </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
 
-                {/* Bottom Left Specs in Image */}
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs">
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md font-medium">
-                    <Star className="w-3.5 h-3.5 fill-gold text-gold" />
-                    <span className="font-bold">{spotlightVenue.rating.toFixed(1)}</span>
-                    <span className="text-white/70">({spotlightVenue.reviewCount} reviews)</span>
-                  </div>
-
-                  <div className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md font-medium">
-                    {spotlightVenue.area}
-                  </div>
-                </div>
-              </div>
-
-              {/* Content Body */}
-              <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="font-serif text-2xl sm:text-3xl font-bold text-ink group-hover:text-forest transition-colors">
-                        {spotlightVenue.name}
-                      </h3>
-                      <p className="text-sm text-ink-secondary mt-2 leading-relaxed">
-                        {spotlightVenue.tagline}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Supported Event Types */}
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    {spotlightVenue.eventTypes.slice(0, 4).map((et) => (
-                      <span
-                        key={et}
-                        className="px-2.5 py-0.5 rounded-md bg-white border border-ivory-border text-ink-secondary text-[11px] font-medium"
-                      >
-                        {et}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Highlights Bar */}
-                  <div className="mt-6 pt-5 border-t border-ivory-border grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
-                    <div>
-                      <span className="text-[11px] text-ink-muted uppercase tracking-wider block">
-                        Guest Capacity
-                      </span>
-                      <span className="font-bold text-ink mt-0.5 block">
-                        {spotlightVenue.capacityDisplay}
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="text-[11px] text-ink-muted uppercase tracking-wider block">
-                        Pricing Basis
-                      </span>
-                      <span className="font-bold text-forest text-base mt-0.5 block">
-                        {spotlightVenue.priceDisplay}
-                        <span className="text-xs text-ink-muted font-normal ml-1">
-                          /{spotlightVenue.priceUnit}
+                    {/* Top Badges */}
+                    <div className="absolute top-4 inset-x-4 flex items-center justify-between z-10 translate-z-20">
+                      <div className="flex items-center gap-2">
+                        <span className="px-3 py-1 rounded-full bg-forest text-white text-xs font-bold shadow-xs">
+                          {spotlightVenue.category}
                         </span>
-                      </span>
+                        <span className="px-2.5 py-1 rounded-full bg-white/95 text-forest text-[11px] font-bold shadow-xs flex items-center gap-1 backdrop-blur-md">
+                          <Sparkles className="w-3 h-3 text-gold" />
+                          <span>Premier Spotlight</span>
+                        </span>
+                      </div>
+
+                      {/* Wishlist Button */}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleWishlist(spotlightVenue.id);
+                        }}
+                        className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-ink-secondary hover:text-rose-500 transition-colors shadow-xs"
+                        aria-label="Save to wishlist"
+                      >
+                        <Heart
+                          className={`w-4.5 h-4.5 ${
+                            isSaved(spotlightVenue.id) ? 'fill-rose-500 text-rose-500' : ''
+                          }`}
+                        />
+                      </button>
                     </div>
 
-                    <div className="col-span-2 sm:col-span-1">
-                      <span className="text-[11px] text-ink-muted uppercase tracking-wider block">
-                        Corridor
-                      </span>
-                      <span className="font-medium text-ink mt-0.5 block truncate">
-                        {spotlightVenue.area.split('(')[0]}
-                      </span>
+                    {/* Bottom Left Specs in Image */}
+                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs translate-z-20">
+                      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md font-medium">
+                        <Star className="w-3.5 h-3.5 fill-gold text-gold" />
+                        <span className="font-bold">{spotlightVenue.rating.toFixed(1)}</span>
+                        <span className="text-white/70">({spotlightVenue.reviewCount} reviews)</span>
+                      </div>
+
+                      <div className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md font-medium">
+                        {spotlightVenue.area}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content Body */}
+                  <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="translate-z-10">
+                          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-ink group-hover:text-forest transition-colors">
+                            {spotlightVenue.name}
+                          </h3>
+                          <p className="text-sm text-ink-secondary mt-2 leading-relaxed">
+                            {spotlightVenue.tagline}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Supported Event Types */}
+                      <div className="mt-4 flex flex-wrap gap-1.5 translate-z-10">
+                        {spotlightVenue.eventTypes.slice(0, 4).map((et) => (
+                          <span
+                            key={et}
+                            className="px-2.5 py-0.5 rounded-md bg-white border border-ivory-border text-ink-secondary text-[11px] font-medium"
+                          >
+                            {et}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Highlights Bar */}
+                      <div className="mt-6 pt-5 border-t border-ivory-border grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs translate-z-20">
+                        <div>
+                          <span className="text-[11px] text-ink-muted uppercase tracking-wider block">
+                            Guest Capacity
+                          </span>
+                          <span className="font-bold text-ink mt-0.5 block">
+                            {spotlightVenue.capacityDisplay}
+                          </span>
+                        </div>
+
+                        <div>
+                          <span className="text-[11px] text-ink-muted uppercase tracking-wider block">
+                            Pricing Basis
+                          </span>
+                          <span className="font-bold text-forest text-base mt-0.5 block">
+                            {spotlightVenue.priceDisplay}
+                            <span className="text-xs text-ink-muted font-normal ml-1">
+                              /{spotlightVenue.priceUnit}
+                            </span>
+                          </span>
+                        </div>
+
+                        <div className="col-span-2 sm:col-span-1">
+                          <span className="text-[11px] text-ink-muted uppercase tracking-wider block">
+                            Corridor
+                          </span>
+                          <span className="font-medium text-ink mt-0.5 block truncate">
+                            {spotlightVenue.area.split('(')[0]}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="mt-7 pt-5 border-t border-ivory-border flex flex-col sm:flex-row items-center gap-3 translate-z-30">
+                      <Link
+                        href={`/business/${spotlightVenue.slug}`}
+                        className="w-full sm:w-1/2 py-3 px-4 rounded-xl border border-ivory-border hover:bg-white text-xs sm:text-sm font-semibold text-center text-ink transition-colors shadow-2xs"
+                      >
+                        View Details
+                      </Link>
+
+                      <button
+                        onClick={() => openEnquiryModal(spotlightVenue)}
+                        className="w-full sm:w-1/2 py-3 px-4 rounded-xl bg-forest hover:bg-forest-dark text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs transition-colors active:scale-95"
+                      >
+                        <CalendarCheck className="w-4 h-4 text-gold" />
+                        <span>Enquire Now</span>
+                      </button>
                     </div>
                   </div>
                 </div>
-
-                {/* Actions */}
-                <div className="mt-7 pt-5 border-t border-ivory-border flex flex-col sm:flex-row items-center gap-3">
-                  <Link
-                    href={`/business/${spotlightVenue.slug}`}
-                    className="w-full sm:w-1/2 py-3 px-4 rounded-xl border border-ivory-border hover:bg-white text-xs sm:text-sm font-semibold text-center text-ink transition-colors shadow-2xs"
-                  >
-                    View Details
-                  </Link>
-
-                  <button
-                    onClick={() => openEnquiryModal(spotlightVenue)}
-                    className="w-full sm:w-1/2 py-3 px-4 rounded-xl bg-forest hover:bg-forest-dark text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs transition-colors active:scale-95"
-                  >
-                    <CalendarCheck className="w-4 h-4 text-gold" />
-                    <span>Enquire Now</span>
-                  </button>
-                </div>
-              </div>
+              </Tilt3DCard>
             </div>
           )}
 
@@ -200,10 +205,10 @@ export const FeaturedVenues: React.FC = () => {
             {sideVenues.map((venue) => {
               const saved = isSaved(venue.id);
               return (
-                <div
-                  key={venue.id}
-                  className="group bg-white rounded-3xl overflow-hidden border border-ivory-border shadow-soft-sm hover:shadow-soft hover:border-gold-border transition-all duration-300 flex flex-col sm:flex-row"
-                >
+                <Tilt3DCard key={venue.id} maxTilt={6} perspective={1000} className="rounded-3xl shadow-3d overflow-hidden">
+                  <div
+                    className="group bg-white rounded-3xl overflow-hidden border border-ivory-border transition-all duration-300 flex flex-col sm:flex-row preserve-3d"
+                  >
                   {/* Thumbnail */}
                   <div className="relative sm:w-44 aspect-[16/10] sm:aspect-auto shrink-0 overflow-hidden bg-ivory-dark">
                     <Image
@@ -292,8 +297,9 @@ export const FeaturedVenues: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              );
-            })}
+              </Tilt3DCard>
+            );
+          })}
           </div>
         </div>
       </div>

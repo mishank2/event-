@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Tilt3DCard } from '@/components/ui/Tilt3DCard';
 import { MapPin, ArrowRight, Sparkles } from 'lucide-react';
 
 export const AhmedabadRecommendations: React.FC = () => {
@@ -78,51 +79,58 @@ export const AhmedabadRecommendations: React.FC = () => {
           </Link>
         </div>
 
-        {/* Corridor Cards Grid */}
+        {/* Corridor Cards Grid in 3D */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {corridors.map((c) => (
-            <Link
+            <Tilt3DCard
               key={c.name}
-              href={`/businesses?area=${encodeURIComponent(c.name.split(' ')[0])}`}
-              className="group bg-white rounded-3xl overflow-hidden border border-ivory-border shadow-soft-sm hover:shadow-soft hover:border-gold-border transition-all duration-300 flex flex-col hover:-translate-y-1"
+              maxTilt={7}
+              perspective={1000}
+              glareColor="rgba(21, 93, 64, 0.08)"
+              className="rounded-3xl shadow-3d hover:shadow-3d-hover transition-all"
             >
-              <div className="relative aspect-[16/10] overflow-hidden bg-ivory-dark">
-                <Image
-                  src={c.image}
-                  alt={c.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
+              <Link
+                href={`/businesses?area=${encodeURIComponent(c.name.split(' ')[0])}`}
+                className="group bg-white rounded-3xl overflow-hidden border border-ivory-border hover:border-gold-border transition-all duration-300 flex flex-col h-full"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden bg-ivory-dark">
+                  <Image
+                    src={c.image}
+                    alt={c.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
 
-                <div className="absolute top-3.5 left-3.5 px-2.5 py-1 rounded-full bg-forest/90 text-white text-[10px] font-bold backdrop-blur-md">
-                  {c.badge}
-                </div>
+                  <div className="absolute top-3.5 left-3.5 px-2.5 py-1 rounded-full bg-forest/90 text-white text-[10px] font-bold backdrop-blur-md translate-z-20">
+                    {c.badge}
+                  </div>
 
-                <div className="absolute bottom-3.5 left-3.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold">
-                  {c.venueCount} Listings
-                </div>
-              </div>
-
-              <div className="p-5 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="font-serif text-lg font-bold text-ink group-hover:text-forest transition-colors">
-                    {c.name}
-                  </h3>
-                  <p className="text-xs text-ink-muted mt-2 leading-relaxed">
-                    {c.description}
-                  </p>
-                </div>
-
-                <div className="mt-5 pt-3 border-t border-ivory-border flex items-center justify-between text-xs font-bold text-forest">
-                  <span>Browse Corridors</span>
-                  <div className="w-6 h-6 rounded-full bg-emerald-soft flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                    <ArrowRight className="w-3.5 h-3.5" />
+                  <div className="absolute bottom-3.5 left-3.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold translate-z-10">
+                    {c.venueCount} Listings
                   </div>
                 </div>
-              </div>
-            </Link>
+
+                <div className="p-5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-serif text-lg font-bold text-ink group-hover:text-forest transition-colors">
+                      {c.name}
+                    </h3>
+                    <p className="text-xs text-ink-muted mt-2 leading-relaxed">
+                      {c.description}
+                    </p>
+                  </div>
+
+                  <div className="mt-5 pt-3 border-t border-ivory-border flex items-center justify-between text-xs font-bold text-forest">
+                    <span>Browse Corridors</span>
+                    <div className="w-6 h-6 rounded-full bg-emerald-soft flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </Tilt3DCard>
           ))}
         </div>
       </div>
