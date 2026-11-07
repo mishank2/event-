@@ -10,15 +10,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Brand Emerald
+        // Brand Emerald & Deep Green
         emerald: {
-          primary: "#155D40",
-          dark: "#103F2E",
-          light: "#1E7A54",
+          primary: "#174B38",
+          dark: "#103729",
+          light: "#236B51",
           soft: "#EAF3ED",
-          muted: "#2D7F5C",
+          muted: "#2E7C5F",
         },
-        // Champagne Gold
+        // Champagne Gold Accent
         gold: {
           DEFAULT: "#C5A46D",
           dark: "#A8884F",
@@ -26,26 +26,33 @@ const config: Config = {
           soft: "#F7F1E6",
           border: "#E8D9BF",
         },
-        // Neutrals
+        // Editorial Navy Accent
+        navy: {
+          DEFAULT: "#232A63",
+          dark: "#191E47",
+          light: "#353D82",
+          soft: "#EEF0F8",
+        },
+        // Background & Neutrals
         ivory: {
-          DEFAULT: "#FBF9F5",
+          DEFAULT: "#FAF9F6",
           light: "#FFFFFF",
-          dark: "#F5F2EC",
-          border: "#EAE7DF",
+          dark: "#F4F1EA",
+          border: "#E9E6DE",
         },
         // Text
         ink: {
-          DEFAULT: "#232A27",
-          secondary: "#777D78",
-          muted: "#A3A9A4",
+          DEFAULT: "#242824",
+          secondary: "#747A75",
+          muted: "#9FA6A0",
           light: "#C8CECA",
         },
-        // Legacy compatibility
+        // Forest Brand Colors
         forest: {
-          DEFAULT: "#155D40",
-          dark: "#103F2E",
-          deep: "#0B2118",
-          light: "#1E7A54",
+          DEFAULT: "#174B38",
+          dark: "#103729",
+          deep: "#0B261D",
+          light: "#236B51",
           subtle: "#EAF3ED",
         },
         charcoal: {

@@ -15,6 +15,222 @@ export const EVENT_TYPES = [
 
 export type EventType = (typeof EVENT_TYPES)[number];
 
+export interface OccasionInfo {
+  id: string;
+  name: string;
+  eventType: string;
+  tagline: string;
+  description: string;
+  image: string;
+  venueCount: number;
+  featured?: boolean;
+  badge?: string;
+  iconName: string;
+}
+
+export const OCCASIONS: OccasionInfo[] = [
+  {
+    id: 'wedding',
+    name: 'Weddings & Receptions',
+    eventType: 'Weddings',
+    tagline: 'Grand royal celebrations & open-air lawns',
+    description: 'Manicured party plots, traditional marriage halls, and bespoke mandap decor for royal Gujarati ceremonies.',
+    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80',
+    venueCount: 68,
+    featured: true,
+    badge: 'Signature Occasion',
+    iconName: 'Crown',
+  },
+  {
+    id: 'corporate',
+    name: 'Corporate & Summits',
+    eventType: 'Corporate Events',
+    tagline: 'High-tech auditoriums & gala dinners',
+    description: 'State-of-the-art conference centres, seminar halls with full AV projection, and executive corporate dining.',
+    image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80',
+    venueCount: 34,
+    featured: true,
+    badge: 'Business Class',
+    iconName: 'Briefcase',
+  },
+  {
+    id: 'birthday',
+    name: 'Birthdays & Milestones',
+    eventType: 'Birthdays',
+    tagline: 'Rooftops, theme lounges & pool parties',
+    description: 'Chic celebration spaces, play lounges, and rooftop terraces designed for festive birthday bashes.',
+    image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1200&q=80',
+    venueCount: 28,
+    iconName: 'Cake',
+  },
+  {
+    id: 'anniversary',
+    name: 'Anniversaries & Jubilees',
+    eventType: 'Anniversaries',
+    tagline: 'Intimate poolside cabanas & garden banquets',
+    description: 'Boutique intimate lawns and private dining rooms to toast silver and golden marital milestones.',
+    image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=80',
+    venueCount: 23,
+    iconName: 'HeartHandshake',
+  },
+  {
+    id: 'private-party',
+    name: 'Private Parties & Farmhouses',
+    eventType: 'Private Parties',
+    tagline: 'Exclusive gated villas & weekend retreats',
+    description: 'Private farmhouses with pools, barbecue pavilions, and expansive lawns for family reunions and gatherings.',
+    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80',
+    venueCount: 25,
+    iconName: 'Compass',
+  },
+  {
+    id: 'baby-celebrations',
+    name: 'Baby Celebrations & Srimant',
+    eventType: 'Baby Celebrations',
+    tagline: 'Godh bharai, naming & cradle ceremonies',
+    description: 'Charming indoor and boutique garden settings with pastel floral setups and warm family hospitality.',
+    image: 'https://images.unsplash.com/photo-1529636798458-92182e662485?auto=format&fit=crop&w=1200&q=80',
+    venueCount: 18,
+    iconName: 'Gem',
+  },
+  {
+    id: 'festivals',
+    name: 'Festivals & Concerts',
+    eventType: 'Festivals & Concerts',
+    tagline: 'Navratri Garba grounds & mega exhibitions',
+    description: 'Expansive grounds with high-capacity crowd management, concert sound, and festival lighting.',
+    image: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1200&q=80',
+    venueCount: 16,
+    iconName: 'Flame',
+  },
+  {
+    id: 'education',
+    name: 'Education & Seminars',
+    eventType: 'Educational & Seminars',
+    tagline: 'Acoustic auditoriums & workshops',
+    description: 'Tiered academic auditoriums, university campus spaces, and training halls for seminars & workshops.',
+    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80',
+    venueCount: 14,
+    iconName: 'GraduationCap',
+  },
+  {
+    id: 'community',
+    name: 'Community & Cultural',
+    eventType: 'Community Gatherings',
+    tagline: 'Samasth sabha halls & trust mandals',
+    description: 'Spacious community halls, trust auditoriums, and cultural grounds for community sammelans.',
+    image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=80',
+    venueCount: 22,
+    iconName: 'Users',
+  },
+  {
+    id: 'special-occasions',
+    name: 'Special Occasions & Galas',
+    eventType: 'All Events',
+    tagline: 'Curated bespoke venues for unique gatherings',
+    description: 'Unconventional spaces, artistic studios, and luxury banquet suites for bespoke celebrations.',
+    image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1200&q=80',
+    venueCount: 45,
+    iconName: 'Sparkles',
+  },
+];
+
+export interface VendorServiceInfo {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  image: string;
+  startingPrice: string;
+  count: number;
+  iconName: string;
+}
+
+export const VENDOR_SERVICES: VendorServiceInfo[] = [
+  {
+    id: 'decorators',
+    name: 'Event Decorators',
+    slug: 'decoration',
+    description: 'Thematic stage sets, floral mandaps, corporate backdrops & ambient lighting.',
+    image: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80',
+    startingPrice: 'From ₹45,000',
+    count: 31,
+    iconName: 'Palette',
+  },
+  {
+    id: 'photographers',
+    name: 'Photographers',
+    slug: 'photography',
+    description: 'Candid event portraiture, corporate coverage, pre-shoots & drone cinematography.',
+    image: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=800&q=80',
+    startingPrice: 'From ₹35,000 / day',
+    count: 27,
+    iconName: 'Camera',
+  },
+  {
+    id: 'caterers',
+    name: 'Caterers & Feasts',
+    slug: 'catering',
+    description: 'Authentic Gujarati thals, Royal Marwadi spreads, Kathiyawadi counters & global buffets.',
+    image: 'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=800&q=80',
+    startingPrice: 'From ₹650 / plate',
+    count: 35,
+    iconName: 'Utensils',
+  },
+  {
+    id: 'makeup-artists',
+    name: 'Makeup Artists',
+    slug: 'makeup-artists',
+    description: 'HD bridal beauty, party hair & styling, airbrush cosmetics & celebrity artists.',
+    image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&q=80',
+    startingPrice: 'From ₹12,000 / session',
+    count: 21,
+    iconName: 'Crown',
+  },
+  {
+    id: 'dj-entertainment',
+    name: 'DJs & Entertainment',
+    slug: 'dj-sound',
+    description: 'Live bands, Bollywood DJs, Garba artists, symphony musicians & emcees.',
+    image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80',
+    startingPrice: 'From ₹25,000 / event',
+    count: 19,
+    iconName: 'Music',
+  },
+  {
+    id: 'florists',
+    name: 'Florists & Styling',
+    slug: 'wedding-gardens',
+    description: 'Exotic Dutch flowers, floral arches, entrance installations & traditional marigold styling.',
+    image: 'https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=800&q=80',
+    startingPrice: 'From ₹30,000',
+    count: 22,
+    iconName: 'Flower2',
+  },
+  {
+    id: 'event-planners',
+    name: 'Event Planners',
+    slug: 'wedding-services',
+    description: 'Turnkey event management, vendor coordination, RSVP desks & day-of execution.',
+    image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80',
+    startingPrice: 'From ₹50,000',
+    count: 20,
+    iconName: 'Sparkles',
+  },
+  {
+    id: 'light-sound',
+    name: 'Light & Sound Providers',
+    slug: 'other-event-services',
+    description: 'Concert line arrays, conference podium mics, laser mapping, trussing & silent generators.',
+    image: 'https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=800&q=80',
+    startingPrice: 'From ₹20,000',
+    count: 15,
+    iconName: 'ShieldCheck',
+  },
+];
+
+export const TOTAL_CATEGORY_COUNT = 20;
+
 export const CATEGORIES: CategoryInfo[] = [
   {
     id: 'party-plots',

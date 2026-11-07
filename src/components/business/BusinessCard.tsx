@@ -104,8 +104,22 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
               {business.description}
             </p>
 
+            {/* Supported Event Types */}
+            {business.eventTypes && business.eventTypes.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-2.5">
+                {business.eventTypes.slice(0, 4).map((et) => (
+                  <span
+                    key={et}
+                    className="px-2 py-0.5 rounded-md bg-emerald-soft text-forest text-[10px] font-semibold"
+                  >
+                    {et}
+                  </span>
+                ))}
+              </div>
+            )}
+
             {/* Amenities Pills */}
-            <div className="flex flex-wrap gap-1.5 mt-3">
+            <div className="flex flex-wrap gap-1.5 mt-2.5">
               {business.amenities.slice(0, 4).map((amenity) => (
                 <span
                   key={amenity}
@@ -213,6 +227,25 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
           <p className="text-xs text-ink-secondary mt-2.5 line-clamp-2 leading-relaxed">
             {business.tagline}
           </p>
+
+          {/* Supported Event Types */}
+          {business.eventTypes && business.eventTypes.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1">
+              {business.eventTypes.slice(0, 3).map((et) => (
+                <span
+                  key={et}
+                  className="px-2 py-0.5 rounded-md bg-ivory text-ink-secondary text-[10px] font-medium border border-ivory-border"
+                >
+                  {et}
+                </span>
+              ))}
+              {business.eventTypes.length > 3 && (
+                <span className="text-[10px] text-ink-muted self-center ml-0.5">
+                  +{business.eventTypes.length - 3}
+                </span>
+              )}
+            </div>
+          )}
 
           {/* Capacity & Price Row */}
           <div className="mt-4 pt-3 border-t border-ivory-border grid grid-cols-2 gap-2 text-xs">

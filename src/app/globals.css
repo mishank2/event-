@@ -19,16 +19,16 @@
   --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   /* Core Palette */
-  --color-bg: #FBF9F5;
+  --color-bg: #FAF9F6;
   --color-surface: #FFFFFF;
-  --color-surface-alt: #F5F2EC;
-  --color-border: #EAE7DF;
-  --color-border-light: #F0EDE7;
+  --color-surface-alt: #F4F1EA;
+  --color-border: #E9E6DE;
+  --color-border-light: #F0EDE6;
 
-  /* Brand Emerald */
-  --color-primary: #155D40;
-  --color-primary-dark: #103F2E;
-  --color-primary-light: #1E7A54;
+  /* Brand Primary Green */
+  --color-primary: #174B38;
+  --color-primary-dark: #103729;
+  --color-primary-light: #236B51;
   --color-primary-soft: #EAF3ED;
 
   /* Champagne Gold */
@@ -37,10 +37,15 @@
   --color-gold-soft: #F7F1E6;
   --color-gold-border: #E8D9BF;
 
+  /* Editorial Navy Accent */
+  --color-navy: #232A63;
+  --color-navy-dark: #191E47;
+  --color-navy-soft: #EEF0F8;
+
   /* Text */
-  --color-text: #232A27;
-  --color-text-secondary: #777D78;
-  --color-text-muted: #A3A9A4;
+  --color-text: #242824;
+  --color-text-secondary: #747A75;
+  --color-text-muted: #9FA6A0;
 
   /* Status / Accent */
   --color-accent: #C5A46D;

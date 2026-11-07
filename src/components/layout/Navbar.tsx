@@ -6,27 +6,29 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useWishlistStore } from '@/store/useWishlistStore';
 import { useEnquiryStore } from '@/store/useEnquiryStore';
 import {
-  Menu, X, Search, Heart, ChevronDown, MapPin, Sparkles, ArrowRight
+  Menu, X, Search, Heart, ChevronDown, MapPin, Sparkles, ArrowRight, User
 } from 'lucide-react';
 
 const NAV_LINKS = [
   { name: 'Home', href: '/' },
+  { name: 'Explore', href: '/explore' },
   {
-    name: 'Explore Venues',
+    name: 'Venues',
     href: '/businesses?category=party-plots',
     children: [
       { name: 'Party Plots & Lawns', href: '/businesses?category=party-plots' },
       { name: 'Marriage Halls', href: '/businesses?category=marriage-halls' },
       { name: 'Banquet Halls', href: '/businesses?category=banquet-halls' },
-      { name: 'Corporate & Conference Venues', href: '/businesses?category=corporate-event-venues' },
+      { name: 'Corporate Venues', href: '/businesses?category=corporate-event-venues' },
       { name: 'Birthday & Theme Venues', href: '/businesses?category=birthday-party-venues' },
-      { name: 'Farmhouses & Private Lounges', href: '/businesses?category=private-party-spaces' },
+      { name: 'Farmhouses & Lounges', href: '/businesses?category=private-party-spaces' },
       { name: 'Festival & Exhibition Grounds', href: '/businesses?category=festival-grounds' },
+      { name: 'All Venues', href: '/businesses' },
     ],
   },
   {
-    name: 'Discover Vendors',
-    href: '/explore',
+    name: 'Vendors',
+    href: '/businesses?category=catering',
     children: [
       { name: 'Catering Businesses', href: '/businesses?category=catering' },
       { name: 'Event Decorators', href: '/businesses?category=decoration' },
@@ -34,9 +36,10 @@ const NAV_LINKS = [
       { name: 'DJ & Sound Production', href: '/businesses?category=dj-sound' },
       { name: 'Makeup & Grooming', href: '/businesses?category=makeup-artists' },
       { name: 'Videography & Live Streaming', href: '/businesses?category=videography' },
+      { name: 'All Vendors', href: '/explore' },
     ],
   },
-  { name: 'Gatherly Discover', href: '/#wedding-reels' },
+  { name: 'Discover', href: '/#discover' },
   { name: 'How It Works', href: '/#how-it-works' },
 ];
 
@@ -104,9 +107,9 @@ export const Navbar: React.FC = () => {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
             ? 'bg-white/98 backdrop-blur-lg border-b border-ivory-border shadow-soft-sm'
-            : 'bg-white/90 backdrop-blur-md'
+            : 'bg-white/95 backdrop-blur-md border-b border-ivory-border/60'
         }`}
-        style={{ height: '72px' }}
+        style={{ height: '70px' }}
       >
         <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4">
 
@@ -212,12 +215,21 @@ export const Navbar: React.FC = () => {
               )}
             </Link>
 
-            {/* Plan Your Event CTA */}
+            {/* Login / Profile Workspace */}
+            <Link
+              href="/dashboard"
+              className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-ink-secondary hover:text-ink hover:bg-ivory-dark border border-ivory-border transition-colors"
+            >
+              <User className="w-3.5 h-3.5 text-forest" />
+              <span>Workspace</span>
+            </Link>
+
+            {/* Plan an Event CTA */}
             <button
               onClick={() => openEnquiryModal()}
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-forest hover:bg-forest-dark text-white text-sm font-semibold transition-all hover:shadow-soft-sm active:scale-95"
+              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-forest hover:bg-forest-dark text-white text-xs sm:text-sm font-semibold transition-all hover:shadow-soft-sm active:scale-95"
             >
-              <span>Plan Your Event</span>
+              <span>Plan an Event</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
 
@@ -333,14 +345,22 @@ export const Navbar: React.FC = () => {
               ))}
             </div>
 
-            <div className="p-5 border-t border-ivory-border space-y-3">
+            <div className="p-5 border-t border-ivory-border space-y-2.5">
               <button
                 onClick={() => { openEnquiryModal(); setMobileOpen(false); }}
                 className="w-full py-3 rounded-xl bg-forest text-white font-semibold text-sm hover:bg-forest-dark transition-colors flex items-center justify-center gap-2"
               >
-                <span>Plan Your Event</span>
+                <span>Plan an Event</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
+              <Link
+                href="/dashboard"
+                onClick={() => setMobileOpen(false)}
+                className="w-full py-2.5 rounded-xl border border-ivory-border text-ink font-medium text-xs hover:bg-ivory-dark transition-colors flex items-center justify-center gap-1.5"
+              >
+                <User className="w-3.5 h-3.5 text-forest" />
+                <span>Planning Workspace</span>
+              </Link>
               <Link
                 href="/wishlist"
                 onClick={() => setMobileOpen(false)}

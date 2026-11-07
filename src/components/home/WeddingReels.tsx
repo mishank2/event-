@@ -5,9 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   DISCOVER_REELS,
-  DISCOVER_EVENT_FILTERS,
   DiscoverReel,
-  DiscoverEventCategory,
 } from '@/data/reels';
 import { useWishlistStore } from '@/store/useWishlistStore';
 import { useEnquiryStore } from '@/store/useEnquiryStore';
@@ -22,6 +20,7 @@ import {
   ChevronRight,
   Heart,
   Bookmark,
+  Share2,
   CalendarCheck,
   Film,
   ExternalLink,
@@ -29,8 +28,21 @@ import {
   MapPin,
 } from 'lucide-react';
 
+const REEL_FILTERS = [
+  'All',
+  'Wedding',
+  'Birthday',
+  'Anniversary',
+  'Corporate',
+  'Private Party',
+  'Festivals',
+  'Other Events',
+] as const;
+
+type ReelFilter = (typeof REEL_FILTERS)[number];
+
 export const WeddingReels: React.FC = () => {
-  const [selectedFilter, setSelectedFilter] = useState<DiscoverEventCategory>('All');
+  const [selectedFilter, setSelectedFilter] = useState<ReelFilter>('All');
   const [activeReelIndex, setActiveReelIndex] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [isMuted, setIsMuted] = useState<boolean>(true);
@@ -43,10 +55,13 @@ export const WeddingReels: React.FC = () => {
   const openEnquiryModal = useEnquiryStore((state) => state.openEnquiryModal);
   const addToast = useToastStore((state) => state.addToast);
 
-  const filteredReels =
-    selectedFilter === 'All'
-      ? DISCOVER_REELS
-      : DISCOVER_REELS.filter((r) => r.eventCategory === selectedFilter);
+  const filteredReels = DISCOVER_REELS.filter((r) => {
+    if (selectedFilter === 'All') return true;
+    if (selectedFilter === 'Other Events') {
+      return ['Baby Celebrations', 'Education', 'Community'].includes(r.eventCategory);
+    }
+    return r.eventCategory === selectedFilter;
+  });
 
   const handleScroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -77,10 +92,28 @@ export const WeddingReels: React.FC = () => {
       addToast({
         type: 'info',
         title: next ? 'Saved to Bookmarks' : 'Removed from Bookmarks',
-        message: next ? 'You can view this reel anytime in your shortlist.' : 'Removed from saved moments.',
+        message: next ? 'You can review this moment anytime in your shortlist.' : 'Removed from bookmarks.',
       });
       return { ...prev, [id]: next };
     });
+  };
+
+  const handleShare = (e: React.MouseEvent, reel: DiscoverReel) => {
+    e.stopPropagation();
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      navigator.share({
+        title: reel.title,
+        text: reel.caption,
+        url: window.location.href,
+      }).catch(() => {});
+    } else if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href);
+      addToast({
+        type: 'info',
+        title: 'Link Copied',
+        message: 'Reel link copied to your clipboard.',
+      });
+    }
   };
 
   const activeReel = activeReelIndex !== null ? filteredReels[activeReelIndex] : null;
@@ -111,20 +144,20 @@ export const WeddingReels: React.FC = () => {
   }, [isPlaying, activeReelIndex]);
 
   return (
-    <section id="wedding-reels" className="py-16 sm:py-24 bg-white border-y border-ivory-border overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header: Gatherly Discover */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+    <section id="discover" className="py-20 sm:py-28 bg-white border-b border-ivory-border overflow-hidden">
+      <div id="wedding-reels" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
           <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-soft text-forest text-xs font-bold uppercase tracking-wider mb-2">
-              <Film className="w-3.5 h-3.5 text-gold-dark" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-soft text-forest text-xs font-bold uppercase tracking-wider mb-2.5">
+              <Film className="w-3.5 h-3.5 text-gold" />
               <span>Gatherly Discover</span>
             </div>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-ink tracking-tight">
-              Moments Across Every Celebration
+              Moments That Inspire.
             </h2>
-            <p className="text-sm sm:text-base text-ink-secondary mt-2 max-w-2xl font-normal leading-relaxed">
-              Explore genuine short-form video moments of grand weddings, birthday theme setups, corporate conventions, milestone jubilees, and festival gatherings across Ahmedabad.
+            <p className="text-sm sm:text-base text-ink-secondary mt-2.5 max-w-2xl font-normal leading-relaxed">
+              Explore authentic short-form video walkthroughs, decor transformations, and celebrations from real events across Ahmedabad.
             </p>
           </div>
 
@@ -148,8 +181,8 @@ export const WeddingReels: React.FC = () => {
         </div>
 
         {/* Event Filter Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none">
-          {DISCOVER_EVENT_FILTERS.map((cat) => (
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none">
+          {REEL_FILTERS.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedFilter(cat)}
@@ -159,19 +192,19 @@ export const WeddingReels: React.FC = () => {
                   : 'bg-ivory text-ink-secondary hover:text-ink hover:bg-ivory-dark border border-ivory-border'
               }`}
             >
-              {cat === 'All' ? `All Events (${DISCOVER_REELS.length})` : cat}
+              {cat === 'All' ? `All Moments (${DISCOVER_REELS.length})` : cat}
             </button>
           ))}
         </div>
 
-        {/* Reels Carousel */}
+        {/* Horizontal Carousel (Desktop) / Touch Swipe (Mobile) */}
         <div
           ref={scrollContainerRef}
           className="flex gap-4 sm:gap-6 overflow-x-auto pb-6 pt-1 scroll-smooth snap-x snap-mandatory scrollbar-none"
         >
           {filteredReels.map((reel, index) => {
-            const isLiked = !!likedReelIds[reel.id];
-            const isSaved = !!savedReelIds[reel.id];
+            const isLiked = likedReelIds[reel.id];
+            const isSaved = savedReelIds[reel.id];
 
             return (
               <div
@@ -179,64 +212,86 @@ export const WeddingReels: React.FC = () => {
                 onClick={() => {
                   setActiveReelIndex(index);
                   setIsPlaying(true);
+                  setIsMuted(true);
                 }}
-                className="group relative shrink-0 w-[240px] sm:w-[270px] aspect-[9/16] rounded-3xl overflow-hidden cursor-pointer shadow-soft hover:shadow-lg transition-all duration-300 snap-start bg-neutral-900 border border-ivory-border hover:-translate-y-1"
+                className="group relative flex-none w-[270px] sm:w-[300px] aspect-[9/16] rounded-3xl overflow-hidden bg-forest-dark border border-ivory-border shadow-soft-sm hover:shadow-soft-lg hover:border-gold-border cursor-pointer transition-all duration-300 snap-start flex flex-col justify-between p-5 hover:-translate-y-1"
               >
-                {/* Poster / Video Element */}
+                {/* Poster Thumbnail */}
                 <Image
                   src={reel.thumbnail}
                   alt={reel.title}
                   fill
-                  sizes="(max-width: 768px) 240px, 270px"
-                  className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                  sizes="(max-width: 640px) 270px, 300px"
+                  className="object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.9]"
                 />
 
-                {/* Ambient Gradient Overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/35 pointer-events-none" />
+                {/* Subtle Cinematic Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/40 group-hover:via-black/30 transition-colors" />
 
-                {/* Top Bar: Event Badge, Duration & Actions */}
-                <div className="absolute top-3.5 inset-x-3.5 flex items-center justify-between text-white z-10">
-                  <span className="px-2.5 py-0.5 rounded-full bg-forest text-[10px] font-bold tracking-wider uppercase">
-                    {reel.eventCategory}
-                  </span>
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      onClick={(e) => toggleSave(e, reel.id)}
-                      className={`w-7 h-7 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center transition-colors ${
-                        isSaved ? 'text-gold fill-gold' : 'text-white/80 hover:text-white'
-                      }`}
-                      aria-label="Bookmark reel"
-                    >
-                      <Bookmark className={`w-3.5 h-3.5 ${isSaved ? 'fill-gold' : ''}`} />
-                    </button>
-                    <button
-                      onClick={(e) => toggleLike(e, reel.id)}
-                      className="w-7 h-7 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white/80 hover:text-rose-400 transition-colors"
-                      aria-label="Like reel"
-                    >
-                      <Heart className={`w-3.5 h-3.5 ${isLiked ? 'fill-rose-500 text-rose-500' : ''}`} />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Play Button Indicator in Center */}
-                <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-                  <div className="w-12 h-12 rounded-full bg-white/25 backdrop-blur-md border border-white/40 flex items-center justify-center text-white shadow-xl opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all">
-                    <Play className="w-5 h-5 fill-white ml-0.5" />
-                  </div>
-                </div>
-
-                {/* Bottom Details */}
-                <div className="absolute bottom-0 inset-x-0 p-4 text-white z-10">
-                  <span className="inline-block px-2 py-0.5 rounded bg-gold-dark/90 text-[10px] font-bold uppercase tracking-wider text-white mb-1.5">
+                {/* Top Bar inside Card */}
+                <div className="relative z-10 flex items-center justify-between gap-2">
+                  <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-bold">
                     {reel.categoryTag}
                   </span>
-                  <h3 className="font-serif font-bold text-sm leading-snug line-clamp-2 drop-shadow-sm">
-                    {reel.title}
-                  </h3>
-                  <div className="flex items-center gap-1.5 mt-2 text-[11px] text-white/80">
-                    <MapPin className="w-3 h-3 text-gold shrink-0" />
-                    <span className="truncate">{reel.venueName || reel.creatorName}</span>
+
+                  <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] font-mono">
+                    {reel.duration}
+                  </span>
+                </div>
+
+                {/* Center Play Button Pulse */}
+                <div className="relative z-10 my-auto self-center">
+                  <div className="w-13 h-13 rounded-full bg-white/30 backdrop-blur-md border border-white/50 text-white flex items-center justify-center group-hover:scale-110 group-hover:bg-gold group-hover:text-forest-deep transition-all duration-300 shadow-md">
+                    <Play className="w-6 h-6 ml-1 fill-current" />
+                  </div>
+                </div>
+
+                {/* Bottom Info inside Card */}
+                <div className="relative z-10 space-y-2">
+                  {/* Floating Action Buttons */}
+                  <div className="flex items-center justify-end gap-2 pb-1">
+                    <button
+                      onClick={(e) => toggleLike(e, reel.id)}
+                      className="w-8 h-8 rounded-full bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-rose-500 transition-colors"
+                      aria-label="Like"
+                    >
+                      <Heart
+                        className={`w-4 h-4 ${isLiked ? 'fill-rose-500 text-rose-500' : ''}`}
+                      />
+                    </button>
+
+                    <button
+                      onClick={(e) => toggleSave(e, reel.id)}
+                      className="w-8 h-8 rounded-full bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-gold transition-colors"
+                      aria-label="Save"
+                    >
+                      <Bookmark
+                        className={`w-4 h-4 ${isSaved ? 'fill-gold text-gold' : ''}`}
+                      />
+                    </button>
+
+                    <button
+                      onClick={(e) => handleShare(e, reel)}
+                      className="w-8 h-8 rounded-full bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/40 transition-colors"
+                      aria-label="Share"
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {/* Title & Creator */}
+                  <div>
+                    <h3 className="font-serif text-white font-bold text-base leading-snug line-clamp-2">
+                      {reel.title}
+                    </h3>
+                    <p className="text-[11px] text-white/70 mt-1 truncate">
+                      {reel.venueName || reel.creatorName}
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-white/20 flex items-center justify-between text-[11px] text-gold-light">
+                    <span>Watch Full Walkthrough</span>
+                    <Play className="w-3 h-3 fill-current" />
                   </div>
                 </div>
               </div>
@@ -244,182 +299,172 @@ export const WeddingReels: React.FC = () => {
           })}
         </div>
 
-        {/* Demo Notice */}
-        <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-ink-muted pt-4 border-t border-ivory-border">
-          <p>
-            * Curated demonstration short-form video moments from Ahmedabad celebration spaces. Partner verified walkthroughs loaded on individual venue pages.
-          </p>
-          <button
-            onClick={() => openEnquiryModal()}
-            className="text-forest hover:text-forest-dark font-semibold inline-flex items-center gap-1 self-start sm:self-auto"
-          >
-            <span>Request In-Person Venue Walkthrough</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </div>
-
-      {/* Full-Screen Video Viewer Modal with Genuine Video Playback */}
-      {activeReel && (
-        <div className="fixed inset-0 z-[120] bg-black/95 backdrop-blur-md flex items-center justify-center p-2 sm:p-6 animate-fade-in">
-          {/* Close Button */}
-          <button
+        {/* Full-Screen Video Modal Viewer */}
+        {activeReel && activeReelIndex !== null && (
+          <div
+            className="fixed inset-0 z-[70] bg-black/90 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6"
             onClick={() => setActiveReelIndex(null)}
-            className="absolute top-4 right-4 sm:top-6 sm:right-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-30"
-            aria-label="Close video viewer"
           >
-            <X className="w-6 h-6" />
-          </button>
-
-          {/* Navigation Arrows */}
-          {activeReelIndex !== null && activeReelIndex > 0 && (
-            <button
-              onClick={handlePrevReel}
-              className="hidden md:flex absolute left-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white items-center justify-center transition-colors z-30"
-              aria-label="Previous reel"
+            <div
+              className="relative w-full max-w-sm sm:max-w-md aspect-[9/16] max-h-[92vh] bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/20 flex flex-col justify-between"
+              onClick={(e) => e.stopPropagation()}
             >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-          )}
-
-          {activeReelIndex !== null && activeReelIndex < filteredReels.length - 1 && (
-            <button
-              onClick={handleNextReel}
-              className="hidden md:flex absolute right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white items-center justify-center transition-colors z-30"
-              aria-label="Next reel"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          )}
-
-          {/* 9:16 Video Player Container */}
-          <div className="relative w-full max-w-[420px] aspect-[9/16] rounded-3xl overflow-hidden shadow-2xl bg-black border border-white/10">
-            {/* Genuine HTML5 Video Element */}
-            <video
-              ref={modalVideoRef}
-              src={activeReel.videoUrl}
-              poster={activeReel.thumbnail}
-              autoPlay
-              loop
-              playsInline
-              muted={isMuted}
-              className="w-full h-full object-cover"
-              onClick={() => setIsPlaying(!isPlaying)}
-            />
-
-            {/* Ambient Shadow Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-black/35 pointer-events-none" />
-
-            {/* Video Controls (Top Right) */}
-            <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
-              <button
-                onClick={() => setIsMuted(!isMuted)}
-                className="w-9 h-9 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/80 transition-colors"
-                aria-label={isMuted ? 'Unmute' : 'Mute'}
-              >
-                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-              </button>
-              <button
+              {/* Actual Video Tag */}
+              <video
+                ref={modalVideoRef}
+                src={activeReel.videoUrl}
+                poster={activeReel.thumbnail}
+                className="absolute inset-0 w-full h-full object-cover"
+                autoPlay
+                playsInline
+                loop
+                muted={isMuted}
                 onClick={() => setIsPlaying(!isPlaying)}
-                className="w-9 h-9 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/80 transition-colors"
-                aria-label={isPlaying ? 'Pause' : 'Play'}
-              >
-                {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-              </button>
-            </div>
+              />
 
-            {/* Top Left Event Pill */}
-            <div className="absolute top-4 left-4 z-20">
-              <span className="px-3 py-1 rounded-full bg-forest/90 text-white text-xs font-bold shadow-xs">
-                {activeReel.eventCategory}
-              </span>
-            </div>
+              {/* Gradient Overlays */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/60 pointer-events-none" />
 
-            {/* Floating Action Column: Like & Save */}
-            <div className="absolute right-4 bottom-28 flex flex-col items-center gap-3 z-20">
-              <button
-                onClick={(e) => toggleLike(e, activeReel.id)}
-                className="w-11 h-11 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white hover:text-rose-400 transition-colors shadow-md"
-              >
-                <Heart
-                  className={`w-5 h-5 ${likedReelIds[activeReel.id] ? 'fill-rose-500 text-rose-500' : ''}`}
-                />
-              </button>
-              <span className="text-[11px] font-bold text-white drop-shadow-md">
-                {activeReel.likes + (likedReelIds[activeReel.id] ? 1 : 0)}
-              </span>
-
-              <button
-                onClick={(e) => toggleSave(e, activeReel.id)}
-                className={`w-11 h-11 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center transition-colors shadow-md ${
-                  savedReelIds[activeReel.id] ? 'text-gold fill-gold' : 'text-white hover:text-gold'
-                }`}
-              >
-                <Bookmark className={`w-5 h-5 ${savedReelIds[activeReel.id] ? 'fill-gold' : ''}`} />
-              </button>
-            </div>
-
-            {/* Reel Details & Action */}
-            <div className="absolute bottom-0 inset-x-0 p-5 text-white z-20">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-gold-dark/90 text-[11px] font-semibold uppercase tracking-wider mb-2">
-                <Sparkles className="w-3 h-3 text-gold-light" />
-                <span>{activeReel.categoryTag}</span>
-              </div>
-
-              <h3 className="font-serif text-xl font-bold leading-tight drop-shadow-sm mb-1.5">
-                {activeReel.title}
-              </h3>
-              <p className="text-xs text-white/80 line-clamp-2 leading-relaxed mb-3">
-                {activeReel.caption}
-              </p>
-
-              <div className="flex items-center gap-2 text-xs text-white/90 mb-4 pb-3 border-b border-white/15">
-                <div className="w-6 h-6 rounded-full bg-forest flex items-center justify-center text-gold text-[10px] font-bold">
-                  G
+              {/* Top Modal Controls */}
+              <div className="relative z-20 p-4 flex items-center justify-between text-white">
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-xs font-bold border border-white/20">
+                    {activeReel.eventCategory}
+                  </span>
+                  <span className="text-xs text-white/80">{activeReel.categoryTag}</span>
                 </div>
-                <div>
-                  <p className="font-semibold leading-none">{activeReel.creatorName}</p>
-                  <p className="text-[10px] text-white/60 mt-0.5">{activeReel.creatorRole}</p>
-                </div>
-              </div>
 
-              {/* Action Buttons */}
-              <div className="grid grid-cols-2 gap-2">
-                {activeReel.businessSlug ? (
-                  <Link
-                    href={`/business/${activeReel.businessSlug}`}
-                    onClick={() => setActiveReelIndex(null)}
-                    className="py-2.5 px-3 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-semibold text-center backdrop-blur-md transition-colors"
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setIsMuted(!isMuted)}
+                    className="w-9 h-9 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/20 hover:bg-white/20 transition-colors"
+                    aria-label={isMuted ? 'Unmute' : 'Mute'}
                   >
-                    View Venue Profile
-                  </Link>
-                ) : (
+                    {isMuted ? <VolumeX className="w-4.5 h-4.5" /> : <Volume2 className="w-4.5 h-4.5" />}
+                  </button>
+
+                  <button
+                    onClick={() => setActiveReelIndex(null)}
+                    className="w-9 h-9 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/20 hover:bg-white/20 transition-colors"
+                    aria-label="Close viewer"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Center Play/Pause indicator */}
+              <div
+                className="relative z-20 self-center cursor-pointer p-4"
+                onClick={() => setIsPlaying(!isPlaying)}
+              >
+                {!isPlaying && (
+                  <div className="w-16 h-16 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/40">
+                    <Play className="w-8 h-8 fill-current ml-1" />
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom Reel Details & Interaction Sidebar */}
+              <div className="relative z-20 p-5 space-y-4">
+                {/* Floating Action Buttons */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-white">
+                    <button
+                      onClick={(e) => toggleLike(e, activeReel.id)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-xs border border-white/20"
+                    >
+                      <Heart
+                        className={`w-4 h-4 ${
+                          likedReelIds[activeReel.id] ? 'fill-rose-500 text-rose-500' : ''
+                        }`}
+                      />
+                      <span>
+                        {activeReel.likes + (likedReelIds[activeReel.id] ? 1 : 0)}
+                      </span>
+                    </button>
+
+                    <button
+                      onClick={(e) => toggleSave(e, activeReel.id)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-xs border border-white/20"
+                    >
+                      <Bookmark
+                        className={`w-4 h-4 ${
+                          savedReelIds[activeReel.id] ? 'fill-gold text-gold' : ''
+                        }`}
+                      />
+                      <span>Save</span>
+                    </button>
+
+                    <button
+                      onClick={(e) => handleShare(e, activeReel)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-xs border border-white/20"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      <span>Share</span>
+                    </button>
+                  </div>
+
+                  {/* Previous / Next Reel Buttons */}
+                  <div className="flex items-center gap-1.5 text-white">
+                    <button
+                      onClick={handlePrevReel}
+                      disabled={activeReelIndex === 0}
+                      className="w-8 h-8 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center border border-white/20 disabled:opacity-30"
+                      aria-label="Previous reel"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={handleNextReel}
+                      disabled={activeReelIndex === filteredReels.length - 1}
+                      className="w-8 h-8 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center border border-white/20 disabled:opacity-30"
+                      aria-label="Next reel"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Text Description */}
+                <div>
+                  <h3 className="font-serif text-white font-bold text-lg leading-snug">
+                    {activeReel.title}
+                  </h3>
+                  <p className="text-white/80 text-xs mt-1.5 leading-relaxed line-clamp-3 font-sans">
+                    {activeReel.caption}
+                  </p>
+                </div>
+
+                {/* CTAs */}
+                <div className="pt-2 flex items-center gap-2">
+                  {activeReel.businessSlug && (
+                    <Link
+                      href={`/business/${activeReel.businessSlug}`}
+                      onClick={() => setActiveReelIndex(null)}
+                      className="flex-1 py-2.5 px-3 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white text-xs font-semibold text-center border border-white/20 transition-colors flex items-center justify-center gap-1"
+                    >
+                      <span>View Venue</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </Link>
+                  )}
+
                   <button
                     onClick={() => {
                       setActiveReelIndex(null);
                       openEnquiryModal();
                     }}
-                    className="py-2.5 px-3 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-semibold text-center backdrop-blur-md transition-colors"
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-gold hover:bg-gold-dark text-forest-deep text-xs font-bold transition-colors flex items-center justify-center gap-1"
                   >
-                    Check Venue Details
+                    <CalendarCheck className="w-3.5 h-3.5" />
+                    <span>Plan This Event</span>
                   </button>
-                )}
-
-                <button
-                  onClick={() => {
-                    setActiveReelIndex(null);
-                    openEnquiryModal();
-                  }}
-                  className="py-2.5 px-3 rounded-xl bg-forest hover:bg-forest-light text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md transition-colors"
-                >
-                  <CalendarCheck className="w-3.5 h-3.5 text-gold" />
-                  <span>Enquire Date</span>
-                </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </section>
   );
 };

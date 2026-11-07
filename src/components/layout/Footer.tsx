@@ -104,7 +104,7 @@ export const Footer: React.FC = () => {
               ))}
               <li>
                 <Link href="/explore" className="text-gold hover:underline text-xs font-bold inline-flex items-center gap-1 mt-1">
-                  View All 15 Categories &rarr;
+                  View All {CATEGORIES.length} Categories &rarr;
                 </Link>
               </li>
             </ul>
