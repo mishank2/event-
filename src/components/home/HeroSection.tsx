@@ -15,7 +15,19 @@ import {
   ShieldCheck,
   CheckCircle2,
   CalendarCheck,
+  Play,
 } from 'lucide-react';
+
+const HERO_EVENT_PILLS = [
+  { label: 'Weddings & Receptions', value: 'Weddings', icon: '💍' },
+  { label: 'Birthday Parties', value: 'Birthdays', icon: '🎂' },
+  { label: 'Corporate & Summits', value: 'Corporate Events', icon: '🏢' },
+  { label: 'Festivals & Garba', value: 'Festivals & Concerts', icon: '🎪' },
+  { label: 'Anniversaries & Rings', value: 'Anniversaries', icon: '🥂' },
+  { label: 'Concerts & Shows', value: 'Festivals & Concerts', icon: '🎸' },
+  { label: 'Baby Showers', value: 'Baby Celebrations', icon: '👶' },
+  { label: 'Private Parties', value: 'Private Parties', icon: '🏡' },
+];
 
 export const HeroSection: React.FC = () => {
   const router = useRouter();
@@ -46,23 +58,36 @@ export const HeroSection: React.FC = () => {
     router.push(`/businesses?${params.toString()}`);
   };
 
-  return (
-    <section className="relative min-h-[720px] lg:min-h-[800px] bg-forest-dark text-white overflow-hidden flex items-center justify-center pt-24 pb-16">
-      {/* Background Photography with Warm Luxury Tone */}
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-luminosity scale-105 transition-transform duration-1000"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=2400&q=85')",
-        }}
-      />
+  const handlePillClick = (val: string) => {
+    setSelectedEventType(val);
+    router.push(`/businesses?eventType=${encodeURIComponent(val)}`);
+  };
 
-      {/* Editorial Gradient & Warm Light */}
-      <div className="absolute inset-0 bg-gradient-to-b from-forest-deep/95 via-forest/85 to-forest-deep/95" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[380px] bg-gold/15 rounded-full blur-[150px] pointer-events-none" />
+  return (
+    <section className="relative min-h-[760px] lg:min-h-[840px] text-white overflow-hidden flex items-center justify-center pt-28 pb-16">
+      {/* Background Cinematic Event Video with Autoplay, Muted, Loop */}
+      <div className="absolute inset-0 overflow-hidden">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=2400&q=85"
+          className="w-full h-full object-cover scale-105 filter brightness-[0.7] contrast-[1.05]"
+        >
+          <source
+            src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+            type="video/mp4"
+          />
+        </video>
+
+        {/* Elegant Editorial Dark Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-forest-deep/75 to-forest-deep/95" />
+        <div className="absolute inset-0 bg-radial from-transparent via-black/40 to-black/80 pointer-events-none" />
+      </div>
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-10 w-full text-center">
-        {/* Editorial Pill */}
+        {/* Editorial Badge Pill */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-gold/40 text-xs sm:text-sm font-medium text-gold-light mb-6 shadow-sm">
           <Sparkles className="w-3.5 h-3.5 text-gold" />
           <span>Every Event, Beautifully Connected</span>
@@ -70,45 +95,65 @@ export const HeroSection: React.FC = () => {
           <span className="text-white/80">Ahmedabad Concierge</span>
         </div>
 
-        {/* Editorial Headline */}
-        <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.12] max-w-4xl mx-auto">
-          Find the Perfect Place for{' '}
+        {/* Required Headline */}
+        <h1 className="font-serif text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-white leading-[1.1] max-w-4xl mx-auto">
+          Every Celebration{' '}
           <span className="gold-gradient-text italic font-normal">
-            Every Celebration.
+            Begins Here.
           </span>
         </h1>
 
-        {/* Supporting Text */}
-        <p className="text-base sm:text-lg text-white/85 font-sans leading-relaxed max-w-2xl mx-auto mt-4 font-normal">
-          Discover venues, talented professionals, and inspiration for every occasion.
+        {/* Required Subtitle */}
+        <p className="text-base sm:text-xl text-white/90 font-sans leading-relaxed max-w-3xl mx-auto mt-5 font-normal">
+          Discover extraordinary venues, creative vendors, and unforgettable experiences for every occasion.
         </p>
 
-        {/* Primary CTAs */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 mt-8">
+        {/* CTAs: Explore Events & Plan Your Event */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
           <Link
             href="/businesses"
-            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gold hover:bg-gold-dark text-forest-deep font-bold text-sm shadow-md hover:shadow-gold transition-all flex items-center justify-center gap-2 group active:scale-95"
+            className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gold hover:bg-gold-dark text-forest-deep font-bold text-sm shadow-md hover:shadow-gold transition-all flex items-center justify-center gap-2 group active:scale-95"
           >
-            <span>Explore All Venues</span>
+            <span>Explore Events</span>
             <ArrowRight className="w-4 h-4 text-forest-deep group-hover:translate-x-1 transition-transform" />
           </Link>
 
           <button
             onClick={() => openEnquiryModal()}
-            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-sm border border-gold/40 backdrop-blur-md shadow-sm transition-all flex items-center justify-center gap-2 active:scale-95"
+            className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm border border-gold/40 backdrop-blur-md shadow-sm transition-all flex items-center justify-center gap-2 active:scale-95"
           >
             <CalendarCheck className="w-4 h-4 text-gold" />
-            <span>Plan an Event</span>
+            <span>Plan Your Event</span>
           </button>
         </div>
 
+        {/* Stylish Event Category Selector Tabs */}
+        <div className="mt-10 max-w-4xl mx-auto">
+          <div className="flex items-center justify-center gap-2 overflow-x-auto pb-3 scrollbar-none">
+            {HERO_EVENT_PILLS.map((pill) => (
+              <button
+                key={pill.label}
+                onClick={() => handlePillClick(pill.value)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-all backdrop-blur-md ${
+                  selectedEventType === pill.value
+                    ? 'bg-gold text-forest-deep shadow-sm scale-105'
+                    : 'bg-black/40 hover:bg-white/20 text-white/90 border border-white/15'
+                }`}
+              >
+                <span>{pill.icon}</span>
+                <span>{pill.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Elegant Search Panel */}
-        <div className="mt-12 max-w-5xl mx-auto text-left">
+        <div className="mt-6 max-w-5xl mx-auto text-left">
           <form
             onSubmit={handleSearch}
-            className="bg-white rounded-3xl p-4 sm:p-5 shadow-2xl border border-ivory-border grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 text-ink"
+            className="bg-white/95 backdrop-blur-xl rounded-3xl p-4 sm:p-5 shadow-2xl border border-ivory-border grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 text-ink"
           >
-            {/* 1. Event Type Dropdown (Primary search dimension) */}
+            {/* 1. Event Type Dropdown */}
             <div className="lg:col-span-3">
               <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1.5 flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-forest" />
@@ -127,7 +172,7 @@ export const HeroSection: React.FC = () => {
               </select>
             </div>
 
-            {/* 2. City / Location (Default: Ahmedabad) */}
+            {/* 2. City / Corridor (Default: Ahmedabad) */}
             <div className="lg:col-span-3">
               <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1.5 flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-forest" />
@@ -180,7 +225,7 @@ export const HeroSection: React.FC = () => {
               </select>
             </div>
 
-            {/* 5. Search CTA */}
+            {/* 5. Search Button */}
             <div className="lg:col-span-2 flex items-end">
               <button
                 type="submit"
@@ -191,56 +236,37 @@ export const HeroSection: React.FC = () => {
               </button>
             </div>
           </form>
-
-          {/* Popular Corridors Quick Shortcuts */}
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs text-white/70">
-            <span className="text-gold font-medium">Top Corridors:</span>
-            {['Sindhu Bhavan Road (SBR)', 'SG Highway', 'Bodakdev', 'Prahlad Nagar', 'Bopal'].map(
-              (area) => (
-                <button
-                  key={area}
-                  onClick={() => {
-                    setSelectedLocation(area);
-                    router.push(`/businesses?area=${encodeURIComponent(area)}`);
-                  }}
-                  className="px-3 py-1 rounded-full bg-white/10 hover:bg-gold/30 hover:text-white transition-colors text-[11px] border border-white/10"
-                >
-                  {area}
-                </button>
-              )
-            )}
-          </div>
         </div>
 
-        {/* Concierge Trust Badges */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto pt-6 border-t border-white/10 text-left">
-          <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
+        {/* Concierge Guarantee Pills */}
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto pt-6 border-t border-white/15 text-left">
+          <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md">
             <div className="w-9 h-9 rounded-xl bg-forest-light/60 border border-gold/30 flex items-center justify-center shrink-0">
               <ShieldCheck className="w-4.5 h-4.5 text-gold" />
             </div>
             <div>
               <p className="font-semibold text-white text-xs">Private Concierge Desk</p>
-              <p className="text-white/70 text-[11px]">No cold calls or vendor spam</p>
+              <p className="text-white/80 text-[11px]">No cold calls or third-party spam</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
+          <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md">
             <div className="w-9 h-9 rounded-xl bg-forest-light/60 border border-gold/30 flex items-center justify-center shrink-0">
               <CheckCircle2 className="w-4.5 h-4.5 text-gold" />
             </div>
             <div>
-              <p className="font-semibold text-white text-xs">Verified Dates & Rates</p>
-              <p className="text-white/70 text-[11px]">Direct audit with venue caretaking</p>
+              <p className="font-semibold text-white text-xs">Verified Venue Availability</p>
+              <p className="text-white/80 text-[11px]">Direct dates audit with caretaking staff</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
+          <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md">
             <div className="w-9 h-9 rounded-xl bg-forest-light/60 border border-gold/30 flex items-center justify-center shrink-0">
               <Sparkles className="w-4.5 h-4.5 text-gold" />
             </div>
             <div>
               <p className="font-semibold text-white text-xs">Turnkey Coordination</p>
-              <p className="text-white/70 text-[11px]">Venues, decor, catering & AV</p>
+              <p className="text-white/80 text-[11px]">Venues, catering, decor & production</p>
             </div>
           </div>
         </div>

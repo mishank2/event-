@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -32,10 +32,11 @@ const REEL_FILTERS = [
   'All',
   'Wedding',
   'Birthday',
-  'Anniversary',
   'Corporate',
-  'Private Party',
   'Festivals',
+  'Concerts',
+  'Anniversary',
+  'Community',
   'Other Events',
 ] as const;
 
@@ -44,13 +45,21 @@ type ReelFilter = (typeof REEL_FILTERS)[number];
 export const WeddingReels: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState<ReelFilter>('All');
   const [activeReelIndex, setActiveReelIndex] = useState<number | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const [modalIsPlaying, setModalIsPlaying] = useState<boolean>(true);
   const [isMuted, setIsMuted] = useState<boolean>(true);
+  const [cardPlayingState, setCardPlayingState] = useState<Record<string, boolean>>({});
   const [likedReelIds, setLikedReelIds] = useState<Record<string, boolean>>({});
   const [savedReelIds, setSavedReelIds] = useState<Record<string, boolean>>({});
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const cardVideoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
   const modalVideoRef = useRef<HTMLVideoElement>(null);
+
+  // Drag-to-scroll state
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+  const hasDragged = useRef(false);
 
   const openEnquiryModal = useEnquiryStore((state) => state.openEnquiryModal);
   const addToast = useToastStore((state) => state.addToast);
@@ -58,10 +67,79 @@ export const WeddingReels: React.FC = () => {
   const filteredReels = DISCOVER_REELS.filter((r) => {
     if (selectedFilter === 'All') return true;
     if (selectedFilter === 'Other Events') {
-      return ['Baby Celebrations', 'Education', 'Community'].includes(r.eventCategory);
+      return ['Baby Celebrations', 'Education', 'Private Party'].includes(r.eventCategory);
     }
     return r.eventCategory === selectedFilter;
   });
+
+  // Autoplay visible video cards with IntersectionObserver
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          const reelId = video.dataset.reelId;
+          if (!reelId) return;
+
+          if (entry.isIntersecting) {
+            video.play().then(() => {
+              setCardPlayingState((prev) => ({ ...prev, [reelId]: true }));
+            }).catch(() => {
+              // Browser policy may prevent autoplay until user interaction
+            });
+          } else {
+            video.pause();
+            setCardPlayingState((prev) => ({ ...prev, [reelId]: false }));
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+
+    Object.values(cardVideoRefs.current).forEach((video) => {
+      if (video) observer.observe(video);
+    });
+
+    return () => observer.disconnect();
+  }, [filteredReels]);
+
+  // Card play/pause toggle
+  const toggleCardPlay = (e: React.MouseEvent, reelId: string) => {
+    e.stopPropagation();
+    const video = cardVideoRefs.current[reelId];
+    if (!video) return;
+
+    if (video.paused) {
+      video.play().then(() => {
+        setCardPlayingState((prev) => ({ ...prev, [reelId]: true }));
+      }).catch(() => {});
+    } else {
+      video.pause();
+      setCardPlayingState((prev) => ({ ...prev, [reelId]: false }));
+    }
+  };
+
+  // Drag-to-scroll handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollContainerRef.current) return;
+    isDragging.current = true;
+    hasDragged.current = false;
+    startX.current = e.pageX - scrollContainerRef.current.offsetLeft;
+    scrollLeft.current = scrollContainerRef.current.scrollLeft;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !scrollContainerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollContainerRef.current.offsetLeft;
+    const walk = (x - startX.current) * 1.5;
+    if (Math.abs(walk) > 5) hasDragged.current = true;
+    scrollContainerRef.current.scrollLeft = scrollLeft.current - walk;
+  };
+
+  const handleMouseUp = () => {
+    isDragging.current = false;
+  };
 
   const handleScroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -121,30 +199,30 @@ export const WeddingReels: React.FC = () => {
   const handleNextReel = () => {
     if (activeReelIndex !== null && activeReelIndex < filteredReels.length - 1) {
       setActiveReelIndex(activeReelIndex + 1);
-      setIsPlaying(true);
+      setModalIsPlaying(true);
     }
   };
 
   const handlePrevReel = () => {
     if (activeReelIndex !== null && activeReelIndex > 0) {
       setActiveReelIndex(activeReelIndex - 1);
-      setIsPlaying(true);
+      setModalIsPlaying(true);
     }
   };
 
   // Video play/pause in modal
   useEffect(() => {
     if (modalVideoRef.current) {
-      if (isPlaying) {
+      if (modalIsPlaying) {
         modalVideoRef.current.play().catch(() => {});
       } else {
         modalVideoRef.current.pause();
       }
     }
-  }, [isPlaying, activeReelIndex]);
+  }, [modalIsPlaying, activeReelIndex]);
 
   return (
-    <section id="discover" className="py-20 sm:py-28 bg-white border-b border-ivory-border overflow-hidden">
+    <section id="discover" className="py-20 sm:py-28 bg-white border-b border-ivory-border overflow-hidden select-none">
       <div id="wedding-reels" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
@@ -154,10 +232,10 @@ export const WeddingReels: React.FC = () => {
               <span>Gatherly Discover</span>
             </div>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-ink tracking-tight">
-              Moments That Inspire.
+              Event Reels & Video Discovery
             </h2>
             <p className="text-sm sm:text-base text-ink-secondary mt-2.5 max-w-2xl font-normal leading-relaxed">
-              Explore authentic short-form video walkthroughs, decor transformations, and celebrations from real events across Ahmedabad.
+              Explore authentic short-form video walkthroughs, decor transformations, and celebrations from real weddings, birthdays, corporate events, and festivals.
             </p>
           </div>
 
@@ -188,62 +266,81 @@ export const WeddingReels: React.FC = () => {
               onClick={() => setSelectedFilter(cat)}
               className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedFilter === cat
-                  ? 'bg-forest text-white shadow-xs'
+                  ? 'bg-forest text-white shadow-xs scale-105'
                   : 'bg-ivory text-ink-secondary hover:text-ink hover:bg-ivory-dark border border-ivory-border'
               }`}
             >
-              {cat === 'All' ? `All Moments (${DISCOVER_REELS.length})` : cat}
+              {cat === 'All' ? `All Events (${DISCOVER_REELS.length})` : cat}
             </button>
           ))}
         </div>
 
-        {/* Horizontal Carousel (Desktop) / Touch Swipe (Mobile) */}
+        {/* Horizontal Scroll / Drag Carousel */}
         <div
           ref={scrollContainerRef}
-          className="flex gap-4 sm:gap-6 overflow-x-auto pb-6 pt-1 scroll-smooth snap-x snap-mandatory scrollbar-none"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          className="flex gap-4 sm:gap-6 overflow-x-auto pb-6 pt-1 scroll-smooth snap-x snap-mandatory scrollbar-none cursor-grab active:cursor-grabbing"
         >
           {filteredReels.map((reel, index) => {
             const isLiked = likedReelIds[reel.id];
             const isSaved = savedReelIds[reel.id];
+            const isCardPlaying = cardPlayingState[reel.id] ?? false;
 
             return (
               <div
                 key={reel.id}
                 onClick={() => {
-                  setActiveReelIndex(index);
-                  setIsPlaying(true);
-                  setIsMuted(true);
+                  if (!hasDragged.current) {
+                    setActiveReelIndex(index);
+                    setModalIsPlaying(true);
+                    setIsMuted(true);
+                  }
                 }}
-                className="group relative flex-none w-[270px] sm:w-[300px] aspect-[9/16] rounded-3xl overflow-hidden bg-forest-dark border border-ivory-border shadow-soft-sm hover:shadow-soft-lg hover:border-gold-border cursor-pointer transition-all duration-300 snap-start flex flex-col justify-between p-5 hover:-translate-y-1"
+                className="group relative flex-none w-[270px] sm:w-[310px] aspect-[9/16] rounded-3xl overflow-hidden bg-forest-dark border border-ivory-border shadow-soft-sm hover:shadow-soft-lg hover:border-gold-border cursor-pointer transition-all duration-300 snap-start flex flex-col justify-between p-5 hover:-translate-y-1"
               >
-                {/* Poster Thumbnail */}
-                <Image
-                  src={reel.thumbnail}
-                  alt={reel.title}
-                  fill
-                  sizes="(max-width: 640px) 270px, 300px"
-                  className="object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.9]"
+                {/* Real HTML5 Video Preview inside Card */}
+                <video
+                  ref={(el) => { cardVideoRefs.current[reel.id] = el; }}
+                  data-reel-id={reel.id}
+                  src={reel.videoUrl}
+                  poster={reel.thumbnail}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.88]"
                 />
 
                 {/* Subtle Cinematic Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/40 group-hover:via-black/30 transition-colors" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-black/45 group-hover:via-black/25 transition-colors pointer-events-none" />
 
                 {/* Top Bar inside Card */}
                 <div className="relative z-10 flex items-center justify-between gap-2">
-                  <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-bold">
-                    {reel.categoryTag}
+                  <span className="px-3 py-1 rounded-full bg-forest text-white text-[11px] font-bold shadow-xs">
+                    {reel.eventCategory}
                   </span>
 
-                  <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] font-mono">
+                  <span className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[10px] font-mono">
                     {reel.duration}
                   </span>
                 </div>
 
-                {/* Center Play Button Pulse */}
+                {/* Center Inline Play/Pause Toggle Control */}
                 <div className="relative z-10 my-auto self-center">
-                  <div className="w-13 h-13 rounded-full bg-white/30 backdrop-blur-md border border-white/50 text-white flex items-center justify-center group-hover:scale-110 group-hover:bg-gold group-hover:text-forest-deep transition-all duration-300 shadow-md">
-                    <Play className="w-6 h-6 ml-1 fill-current" />
-                  </div>
+                  <button
+                    onClick={(e) => toggleCardPlay(e, reel.id)}
+                    className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/40 text-white flex items-center justify-center group-hover:scale-110 group-hover:bg-gold group-hover:text-forest-deep transition-all duration-300 shadow-md"
+                    aria-label={isCardPlaying ? 'Pause preview' : 'Play preview'}
+                  >
+                    {isCardPlaying ? (
+                      <Pause className="w-5 h-5 fill-current" />
+                    ) : (
+                      <Play className="w-5 h-5 ml-0.5 fill-current" />
+                    )}
+                  </button>
                 </div>
 
                 {/* Bottom Info inside Card */}
@@ -279,18 +376,19 @@ export const WeddingReels: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Title & Creator */}
+                  {/* Title & Venue / Location Info */}
                   <div>
                     <h3 className="font-serif text-white font-bold text-base leading-snug line-clamp-2">
                       {reel.title}
                     </h3>
-                    <p className="text-[11px] text-white/70 mt-1 truncate">
-                      {reel.venueName || reel.creatorName}
-                    </p>
+                    <div className="flex items-center gap-1 text-[11px] text-white/80 mt-1 truncate">
+                      <MapPin className="w-3 h-3 text-gold shrink-0" />
+                      <span className="truncate">{reel.venueName || reel.creatorName}</span>
+                    </div>
                   </div>
 
                   <div className="pt-2 border-t border-white/20 flex items-center justify-between text-[11px] text-gold-light">
-                    <span>Watch Full Walkthrough</span>
+                    <span>Watch Full Video</span>
                     <Play className="w-3 h-3 fill-current" />
                   </div>
                 </div>
@@ -302,7 +400,7 @@ export const WeddingReels: React.FC = () => {
         {/* Full-Screen Video Modal Viewer */}
         {activeReel && activeReelIndex !== null && (
           <div
-            className="fixed inset-0 z-[70] bg-black/90 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6"
+            className="fixed inset-0 z-[70] bg-black/95 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6"
             onClick={() => setActiveReelIndex(null)}
           >
             <div
@@ -319,7 +417,7 @@ export const WeddingReels: React.FC = () => {
                 playsInline
                 loop
                 muted={isMuted}
-                onClick={() => setIsPlaying(!isPlaying)}
+                onClick={() => setModalIsPlaying(!modalIsPlaying)}
               />
 
               {/* Gradient Overlays */}
@@ -328,10 +426,10 @@ export const WeddingReels: React.FC = () => {
               {/* Top Modal Controls */}
               <div className="relative z-20 p-4 flex items-center justify-between text-white">
                 <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-xs font-bold border border-white/20">
+                  <span className="px-3 py-1 rounded-full bg-forest text-xs font-bold border border-white/20">
                     {activeReel.eventCategory}
                   </span>
-                  <span className="text-xs text-white/80">{activeReel.categoryTag}</span>
+                  <span className="text-xs text-white/90">{activeReel.categoryTag}</span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -356,9 +454,9 @@ export const WeddingReels: React.FC = () => {
               {/* Center Play/Pause indicator */}
               <div
                 className="relative z-20 self-center cursor-pointer p-4"
-                onClick={() => setIsPlaying(!isPlaying)}
+                onClick={() => setModalIsPlaying(!modalIsPlaying)}
               >
-                {!isPlaying && (
+                {!modalIsPlaying && (
                   <div className="w-16 h-16 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/40">
                     <Play className="w-8 h-8 fill-current ml-1" />
                   </div>
@@ -431,7 +529,11 @@ export const WeddingReels: React.FC = () => {
                   <h3 className="font-serif text-white font-bold text-lg leading-snug">
                     {activeReel.title}
                   </h3>
-                  <p className="text-white/80 text-xs mt-1.5 leading-relaxed line-clamp-3 font-sans">
+                  <div className="flex items-center gap-1.5 text-xs text-gold-light mt-1">
+                    <MapPin className="w-3.5 h-3.5" />
+                    <span>{activeReel.venueName}</span>
+                  </div>
+                  <p className="text-white/80 text-xs mt-1.5 leading-relaxed line-clamp-2 font-sans">
                     {activeReel.caption}
                   </p>
                 </div>

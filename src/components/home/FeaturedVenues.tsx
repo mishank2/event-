@@ -188,7 +188,7 @@ export const FeaturedVenues: React.FC = () => {
                     className="w-full sm:w-1/2 py-3 px-4 rounded-xl bg-forest hover:bg-forest-dark text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs transition-colors active:scale-95"
                   >
                     <CalendarCheck className="w-4 h-4 text-gold" />
-                    <span>Check Availability</span>
+                    <span>Enquire Now</span>
                   </button>
                 </div>
               </div>
@@ -255,6 +255,12 @@ export const FeaturedVenues: React.FC = () => {
                         {venue.name}
                       </h4>
 
+                      <div className="flex items-center gap-1 text-[11px] text-ink-muted mt-1">
+                        <Star className="w-3 h-3 fill-gold text-gold" />
+                        <span className="font-bold text-ink">{venue.rating.toFixed(1)}</span>
+                        <span>({venue.reviewCount})</span>
+                      </div>
+
                       <div className="mt-2.5 flex items-center justify-between text-xs">
                         <span className="text-ink-secondary flex items-center gap-1 text-[11px]">
                           <Users className="w-3 h-3 text-forest" />
@@ -281,7 +287,7 @@ export const FeaturedVenues: React.FC = () => {
                         onClick={() => openEnquiryModal(venue)}
                         className="px-3 py-1.5 rounded-lg bg-emerald-soft hover:bg-forest hover:text-white text-forest text-xs font-bold transition-all"
                       >
-                        Enquire
+                        Enquire Now
                       </button>
                     </div>
                   </div>

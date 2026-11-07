@@ -16,6 +16,7 @@ import {
   Users,
   Sparkles,
   ArrowRight,
+  Music,
 } from 'lucide-react';
 
 const ICON_MAP: Record<string, React.ReactNode> = {
@@ -26,6 +27,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   Compass: <Compass className="w-5 h-5" />,
   Gem: <Gem className="w-5 h-5" />,
   Flame: <Flame className="w-5 h-5" />,
+  Music: <Music className="w-5 h-5" />,
   GraduationCap: <GraduationCap className="w-5 h-5" />,
   Users: <Users className="w-5 h-5" />,
   Sparkles: <Sparkles className="w-5 h-5" />,

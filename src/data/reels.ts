@@ -6,6 +6,7 @@ export type DiscoverEventCategory =
   | 'Anniversary'
   | 'Private Party'
   | 'Festivals'
+  | 'Concerts'
   | 'Baby Celebrations'
   | 'Education'
   | 'Community';
@@ -34,8 +35,9 @@ export const DISCOVER_EVENT_FILTERS: DiscoverEventCategory[] = [
   'Birthday',
   'Corporate',
   'Anniversary',
-  'Private Party',
   'Festivals',
+  'Concerts',
+  'Private Party',
   'Baby Celebrations',
   'Education',
   'Community',
@@ -194,6 +196,40 @@ export const DISCOVER_REELS: DiscoverReel[] = [
     isDemo: true,
     tags: ['#communitysammelan', '#sahbhoj', '#ahmedabadcommunity'],
     likes: 1410,
+  },
+  {
+    id: 'reel-10',
+    title: 'Live Bollywood Music Night & Stage Lighting',
+    caption: 'Dynamic concert moving heads, line-array audio rig, and pyrotechnic cold fire stage for 3,000 attendees.',
+    eventCategory: 'Concerts',
+    categoryTag: 'Concert & Live Show',
+    creatorName: 'Aura Sound & Stage Engineering',
+    creatorRole: 'Concert Production Partner',
+    businessSlug: 'shantam-party-plot-sbr',
+    venueName: 'Sindhu Bhavan Lawns',
+    thumbnail: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=720&q=80',
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    duration: '0:48',
+    isDemo: true,
+    tags: ['#liveconcert', '#stagesound', '#ahmedabadnights'],
+    likes: 2890,
+  },
+  {
+    id: 'reel-11',
+    title: 'Sunset Ring Ceremony & Floral Tunnel',
+    caption: 'Boutique garden lawn entrance adorned with 5,000 tuberoses and mirror aisle for evening ring exchange.',
+    eventCategory: 'Anniversary',
+    categoryTag: 'Engagement & Rings',
+    creatorName: 'Green Pearl Botanical Gardens',
+    creatorRole: 'Garden Venue Host',
+    businessSlug: 'green-pearl-gardens-thaltej',
+    venueName: 'Thaltej Botanical Greens',
+    thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=720&q=80',
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    duration: '0:36',
+    isDemo: true,
+    tags: ['#ringceremony', '#sunsetengagement', '#floraltunnel'],
+    likes: 1950,
   },
 ];
 
