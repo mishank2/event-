@@ -21,6 +21,10 @@ import {
   Users,
   ShieldCheck,
   ArrowRight,
+  HeartHandshake,
+  Flame,
+  GraduationCap,
+  Compass,
 } from 'lucide-react';
 
 const ICON_MAP: Record<string, React.ReactNode> = {
@@ -39,6 +43,10 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   Briefcase: <Briefcase className="w-5 h-5" />,
   Users: <Users className="w-5 h-5" />,
   ShieldCheck: <ShieldCheck className="w-5 h-5" />,
+  HeartHandshake: <HeartHandshake className="w-5 h-5" />,
+  Flame: <Flame className="w-5 h-5" />,
+  GraduationCap: <GraduationCap className="w-5 h-5" />,
+  Compass: <Compass className="w-5 h-5" />,
 };
 
 export const CategorySection: React.FC = () => {
@@ -56,7 +64,7 @@ export const CategorySection: React.FC = () => {
               Discover by Event Category
             </h2>
             <p className="text-sm sm:text-base text-ink-secondary mt-2 max-w-xl font-normal">
-              Ahmedabad&apos;s complete roster of vetted wedding lawns, banquet halls, and celebration specialists.
+              Ahmedabad&apos;s complete roster of vetted event venues, banquet halls, corporate spaces, and celebration specialists.
             </p>
           </div>
 
@@ -64,7 +72,7 @@ export const CategorySection: React.FC = () => {
             href="/explore"
             className="inline-flex items-center gap-2 text-forest hover:text-forest-dark font-bold text-sm group self-start md:self-auto"
           >
-            <span>View All 15 Categories</span>
+            <span>View All {CATEGORIES.length} Categories</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>

@@ -13,6 +13,11 @@ export type CategoryId =
   | 'birthday-party-venues'
   | 'corporate-event-venues'
   | 'community-event-venues'
+  | 'anniversary-venues'
+  | 'baby-celebrations'
+  | 'festival-grounds'
+  | 'educational-seminar-halls'
+  | 'private-party-spaces'
   | 'other-event-services';
 
 export interface CategoryInfo {
@@ -99,12 +104,18 @@ export interface EnquiryFormData {
   estimatedBudget: string;
   requirements: string;
   additionalNotes?: string;
+  // Event-specific fields
+  organizationName?: string;
+  celebrantAge?: string;
+  themePreference?: string;
+  avRequirements?: string;
 }
 
 export interface FilterState {
   searchQuery: string;
   categoryId: string;
   area: string;
+  eventType: string; // 'all' or specific event type like 'Weddings', 'Birthdays', etc.
   minCapacity: number;
   maxCapacity: number;
   priceRange: string; // 'all' | 'budget' | 'mid' | 'luxury'

@@ -20,6 +20,12 @@ import {
   ShieldCheck,
   Send,
   RotateCcw,
+  Briefcase,
+  Cake,
+  Building,
+  Heart,
+  Gem,
+  Flame,
 } from 'lucide-react';
 
 interface EnquiryFormProps {
@@ -63,6 +69,7 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
   });
 
   const selectedGuests = watch('numberOfGuests');
+  const selectedEventType = watch('eventType');
 
   const onSubmit = async (data: EnquiryFormValues) => {
     await new Promise((resolve) => setTimeout(resolve, 800));
@@ -78,7 +85,34 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
     }
   };
 
-  const guestQuickOptions = [150, 350, 750, 1500, 2500];
+  // Adaptive Guest Quick Picks based on Event Type
+  const guestQuickOptions = selectedEventType.includes('Corporate')
+    ? [50, 150, 300, 500, 1000]
+    : selectedEventType.includes('Birthday')
+    ? [30, 60, 100, 150, 250]
+    : selectedEventType.includes('Baby')
+    ? [40, 80, 120, 200]
+    : [200, 500, 1000, 2000, 3500];
+
+  // Adaptive placeholder based on Event Type
+  const getRequirementsPlaceholder = () => {
+    if (selectedEventType.includes('Corporate')) {
+      return 'Mention conference hall format (Theatre / U-Shape / Clusters), LED video wall, projector requirements, executive lunch buffet, delegate badges...';
+    }
+    if (selectedEventType.includes('Birthday')) {
+      return 'Mention birthday theme, cake cutting time, balloon arch, magician / live game host, DJ, kids play zone...';
+    }
+    if (selectedEventType.includes('Anniversary')) {
+      return 'Mention intimate dinner format, anniversary milestone, acoustic live music, memory slide projection, floral entrance...';
+    }
+    if (selectedEventType.includes('Baby')) {
+      return 'Mention traditional cradle / swing decor, floral backdrop, family lunch thal requirements, photography...';
+    }
+    if (selectedEventType.includes('Community') || selectedEventType.includes('Festival')) {
+      return 'Mention expected footfall, sound permissions, security guards, stage requirements, food stall areas...';
+    }
+    return 'Mention lawn vs banquet preference, AC bridal green rooms, mandap styling, catering cuisine (Kathiyawadi / Marwadi / Continental), valet parking...';
+  };
 
   if (submitted && submittedData) {
     return (
@@ -156,11 +190,41 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
         </div>
       )}
 
-      {/* Row 1: Name & Phone */}
+      {/* Event Type Selector (Adaptive Field) */}
+      <div>
+        <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1.5">
+          Event Type *
+        </label>
+        <select
+          {...register('eventType')}
+          className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink font-semibold transition-all"
+        >
+          <option value="Wedding & Grand Reception">Wedding &amp; Grand Reception</option>
+          <option value="Sangeet & Garba Night">Sangeet Sandhya / Garba</option>
+          <option value="Ring Ceremony / Engagement">Ring Ceremony / Engagement</option>
+          <option value="Milestone Birthday Party">Milestone Birthday / Kids Theme Party</option>
+          <option value="Anniversary Celebration">Anniversary &amp; Intimate Celebration</option>
+          <option value="Corporate Summit / Conference">Corporate Summit, Conference &amp; Annual Meet</option>
+          <option value="Baby Shower / Srimant">Baby Shower / Srimant / Cradle Ceremony</option>
+          <option value="Private Farmhouse Party">Private Farmhouse / Poolside Party</option>
+          <option value="Festival / Community Gathering">Festival / Cultural / Community Gathering</option>
+          <option value="Other Special Occasion">Other Special Occasion</option>
+        </select>
+      </div>
+
+      {/* Adaptive Helper Callout for Selected Event */}
+      <div className="p-3 rounded-xl bg-ivory border border-ivory-border text-xs flex items-center gap-2 text-ink-secondary">
+        <Sparkles className="w-4 h-4 text-gold-dark shrink-0" />
+        <span>
+          Planning a <strong>{selectedEventType}</strong> in Ahmedabad? Our concierge checks tailored packages and capacity specs.
+        </span>
+      </div>
+
+      {/* Row: Customer Name & Mobile */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
-            Customer Name *
+            Customer / Host Name *
           </label>
           <div className="relative">
             <User className="w-4 h-4 text-ink-muted absolute left-3 top-3 pointer-events-none" />
@@ -195,7 +259,7 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
         </div>
       </div>
 
-      {/* Row 2: Email & Event Type */}
+      {/* Row: Email & Event Date */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
@@ -217,28 +281,7 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
 
         <div>
           <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
-            Event Type *
-          </label>
-          <select
-            {...register('eventType')}
-            className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink transition-all"
-          >
-            <option value="Wedding & Grand Reception">Wedding &amp; Grand Reception</option>
-            <option value="Sangeet & Garba Night">Sangeet &amp; Garba Night</option>
-            <option value="Ring Ceremony / Sagai">Ring Ceremony / Sagai</option>
-            <option value="Milestone Birthday">Milestone Birthday</option>
-            <option value="Corporate Gala / Summit">Corporate Gala / Summit</option>
-            <option value="Community Gathering">Community Gathering</option>
-            <option value="Other Celebration">Other Celebration</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Row 3: Event Date & Location */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
-            Event Date *
+            Target Event Date *
           </label>
           <div className="relative">
             <Calendar className="w-4 h-4 text-ink-muted absolute left-3 top-3 pointer-events-none" />
@@ -252,10 +295,13 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
             <p className="text-[11px] text-rose-500 mt-1">{errors.eventDate.message}</p>
           )}
         </div>
+      </div>
 
+      {/* Row: Event Location & Budget */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
-            Event Location Corridor *
+            Ahmedabad Corridor *
           </label>
           <div className="relative">
             <MapPin className="w-4 h-4 text-gold-dark absolute left-3 top-3 pointer-events-none" />
@@ -271,13 +317,30 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
             </select>
           </div>
         </div>
+
+        <div>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
+            Estimated Budget *
+          </label>
+          <select
+            {...register('estimatedBudget')}
+            className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink transition-all"
+          >
+            <option value="Under ₹2,00,000">Under ₹2,00,000 (Intimate)</option>
+            <option value="₹2,00,000 - ₹5,00,000">₹2,00,000 - ₹5,00,000</option>
+            <option value="₹5,00,000 - ₹10,00,000">₹5,00,000 - ₹10,00,000</option>
+            <option value="₹10,00,000 - ₹25,00,000">₹10,00,000 - ₹25,00,000</option>
+            <option value="₹25,00,000 - ₹50,00,000">₹25,00,000 - ₹50,00,000</option>
+            <option value="Above ₹50,00,000">Above ₹50,00,000 (Grand Scale)</option>
+          </select>
+        </div>
       </div>
 
-      {/* Guest Count & Quick Picks */}
+      {/* Guest Count & Adaptive Quick Picks */}
       <div>
         <div className="flex items-center justify-between mb-1">
           <label className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
-            Number of Guests *
+            Number of Guests / Delegates *
           </label>
           <div className="flex items-center gap-1">
             {guestQuickOptions.map((opt) => (
@@ -300,7 +363,7 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
           <Users className="w-4 h-4 text-ink-muted absolute left-3 top-3 pointer-events-none" />
           <input
             type="number"
-            placeholder="e.g. 850"
+            placeholder="e.g. 350"
             {...register('numberOfGuests', { valueAsNumber: true })}
             className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink transition-all"
           />
@@ -310,16 +373,16 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
         )}
       </div>
 
-      {/* Requirements */}
+      {/* Adaptive Requirements Box */}
       <div>
         <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-1">
-          Requirements &amp; Setup Notes *
+          Event Requirements &amp; Special Arrangements *
         </label>
         <textarea
           rows={3}
-          placeholder="e.g. Need AC green rooms, lawn setup, catering counters for Gujarati thal, mandap decoration..."
+          placeholder={getRequirementsPlaceholder()}
           {...register('requirements')}
-          className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink transition-all"
+          className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory focus:bg-white focus:border-forest text-ink transition-all leading-relaxed"
         />
         {errors.requirements && (
           <p className="text-[11px] text-rose-500 mt-1">{errors.requirements.message}</p>
@@ -339,7 +402,7 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
           className="w-full sm:w-auto px-7 py-3 rounded-xl bg-forest hover:bg-forest-light text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-60"
         >
           <Send className="w-4 h-4 text-gold" />
-          <span>{isSubmitting ? 'Checking Availability...' : 'Submit Enquiry'}</span>
+          <span>{isSubmitting ? 'Checking Availability...' : 'Submit Enquiry to Gatherly'}</span>
         </button>
       </div>
     </form>

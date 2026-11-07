@@ -6,22 +6,22 @@ import { EnquiryModal } from '@/components/enquiry/EnquiryModal';
 import { ToastContainer } from '@/components/ui/ToastContainer';
 
 export const metadata: Metadata = {
-  title: "Gatherly | Ahmedabad's Premium Wedding & Event Planning Marketplace",
+  title: 'Gatherly — Every Event, Beautifully Connected',
   description:
-    "Discover Ahmedabad's finest wedding venues, party plots, marriage halls, banquet halls, caterers, decorators and photographers. Plan your perfect celebration with Gatherly's concierge service on Sindhu Bhavan Road, SG Highway, Bodakdev and beyond.",
+    "Ahmedabad's premier event venue & service discovery marketplace. Discover top party plots, banquet halls, conference centers, caterers, decorators, and entertainment for weddings, birthdays, corporate events, and celebrations.",
   keywords: [
-    'Wedding venues Ahmedabad',
+    'Event venues Ahmedabad',
     'Party Plots Ahmedabad',
-    'Marriage Halls Ahmedabad',
-    'Sindhu Bhavan Road venues',
-    'SG Highway banquet halls',
-    'Wedding caterers Ahmedabad',
-    'Wedding planners Gujarat',
-    'Gatherly wedding marketplace',
+    'Banquet Halls Ahmedabad',
+    'Corporate event venues Ahmedabad',
+    'Birthday party venues Ahmedabad',
+    'Event caterers Ahmedabad',
+    'Event decorators Gujarat',
+    'Gatherly event marketplace',
   ],
   openGraph: {
-    title: "Gatherly — Every Celebration, Beautifully Connected.",
-    description: "Ahmedabad's premium wedding & event planning marketplace. Discover top venues, vendors and wedding professionals.",
+    title: 'Gatherly — Every Event, Beautifully Connected',
+    description: "Ahmedabad's premier discovery marketplace for every celebration — weddings, birthdays, corporate events, and private gatherings.",
     type: 'website',
   },
 };

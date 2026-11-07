@@ -29,11 +29,11 @@ export default function AboutPage() {
             <span>Our Intermediary Mission</span>
           </div>
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-6xl font-bold text-ink tracking-tight">
-            Every Celebration, <br />
+            Every Event, <br />
             <span className="italic font-normal text-forest">Beautifully Connected.</span>
           </h1>
           <p className="text-sm sm:text-base text-ink-secondary mt-4 leading-relaxed font-normal">
-            Gatherly is an intermediary event venue and service discovery marketplace created specifically for Ahmedabad, Gujarat. We bridge the gap between families planning landmark celebrations and vetted local venue operators.
+            Gatherly is an intermediary discovery and planning marketplace for every type of event in Ahmedabad, Gujarat. We bridge the gap between hosts planning weddings, birthdays, corporate summits, anniversaries, and community gatherings with vetted local venue operators and event professionals.
           </p>
         </div>
 

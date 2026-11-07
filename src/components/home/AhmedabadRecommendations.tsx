@@ -44,7 +44,7 @@ export const AhmedabadRecommendations: React.FC = () => {
     },
     {
       name: 'Bopal & South Bopal',
-      description: 'Sprawling agricultural and farmhouse party plots ideal for 2,000+ guest multi-day Gujarati wedding celebrations.',
+      description: 'Sprawling agricultural and farmhouse party plots ideal for large multi-day celebrations, corporate retreats & weddings.',
       venueCount: 26,
       image: 'https://images.unsplash.com/photo-1529636798458-92182e662485?auto=format&fit=crop&w=800&q=80',
       badge: 'Mega Lawns',
@@ -62,7 +62,7 @@ export const AhmedabadRecommendations: React.FC = () => {
               <span>Ahmedabad Corridors</span>
             </div>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-ink tracking-tight">
-              Explore by Wedding Corridors
+              Explore Ahmedabad&apos;s Event Corridors
             </h2>
             <p className="text-sm sm:text-base text-ink-secondary mt-2 max-w-xl font-normal">
               Compare Ahmedabad&apos;s most sought-after event localities with distinct price profiles, capacities, and aesthetic vibes.

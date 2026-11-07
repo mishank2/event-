@@ -30,13 +30,13 @@ export const WhyChooseGatherly: React.FC = () => {
       icon: <MapPin className="w-5 h-5 text-forest" />,
       title: 'Deep Ahmedabad Expertise',
       description:
-        'From high-demand Sindhu Bhavan Road corridors to serene Gandhinagar highways, our local team knows wedding dates, peak seasons, and zoning rules.',
+        'From high-demand Sindhu Bhavan Road corridors to serene Gandhinagar highways, our local team knows auspicious wedding dates, corporate calendar peaks, and zoning rules.',
     },
     {
       icon: <Layers className="w-5 h-5 text-forest" />,
       title: 'Complete Vendor Ecosystem',
       description:
-        'Coordinate venues, authentic Kathiyawadi caterers, candid wedding photographers, and luxury floral decorators through a single dashboard.',
+        'Coordinate venues, authentic caterers, photographers, corporate AV setups, and thematic decorators through a single dashboard.',
     },
     {
       icon: <Clock className="w-5 h-5 text-forest" />,

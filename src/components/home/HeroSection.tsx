@@ -69,14 +69,14 @@ export const HeroSection: React.FC = () => {
           {/* Tagline Pill */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-gold/40 text-xs sm:text-sm font-medium text-gold-light shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-gold" />
-            <span>Ahmedabad&apos;s Premium Wedding Concierge</span>
+            <span>Ahmedabad&apos;s Premier Event Marketplace</span>
             <span className="hidden sm:inline text-gold/60">•</span>
-            <span className="hidden sm:inline text-gold-soft/85">Every Celebration, Beautifully Connected</span>
+            <span className="hidden sm:inline text-gold-soft/85">Every Event, Beautifully Connected</span>
           </div>
 
           {/* Editorial Heading */}
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.12]">
-            Your Celebration.{' '}
+            Your Event.{' '}
             <span className="gold-gradient-text italic font-normal">
               Beautifully Planned.
             </span>
@@ -84,7 +84,7 @@ export const HeroSection: React.FC = () => {
 
           {/* Subheading */}
           <p className="text-base sm:text-lg text-white/85 font-sans leading-relaxed max-w-2xl mx-auto font-normal">
-            Discover Ahmedabad&apos;s finest party plots, banquet halls, and wedding professionals along Sindhu Bhavan Road, SG Highway, and Bodakdev.
+            Discover Ahmedabad&apos;s finest party plots, conference centers, banquet halls, caterers, and decorators for weddings, birthdays, corporate meets, and special occasions.
           </p>
 
           {/* CTAs */}

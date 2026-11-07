@@ -23,10 +23,10 @@ export default function ExplorePage() {
             <span>Category Directory</span>
           </div>
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-ink tracking-tight">
-            Explore All 15 Event Categories
+            Explore All {CATEGORIES.length} Event Categories
           </h1>
           <p className="text-sm sm:text-base text-ink-secondary mt-2 font-normal leading-relaxed">
-            Discover Ahmedabad&apos;s complete celebration ecosystem — from open lawns and royal banquets to heritage caterers and fine art photographers.
+            Discover Ahmedabad&apos;s complete celebration and event ecosystem — from open party plots and conference auditoriums to birthday party lounges, decorators, and catering specialists.
           </p>
         </div>
 

@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { FilterState } from '@/types';
-import { CATEGORIES, AHMEDABAD_AREAS } from '@/data/categories';
-import { X, SlidersHorizontal, RotateCcw, Check } from 'lucide-react';
+import { CATEGORIES, AHMEDABAD_AREAS, EVENT_TYPES } from '@/data/categories';
+import { X, SlidersHorizontal, RotateCcw, Check, Calendar } from 'lucide-react';
 
 interface MobileFilterDrawerProps {
   isOpen: boolean;
@@ -59,6 +59,24 @@ export const MobileFilterDrawer: React.FC<MobileFilterDrawerProps> = ({
 
         {/* Scrollable Filter Controls */}
         <div className="flex-1 p-5 overflow-y-auto space-y-6">
+          {/* Event Type Filter (NEW) */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-ink-muted mb-2">
+              Event Compatibility
+            </label>
+            <select
+              value={filters.eventType}
+              onChange={(e) => onFilterChange('eventType', e.target.value)}
+              className="w-full px-3 py-2.5 text-sm rounded-xl border border-ivory-border bg-ivory text-ink font-semibold"
+            >
+              {EVENT_TYPES.map((evt) => (
+                <option key={evt} value={evt}>
+                  {evt}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Category */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-ink-muted mb-2">
@@ -69,7 +87,7 @@ export const MobileFilterDrawer: React.FC<MobileFilterDrawerProps> = ({
               onChange={(e) => onFilterChange('categoryId', e.target.value)}
               className="w-full px-3 py-2.5 text-sm rounded-xl border border-ivory-border bg-ivory text-ink"
             >
-              <option value="all">All 15 Categories</option>
+              <option value="all">All Categories ({CATEGORIES.length})</option>
               {CATEGORIES.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.name} ({cat.businessCount})
@@ -177,7 +195,7 @@ export const MobileFilterDrawer: React.FC<MobileFilterDrawerProps> = ({
             onClick={onClose}
             className="w-full py-3.5 rounded-xl bg-forest hover:bg-forest-light text-white font-bold text-sm shadow-md transition-colors"
           >
-            Show {totalResults} Venues & Vendors
+            Show {totalResults} Venues &amp; Vendors
           </button>
         </div>
       </div>

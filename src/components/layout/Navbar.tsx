@@ -15,27 +15,28 @@ const NAV_LINKS = [
     name: 'Explore Venues',
     href: '/businesses?category=party-plots',
     children: [
-      { name: 'Party Plots', href: '/businesses?category=party-plots' },
+      { name: 'Party Plots & Lawns', href: '/businesses?category=party-plots' },
       { name: 'Marriage Halls', href: '/businesses?category=marriage-halls' },
       { name: 'Banquet Halls', href: '/businesses?category=banquet-halls' },
-      { name: 'Wedding Gardens', href: '/businesses?category=wedding-gardens' },
-      { name: 'Birthday Venues', href: '/businesses?category=birthday-party-venues' },
-      { name: 'Corporate Venues', href: '/businesses?category=corporate-event-venues' },
+      { name: 'Corporate & Conference Venues', href: '/businesses?category=corporate-event-venues' },
+      { name: 'Birthday & Theme Venues', href: '/businesses?category=birthday-party-venues' },
+      { name: 'Farmhouses & Private Lounges', href: '/businesses?category=private-party-spaces' },
+      { name: 'Festival & Exhibition Grounds', href: '/businesses?category=festival-grounds' },
     ],
   },
   {
     name: 'Discover Vendors',
     href: '/explore',
     children: [
-      { name: 'Photographers', href: '/businesses?category=photography' },
-      { name: 'Makeup Artists', href: '/businesses?category=makeup-artists' },
+      { name: 'Catering Businesses', href: '/businesses?category=catering' },
       { name: 'Event Decorators', href: '/businesses?category=decoration' },
-      { name: 'Catering', href: '/businesses?category=catering' },
-      { name: 'DJ & Sound', href: '/businesses?category=dj-sound' },
-      { name: 'Wedding Services', href: '/businesses?category=wedding-services' },
+      { name: 'Photographers', href: '/businesses?category=photography' },
+      { name: 'DJ & Sound Production', href: '/businesses?category=dj-sound' },
+      { name: 'Makeup & Grooming', href: '/businesses?category=makeup-artists' },
+      { name: 'Videography & Live Streaming', href: '/businesses?category=videography' },
     ],
   },
-  { name: 'Inspiration', href: '/#wedding-reels' },
+  { name: 'Gatherly Discover', href: '/#wedding-reels' },
   { name: 'How It Works', href: '/#how-it-works' },
 ];
 
@@ -119,7 +120,7 @@ export const Navbar: React.FC = () => {
                 Gatherly
               </span>
               <span className="text-[9px] text-ink-muted tracking-widest uppercase font-medium leading-none mt-0.5">
-                Every Celebration, Beautifully Connected
+                Every Event, Beautifully Connected
               </span>
             </div>
           </Link>

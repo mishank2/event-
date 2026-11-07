@@ -15,6 +15,11 @@ import {
   Clock,
   ArrowRight,
   RotateCcw,
+  Building,
+  Cake,
+  Heart,
+  Gem,
+  Flame,
 } from 'lucide-react';
 
 export default function EnquiryPage() {
@@ -25,6 +30,7 @@ export default function EnquiryPage() {
   const {
     register,
     handleSubmit,
+    watch,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<EnquiryFormValues>({
@@ -33,18 +39,38 @@ export default function EnquiryPage() {
       customerName: '',
       mobileNumber: '',
       email: '',
-      eventType: 'Wedding',
+      eventType: 'Wedding & Grand Reception',
       eventDate: '',
       eventLocation: 'Sindhu Bhavan Road (SBR)',
-      numberOfGuests: 500,
-      estimatedBudget: '₹10 Lakhs - ₹25 Lakhs',
+      numberOfGuests: 350,
+      estimatedBudget: '₹10,00,000 - ₹25,00,000',
       requirements: '',
       additionalNotes: '',
     },
   });
 
+  const selectedEventType = watch('eventType');
+
+  const getRequirementsPlaceholder = () => {
+    if (selectedEventType.includes('Corporate')) {
+      return 'Mention conference hall format (Theatre / U-Shape / Clusters), LED video wall, projector requirements, executive lunch buffet, delegate badges...';
+    }
+    if (selectedEventType.includes('Birthday')) {
+      return 'Mention birthday theme, cake cutting time, balloon arch, magician / live game host, DJ, kids play zone...';
+    }
+    if (selectedEventType.includes('Anniversary')) {
+      return 'Mention intimate dinner format, anniversary milestone, acoustic live music, memory slide projection, floral entrance...';
+    }
+    if (selectedEventType.includes('Baby')) {
+      return 'Mention traditional cradle / swing decor, floral backdrop, family lunch thal requirements, photography...';
+    }
+    if (selectedEventType.includes('Community') || selectedEventType.includes('Festival')) {
+      return 'Mention expected footfall, sound permissions, security guards, stage requirements, food stall areas...';
+    }
+    return 'Mention lawn vs banquet preference, AC bridal green rooms, mandap styling, catering cuisine (Kathiyawadi / Marwadi / Continental), valet parking...';
+  };
+
   const onSubmit = async (data: EnquiryFormValues) => {
-    // Simulate submission to Gatherly Admin Desk
     await new Promise((resolve) => setTimeout(resolve, 800));
     const generatedRef = 'GTH-' + Math.floor(10000 + Math.random() * 90000);
     setRefId(generatedRef);
@@ -69,7 +95,7 @@ export default function EnquiryPage() {
             Submit Event Enquiry
           </h1>
           <p className="text-xs sm:text-sm text-ink-secondary mt-2 font-normal leading-relaxed">
-            All customer enquiries are routed exclusively to Gatherly’s internal team. We privately check venue availability and provide consolidated rates.
+            All customer enquiries are routed exclusively to Gatherly’s internal team. We privately check venue availability and provide consolidated rates for any celebration.
           </p>
         </div>
 
@@ -122,16 +148,18 @@ export default function EnquiryPage() {
                   </label>
                   <select
                     {...register('eventType')}
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory text-ink focus:bg-white focus:border-forest transition-all"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory text-ink focus:bg-white focus:border-forest transition-all font-semibold"
                   >
-                    <option value="Wedding">Grand Wedding</option>
-                    <option value="Reception">Wedding Reception</option>
-                    <option value="Sangeet">Sangeet Sandhya / Garba</option>
-                    <option value="Ring Ceremony">Ring Ceremony / Engagement</option>
-                    <option value="Birthday">Milestone Birthday Celebration</option>
-                    <option value="Corporate">Corporate Summit / Gala</option>
-                    <option value="Community">Community / Cultural Gathering</option>
-                    <option value="Other">Other Celebration</option>
+                    <option value="Wedding & Grand Reception">Wedding &amp; Grand Reception</option>
+                    <option value="Sangeet & Garba Night">Sangeet Sandhya / Garba</option>
+                    <option value="Ring Ceremony / Engagement">Ring Ceremony / Engagement</option>
+                    <option value="Milestone Birthday Party">Milestone Birthday / Theme Party</option>
+                    <option value="Anniversary Celebration">Anniversary &amp; Intimate Celebration</option>
+                    <option value="Corporate Summit / Conference">Corporate Summit / Annual Meet</option>
+                    <option value="Baby Shower / Srimant">Baby Shower / Srimant / Cradle Ceremony</option>
+                    <option value="Private Farmhouse Party">Private Farmhouse / Poolside Party</option>
+                    <option value="Festival / Community Gathering">Festival / Cultural / Community Gathering</option>
+                    <option value="Other Special Occasion">Other Special Occasion</option>
                   </select>
                 </div>
 
@@ -174,7 +202,7 @@ export default function EnquiryPage() {
                   </label>
                   <input
                     type="number"
-                    placeholder="e.g. 850"
+                    placeholder="e.g. 500"
                     {...register('numberOfGuests', { valueAsNumber: true })}
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory text-ink focus:bg-white focus:border-forest transition-all"
                   />
@@ -194,11 +222,12 @@ export default function EnquiryPage() {
                     {...register('estimatedBudget')}
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory text-ink focus:bg-white focus:border-forest transition-all"
                   >
-                    <option value="Under ₹5 Lakhs">Under ₹5 Lakhs</option>
-                    <option value="₹5 Lakhs - ₹10 Lakhs">₹5 Lakhs - ₹10 Lakhs</option>
-                    <option value="₹10 Lakhs - ₹25 Lakhs">₹10 Lakhs - ₹25 Lakhs</option>
-                    <option value="₹25 Lakhs - ₹50 Lakhs">₹25 Lakhs - ₹50 Lakhs</option>
-                    <option value="Above ₹50 Lakhs">Above ₹50 Lakhs (Luxury Grand)</option>
+                    <option value="Under ₹2,00,000">Under ₹2,00,000 (Intimate)</option>
+                    <option value="₹2,00,000 - ₹5,00,000">₹2,00,000 - ₹5,00,000</option>
+                    <option value="₹5,00,000 - ₹10,00,000">₹5,00,000 - ₹10,00,000</option>
+                    <option value="₹10,00,000 - ₹25,00,000">₹10,00,000 - ₹25,00,000</option>
+                    <option value="₹25,00,000 - ₹50,00,000">₹25,00,000 - ₹50,00,000</option>
+                    <option value="Above ₹50,00,000">Above ₹50,00,000 (Grand Scale)</option>
                   </select>
                 </div>
 
@@ -208,7 +237,7 @@ export default function EnquiryPage() {
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Shantam Party Plot, SBR"
+                    placeholder="e.g. Shantam Party Plot, SBR or TGB Palace"
                     {...register('preferredBusiness')}
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory text-ink focus:bg-white focus:border-forest transition-all"
                   />
@@ -269,16 +298,16 @@ export default function EnquiryPage() {
                 </div>
               </div>
 
-              {/* Requirements & Notes */}
+              {/* Adaptive Requirements & Notes */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-ink-muted mb-1.5">
-                  Event Requirements &amp; Special Setup Details *
+                  Event Requirements &amp; Special Arrangements *
                 </label>
                 <textarea
                   rows={3}
-                  placeholder="Mention your requirements: AC green rooms, lawn setup, Gujarati Kathiyawadi buffet, stage lighting, mandap style..."
+                  placeholder={getRequirementsPlaceholder()}
                   {...register('requirements')}
-                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory text-ink focus:bg-white focus:border-forest transition-all"
+                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-ivory-border bg-ivory text-ink focus:bg-white focus:border-forest transition-all leading-relaxed"
                 />
                 {errors.requirements && (
                   <p className="text-[11px] text-rose-600 mt-1">{errors.requirements.message}</p>
@@ -289,7 +318,7 @@ export default function EnquiryPage() {
               <div className="pt-4 border-t border-ivory-border flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-xs text-ink-muted">
                   <ShieldCheck className="w-4 h-4 text-forest shrink-0" />
-                  <span>Enquiry is directed exclusively to Gatherly Admin</span>
+                  <span>Enquiry is directed exclusively to Gatherly Admin Desk</span>
                 </div>
 
                 <button
@@ -298,7 +327,7 @@ export default function EnquiryPage() {
                   className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-forest hover:bg-forest-light text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-60"
                 >
                   <CalendarCheck className="w-4 h-4 text-gold" />
-                  <span>{isSubmitting ? 'Submitting...' : 'Submit Enquiry'}</span>
+                  <span>{isSubmitting ? 'Submitting...' : 'Submit Enquiry to Gatherly'}</span>
                 </button>
               </div>
             </form>

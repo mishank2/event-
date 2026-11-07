@@ -67,13 +67,13 @@ export const Footer: React.FC = () => {
                   Gatherly<span className="text-gold">.</span>
                 </span>
                 <span className="text-[9px] text-gold-light tracking-widest uppercase font-semibold">
-                  Every Celebration, Beautifully Connected
+                  Every Event, Beautifully Connected
                 </span>
               </div>
             </Link>
 
             <p className="text-white/75 text-xs sm:text-sm leading-relaxed max-w-sm font-normal">
-              Ahmedabad’s premier wedding and event discovery marketplace. We connect families, brides, and corporate planners with vetted party plots, marriage halls, caterers, and decorators.
+              Ahmedabad’s premier event discovery and planning marketplace. We connect families, corporate teams, and celebration hosts with vetted party plots, convention centers, banquet halls, caterers, and decorators.
             </p>
 
             {/* Intermediary Guarantee Callout */}

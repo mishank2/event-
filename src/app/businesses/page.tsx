@@ -23,12 +23,14 @@ function BusinessesContent() {
   const initialCategory = searchParams.get('category') || 'all';
   const initialArea = searchParams.get('area') || 'all';
   const initialQuery = searchParams.get('q') || '';
+  const initialEventType = searchParams.get('event') || 'All Events';
   const initialFilter = searchParams.get('filter');
 
   const [filters, setFilters] = useState<FilterState>({
     searchQuery: initialQuery,
     categoryId: initialCategory,
     area: initialArea,
+    eventType: initialEventType,
     minCapacity: 0,
     maxCapacity: 10000,
     priceRange: 'all',
@@ -45,6 +47,7 @@ function BusinessesContent() {
     if (filters.searchQuery) count++;
     if (filters.categoryId !== 'all') count++;
     if (filters.area !== 'all') count++;
+    if (filters.eventType && filters.eventType !== 'All Events') count++;
     if (filters.priceRange !== 'all') count++;
     if (filters.minRating > 0) count++;
     if (filters.minCapacity > 0) count++;
@@ -63,6 +66,7 @@ function BusinessesContent() {
       searchQuery: '',
       categoryId: 'all',
       area: 'all',
+      eventType: 'All Events',
       minCapacity: 0,
       maxCapacity: 10000,
       priceRange: 'all',
@@ -90,6 +94,25 @@ function BusinessesContent() {
         if (!matchesName && !matchesArea && !matchesCategory && !matchesTagline) {
           return false;
         }
+      }
+
+      // Event Type Compatibility Filter
+      if (filters.eventType && filters.eventType !== 'All Events') {
+        const target = filters.eventType.toLowerCase();
+        const matchesEvent = b.eventTypes.some((et) => {
+          const etLower = et.toLowerCase();
+          if (target.includes('wedding') && (etLower.includes('wedding') || etLower.includes('reception') || etLower.includes('sangeet'))) return true;
+          if (target.includes('birthday') && (etLower.includes('birthday') || etLower.includes('parties'))) return true;
+          if (target.includes('corporate') && (etLower.includes('corporate') || etLower.includes('conference') || etLower.includes('gala') || etLower.includes('summit'))) return true;
+          if (target.includes('anniversary') && (etLower.includes('anniversary') || etLower.includes('ceremonies') || etLower.includes('reception'))) return true;
+          if (target.includes('private') && (etLower.includes('party') || etLower.includes('private') || etLower.includes('celebration'))) return true;
+          if (target.includes('baby') && (etLower.includes('baby') || etLower.includes('ceremony') || etLower.includes('family'))) return true;
+          if (target.includes('festival') && (etLower.includes('festival') || etLower.includes('garba') || etLower.includes('concert') || etLower.includes('cultural'))) return true;
+          if (target.includes('education') && (etLower.includes('seminar') || etLower.includes('conference') || etLower.includes('corporate'))) return true;
+          if (target.includes('community') && (etLower.includes('community') || etLower.includes('cultural') || etLower.includes('gathering'))) return true;
+          return etLower.includes(target);
+        });
+        if (!matchesEvent) return false;
       }
 
       // Category filter
@@ -157,10 +180,10 @@ function BusinessesContent() {
             <span>Marketplace Directory</span>
           </div>
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-ink tracking-tight">
-            Explore Venues &amp; Event Services
+            Discover Venues &amp; Event Services
           </h1>
           <p className="text-sm sm:text-base text-ink-secondary mt-2 max-w-2xl font-normal">
-            Discover verified party plots, banquet halls, and wedding specialists across Ahmedabad. Filter by corridor, guest capacity, and budget.
+            Explore vetted party plots, luxury banquets, conference centers, caterers, and decorators for weddings, birthdays, corporate summits, and celebrations across Ahmedabad.
           </p>
         </div>
 
@@ -201,7 +224,7 @@ function BusinessesContent() {
               No matching listings found
             </h3>
             <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed mb-6">
-              Try adjusting your corridor filters, category selections, or search terms to discover more Ahmedabad venues.
+              Try selecting &quot;All Events&quot; or clearing specific corridor filters to view all venues in Ahmedabad.
             </p>
             <button
               onClick={handleResetFilters}
